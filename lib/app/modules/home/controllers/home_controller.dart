@@ -1,23 +1,32 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:guns_guru/app/modules/home/views/auth_view.dart';
+import 'package:guns_guru/app/modules/home/views/home_view.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
 
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
-  }
+
+  FirebaseAuth firebaseAuth=FirebaseAuth.instance;
 
   @override
   void onReady() {
     super.onReady();
+    isUserLogged();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
+  Future<bool> isUserLogged() async {
+    User? firebaseUser =  getLoggedFirebaseUser();
+    if (firebaseUser != null) {
+      Get.off(AuthView());
+      return true;
+    } else {
+      Get.off(HomeView());
+        return false;
+    }
+}
 
-  void increment() => count.value++;
+User? getLoggedFirebaseUser() {
+    return firebaseAuth.currentUser;
+}
+
 }
