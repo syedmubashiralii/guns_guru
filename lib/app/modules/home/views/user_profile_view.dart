@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/views/cnic_test.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
+import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 import '../controllers/home_controller.dart';
@@ -62,25 +63,33 @@ class UserProfileView extends GetView<HomeController> {
                           if (!RegExp(r'^\d{5}-\d{7}-\d{1}$').hasMatch(value)) {
                             return 'CNIC must be in the format 11111-1111111-1';
                           }
-                  
+
                           return null;
                         },
                       ),
                       const SizedBox(height: 20),
                       TextFormField(
-                        controller: controller.dobController,
-                        decoration: const InputDecoration(
-                          labelText: 'Date of Birth',
-                          border: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.datetime,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Date of Birth is required';
-                          }
-                          return null;
-                        },
-                      ),
+                          controller: controller.dobController,
+                          decoration: const InputDecoration(
+                              labelText: 'Date of Birth',
+                              border: OutlineInputBorder(),
+                              hintText: 'DD/MM/YYYY'),
+                          keyboardType: TextInputType.datetime,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Date of Birth is required';
+                            }
+                            RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                            if (!dateRegex.hasMatch(value)) {
+                              return 'Please enter a valid date format: DD/MM/YYYY';
+                            }
+                            List<String> parts = value.split('/');
+                            if (parts.length != 3 ||
+                                parts.any((part) => !isNumeric(part))) {
+                              return 'Date must be in numeric format: DD/MM/YYYY';
+                            }
+                            return null;
+                          }),
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: controller.addressController,

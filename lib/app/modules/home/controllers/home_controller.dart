@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
@@ -23,7 +24,7 @@ class HomeController extends GetxController {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final ImagePicker picker = ImagePicker();
   final firestore = FirebaseFirestore.instance;
-
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   Rx<File?> frontImage = Rx<File?>(null);
   Rx<File?> backImage = Rx<File?>(null);
 
@@ -48,16 +49,21 @@ class HomeController extends GetxController {
       Get.off(const AuthView());
       return true;
     } else {
-       await loadUserData(firebaseUser.uid);
+      await loadUserData(firebaseUser.uid);
       if (userModel != null &&
           userModel!.containsKey(AppConstants.CNICFrontSide) &&
           userModel![AppConstants.CNICFrontSide].toString().isNotEmpty) {
-        snackBar(navigator!.context,
-            title: "User  record exsist, UI to be implemeted");
+        if (userModel!.containsKey(AppConstants.Name) &&
+            userModel![AppConstants.Name].toString().isNotEmpty) {
+          snackBar(navigator!.context,
+              title: "User  record exsist, UI to be implemeted");
+        } else {
+          Get.off(UserProfileView());
+        }
       } else {
         Get.off(IDCardScreen());
       }
-      Get.off(IDCardScreen());
+
       return false;
     }
   }
@@ -94,8 +100,13 @@ class HomeController extends GetxController {
       if (userModel != null &&
           userModel!.containsKey(AppConstants.CNICFrontSide) &&
           userModel![AppConstants.CNICFrontSide].toString().isNotEmpty) {
-        snackBar(navigator!.context,
-            title: "User  record exsist, UI to be implemeted");
+        if (userModel!.containsKey(AppConstants.Name) &&
+            userModel![AppConstants.Name].toString().isNotEmpty) {
+          snackBar(navigator!.context,
+              title: "User  record exsist, UI to be implemeted");
+        } else {
+          Get.off(UserProfileView());
+        }
       } else {
         Get.off(IDCardScreen());
       }
@@ -138,6 +149,32 @@ class HomeController extends GetxController {
     }
   }
 
+  Future uploadImage(File image, String key) async {
+    try {
+      final path = 'user_images/${DateTime.now().millisecondsSinceEpoch}.png';
+      final uploadTask = _storage.ref().child(path).putFile(image);
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      await updateUserSpecificData(
+          firebaseAuth.currentUser!.uid, {key: downloadUrl});
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to upload image: $e');
+      return null;
+    }
+  }
+
+  Future<void> updateUserSpecificData(
+      String userId, Map<String, dynamic> newData) async {
+    try {
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
+      await users.doc(userId).update(newData);
+      print('User data updated successfully');
+    } catch (e) {
+      print('Error updating user data: $e');
+    }
+  }
+
   loadRecordFromCard() async {
     if (frontImage.value != null && backImage.value != null) {
       Get.dialog(LoadingDialog());
@@ -146,6 +183,9 @@ class HomeController extends GetxController {
       nameController.text = cnicModel.cnicHolderName ?? "";
       dobController.text = cnicModel.cnicHolderDateOfBirth ?? "";
       cnicController.text = cnicModel.cnicNumber ?? "";
+      await uploadImage(frontImage.value!, AppConstants.CNICFrontSide);
+      await uploadImage(frontImage.value!, AppConstants.CNICBackSide);
+      await loadUserData(firebaseAuth.currentUser!.uid);
       if (Get.isDialogOpen!) {
         Get.back();
       }
@@ -166,16 +206,24 @@ class HomeController extends GetxController {
     }
   }
 
-  void saveForm() {
+  Future<void> saveForm() async {
     if (formKey.currentState?.validate() ?? false) {
       formKey.currentState?.save();
-      // Handle form submission logic here
-      print('Form submitted:');
-      print('First Name: ${nameController.text}');
-      print('CNIC: ${cnicController.text}');
-      print('Date of Birth: ${dobController.text}');
-      print('Address: ${addressController.text}');
-      print('City: ${cityController.text}');
+
+      Get.dialog(LoadingDialog());
+
+      await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
+        AppConstants.Name: nameController.text,
+        AppConstants.CNIC: cnicController.text,
+        AppConstants.DOB: dobController.text,
+        AppConstants.Address: addressController.text,
+        AppConstants.City: cityController.text
+      });
+      await loadUserData(firebaseAuth.currentUser!.uid);
+      if(Get.isDialogOpen!){
+        Get.back();
+      }
+      //TODO: add navigation
     } else {
       print('Validation failed');
     }

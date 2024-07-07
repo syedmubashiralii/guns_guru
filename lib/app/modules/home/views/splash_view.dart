@@ -21,7 +21,7 @@ class SplashView extends GetView<HomeController> {
               child: Image.asset("assets/images/guns-guru.png")
             ),
             FadeInLeft(
-              child: Text(
+              child: const Text(
                 "If you won a licensend firearm,\nthis app is for you",
                 textAlign: TextAlign.center,
                 style: TextStyle(
