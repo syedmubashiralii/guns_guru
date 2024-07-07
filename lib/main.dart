@@ -4,12 +4,14 @@ import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/routes/app_pages.dart';
 import 'package:guns_guru/firebase_options.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await initialize();
 
   Get.put(HomeController(),permanent: true);
   runApp(

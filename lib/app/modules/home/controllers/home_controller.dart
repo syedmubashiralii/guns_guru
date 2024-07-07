@@ -4,9 +4,7 @@ import 'package:guns_guru/app/modules/home/views/auth_view.dart';
 import 'package:guns_guru/app/modules/home/views/home_view.dart';
 
 class HomeController extends GetxController {
-
-
-  FirebaseAuth firebaseAuth=FirebaseAuth.instance;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
   void onReady() {
@@ -15,18 +13,18 @@ class HomeController extends GetxController {
   }
 
   Future<bool> isUserLogged() async {
-    User? firebaseUser =  getLoggedFirebaseUser();
-    if (firebaseUser != null) {
+    User? firebaseUser = getLoggedFirebaseUser();
+    await Future.delayed(Duration(seconds: 3));
+    if (firebaseUser == null) {
       Get.off(AuthView());
       return true;
     } else {
       Get.off(HomeView());
-        return false;
+      return false;
     }
-}
+  }
 
-User? getLoggedFirebaseUser() {
+  User? getLoggedFirebaseUser() {
     return firebaseAuth.currentUser;
-}
-
+  }
 }
