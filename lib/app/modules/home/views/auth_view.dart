@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class AuthView extends StatelessWidget {
+class AuthView extends GetView<HomeController>  {
   const AuthView({super.key});
 
   @override
@@ -19,7 +19,7 @@ class AuthView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             FadeInRight(
-              child: Text(
+              child: const Text(
                 "GUNS GURU",
                 style: TextStyle(
                     color: Color(0xff001F3F),
@@ -32,10 +32,7 @@ class AuthView extends StatelessWidget {
               child: CustomButton(
                 icon: "assets/images/ic_google.png",
                 text: 'Sign in with Google',
-                onPressed: () {
-                  // Define your onPressed functionality here
-                  print('Button pressed!');
-                },
+                onPressed: controller.signInWithGoogle,
               ),
             ),
           ],
@@ -71,7 +68,7 @@ class CustomButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           color: Colors.transparent,
         ),
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -79,8 +76,8 @@ class CustomButton extends StatelessWidget {
               icon,
               height: 25,
             ),
-            SizedBox(width: 8),
-            Text(text, style: TextStyle(color: Colors.black)),
+            const SizedBox(width: 8),
+            Text(text, style: const TextStyle(color: Colors.black)),
           ],
         ),
       ),
