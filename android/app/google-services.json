@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "340919836801",
+    "project_id": "guns-guru",
+    "storage_bucket": "guns-guru.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:340919836801:android:7fdcb0f880d92188682d80",
+        "android_client_info": {
+          "package_name": "com.example.guns_guru"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAemr949re4chKKzUKfz3yG6Hod9_mOBKQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
