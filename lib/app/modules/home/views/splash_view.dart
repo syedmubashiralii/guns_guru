@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
+import 'package:guns_guru/app/utils/app_colors.dart';
 
 class SplashView extends GetView<HomeController> {
   const SplashView({super.key});
@@ -10,20 +11,14 @@ class SplashView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff001F3F),
+      backgroundColor: ColorHelper.primaryColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             FadeInRight(
-              child: Text(
-                "GUNS GURU",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 36,
-                    fontWeight: FontWeight.w700),
-              ),
+              child: Image.asset("assets/images/guns-guru.png")
             ),
             FadeInLeft(
               child: Text(

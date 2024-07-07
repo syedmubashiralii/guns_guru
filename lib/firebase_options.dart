@@ -63,6 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '340919836801',
     projectId: 'guns-guru',
     storageBucket: 'guns-guru.appspot.com',
+    androidClientId: '340919836801-tmqagurvv0pemi2d4rip0uth7ugl16l1.apps.googleusercontent.com',
+    iosClientId: '340919836801-m81ckhptojdnjirfs47p9qjn3g8961g8.apps.googleusercontent.com',
     iosBundleId: 'com.example.gunsGuru',
   );
 }

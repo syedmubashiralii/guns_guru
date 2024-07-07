@@ -11,10 +11,7 @@ class LoadingDialog extends StatelessWidget {
       child: Container(
         width: 150,
         height: 150,
-        child: Text(
-          "Guns Guru",
-
-        ),
+        child: Image.asset("assets/images/guns-guru.png")
       ),
     );
   }

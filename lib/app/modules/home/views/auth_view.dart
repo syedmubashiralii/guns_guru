@@ -4,6 +4,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
+import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class AuthView extends GetView<HomeController>  {
@@ -12,20 +13,14 @@ class AuthView extends GetView<HomeController>  {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorHelper.primaryColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            FadeInRight(
-              child: const Text(
-                "GUNS GURU",
-                style: TextStyle(
-                    color: Color(0xff001F3F),
-                    fontSize: 26,
-                    fontWeight: FontWeight.w700),
-              ),
+             FadeInRight(
+              child: Image.asset("assets/images/guns-guru.png",height: 80,)
             ),
             10.height,
             FadeInLeft(
@@ -64,7 +59,7 @@ class CustomButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.black, width: 1),
+          border: Border.all(color: Colors.white, width: 1),
           borderRadius: BorderRadius.circular(8),
           color: Colors.transparent,
         ),
@@ -72,12 +67,15 @@ class CustomButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              icon,
-              height: 25,
+            Visibility(
+              visible: icon!="",
+              child: Image.asset(
+                icon,
+                height: 25,
+              ),
             ),
-            const SizedBox(width: 8),
-            Text(text, style: const TextStyle(color: Colors.black)),
+            8.width,
+            Text(text, style: const TextStyle(color: Colors.white)),
           ],
         ),
       ),

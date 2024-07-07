@@ -12,7 +12,20 @@
           "package_name": "com.example.guns_guru"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "340919836801-tmqagurvv0pemi2d4rip0uth7ugl16l1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.guns_guru",
+            "certificate_hash": "1e09accb2dd649f377f34500617bff5b644e3dc1"
+          }
+        },
+        {
+          "client_id": "340919836801-t6rbv33ir4vprualpadnsc769e951a7c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAemr949re4chKKzUKfz3yG6Hod9_mOBKQ"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "340919836801-t6rbv33ir4vprualpadnsc769e951a7c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "340919836801-m81ckhptojdnjirfs47p9qjn3g8961g8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gunsGuru"
+              }
+            }
+          ]
         }
       }
     }
