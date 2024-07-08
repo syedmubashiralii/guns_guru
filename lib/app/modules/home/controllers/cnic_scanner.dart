@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
@@ -92,8 +90,6 @@ class CnicScanner {
     } else if (cnicDates.length == 2) {
       _cnicDetails.cnicIssueDate = cnicDates[0];
       _cnicDetails.cnicExpiryDate = cnicDates[1];
-      if (!isFrontScan)
-
     } else if (cnicDates.length == 3) {
       _cnicDetails.cnicHolderDateOfBirth = cnicDates[0].replaceAll(".", "/");
       _cnicDetails.cnicIssueDate = cnicDates[1].replaceAll(".", "/");

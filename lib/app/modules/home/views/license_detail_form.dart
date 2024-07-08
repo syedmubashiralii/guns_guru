@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class LicenseDetailsForm extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController issuingAuthorityController = TextEditingController();
-  final TextEditingController trackingNumberController = TextEditingController();
+  final TextEditingController issuingAuthorityController =
+      TextEditingController();
+  final TextEditingController trackingNumberController =
+      TextEditingController();
   final TextEditingController licenseNumberController = TextEditingController();
-  final TextEditingController ammunitionLimitController = TextEditingController();
-  final TextEditingController dateOfIssuanceController = TextEditingController();
+  final TextEditingController ammunitionLimitController =
+      TextEditingController();
+  final TextEditingController dateOfIssuanceController =
+      TextEditingController();
   final TextEditingController validTillController = TextEditingController();
   final TextEditingController issuanceQuotaController = TextEditingController();
-  
+
   String weaponType = 'Anti Material';
   String jurisdiction = 'All Pakistan';
 
@@ -20,6 +25,8 @@ class LicenseDetailsForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ColorHelper.primaryColor,
+        foregroundColor: Colors.white,
         title: const Text('Add License Details'),
       ),
       body: Padding(
@@ -28,6 +35,7 @@ class LicenseDetailsForm extends StatelessWidget {
           key: _formKey,
           child: ListView(
             children: [
+              10.height,
               TextFormField(
                 controller: issuingAuthorityController,
                 decoration: const InputDecoration(
@@ -153,7 +161,8 @@ class LicenseDetailsForm extends StatelessWidget {
                   labelText: 'Jurisdiction',
                   border: OutlineInputBorder(),
                 ),
-                items: ['All Pakistan', 'Provincial - Punjab'].map((String value) {
+                items:
+                    ['All Pakistan', 'Provincial - Punjab'].map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -191,7 +200,7 @@ class LicenseDetailsForm extends StatelessWidget {
                 child: const Text('Upload License Picture'),
               ),
               const SizedBox(height: 20),
-               DarkButton(
+              DarkButton(
                 onTap: () {
                   if (_formKey.currentState!.validate()) {
                     // Process the form data
@@ -199,7 +208,6 @@ class LicenseDetailsForm extends StatelessWidget {
                 },
                 text: "Submit",
               ),
-            
             ],
           ),
         ),
@@ -207,5 +215,3 @@ class LicenseDetailsForm extends StatelessWidget {
     );
   }
 }
-
-
