@@ -45,5 +45,22 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>PermissionGroupNotifications</key>
+    	<string>Allow GUNS GURU to send notifications?</string>
+    	<key>NSPhotoLibraryUsageDescription</key>
+    	<string>Allow GUNS GURU to access to images in order to take cnic images and license images</string>
+    <key>NSCameraUsageDescription</key>
+    	<string>Allow GUNS GURU to access to camera in order to capture cnic images and license images</string>
+	<key>CFBundleURLTypes</key>
+    	<array>
+    		<dict>
+    			<key>CFBundleTypeRole</key>
+    			<string>Editor</string>
+    			<key>CFBundleURLSchemes</key>
+    			<array>
+    				<string>com.googleusercontent.apps.340919836801-m81ckhptojdnjirfs47p9qjn3g8961g8</string>
+    			</array>
+    		</dict>
+    	</array>
 </dict>
 </plist>

@@ -11,6 +11,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:guns_guru/app/modules/home/controllers/cnic_scanner.dart';
 import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
 import 'package:guns_guru/app/modules/home/views/auth_view.dart';
+import 'package:guns_guru/app/modules/home/views/license_detail_form.dart';
 import 'package:guns_guru/app/modules/home/views/user_profile_view.dart';
 import 'package:guns_guru/app/modules/home/views/id_card_view.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
@@ -18,6 +19,7 @@ import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class HomeController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -57,6 +59,7 @@ class HomeController extends GetxController {
             userModel![AppConstants.Name].toString().isNotEmpty) {
           snackBar(navigator!.context,
               title: "User  record exsist, UI to be implemeted");
+          Get.to(LicenseDetailsForm());
         } else {
           Get.off(UserProfileView());
         }
@@ -117,6 +120,68 @@ class HomeController extends GetxController {
       }
       if (!e.toString().contains('popup_closed_by_user')) {
         snackBar(Get.context!, title: e.toString());
+      }
+    }
+  }
+
+  Future<void> signInWithApple({bool isSignUpRequired = false}) async {
+    try {
+      final rawNonce = generateNonce();
+      final nonce = sha256ofString(rawNonce);
+      // Trigger the authentication flow
+      // Request credential for the currently signed in Apple account.
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName
+        ],
+        nonce: nonce,
+      );
+
+      // Create an `OAuthCredential` from the credential returned by Apple.
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        rawNonce: rawNonce,
+      );
+
+      // Sign in the user with Firebase. If the nonce we generated earlier does
+      // not match the nonce in `appleCredential.identityToken`, sign in will fail.
+
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+      // Once signed in, return the UserCredential
+      if (kDebugMode) {
+        print("apple signed in ${userCredential.user!.uid}");
+      }
+
+      User? currentUser = FirebaseAuth.instance.currentUser!;
+      await loadUserData(currentUser.uid);
+      if (Get.isDialogOpen!) {
+        Get.back();
+      }
+      if (userModel != null &&
+          userModel!.containsKey(AppConstants.CNICFrontSide) &&
+          userModel![AppConstants.CNICFrontSide].toString().isNotEmpty) {
+        if (userModel!.containsKey(AppConstants.Name) &&
+            userModel![AppConstants.Name].toString().isNotEmpty) {
+          snackBar(navigator!.context,
+              title: "User  record exsist, UI to be implemeted");
+        } else {
+          Get.off(UserProfileView());
+        }
+      } else {
+        Get.off(IDCardScreen());
+      }
+    } catch (e) {
+      if (Get.isDialogOpen!) {
+        Get.back();
+      }
+      if (!e.toString().contains('popup_closed_by_user')) {
+        snackBar(navigator!.context, title: e.toString());
+      }
+      if (kDebugMode) {
+        print("error in signing with google : $e");
       }
     }
   }
@@ -220,7 +285,7 @@ class HomeController extends GetxController {
         AppConstants.City: cityController.text
       });
       await loadUserData(firebaseAuth.currentUser!.uid);
-      if(Get.isDialogOpen!){
+      if (Get.isDialogOpen!) {
         Get.back();
       }
       //TODO: add navigation

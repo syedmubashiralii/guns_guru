@@ -89,24 +89,11 @@ class CnicScanner {
         _cnicDetails.cnicHolderDateOfBirth.length != 10) {
       _cnicDetails.cnicHolderDateOfBirth = cnicDates[0];
       isFrontScan = true;
-      Fluttertoast.showToast(
-          msg: "Scan Back Side Now",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.grey,
-          textColor: Colors.white,
-          fontSize: 16.0);
     } else if (cnicDates.length == 2) {
       _cnicDetails.cnicIssueDate = cnicDates[0];
       _cnicDetails.cnicExpiryDate = cnicDates[1];
       if (!isFrontScan)
-        Fluttertoast.showToast(
-            msg: "Scan Front Side Now",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.grey,
-            textColor: Colors.white,
-            fontSize: 16.0);
+
     } else if (cnicDates.length == 3) {
       _cnicDetails.cnicHolderDateOfBirth = cnicDates[0].replaceAll(".", "/");
       _cnicDetails.cnicIssueDate = cnicDates[1].replaceAll(".", "/");

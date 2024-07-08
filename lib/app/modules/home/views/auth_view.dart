@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class AuthView extends GetView<HomeController>  {
+class AuthView extends GetView<HomeController> {
   const AuthView({super.key});
 
   @override
@@ -19,15 +20,28 @@ class AuthView extends GetView<HomeController>  {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-             FadeInRight(
-              child: Image.asset("assets/images/guns-guru.png",height: 80,)
-            ),
+            FadeInRight(
+                child: Image.asset(
+              "assets/images/guns-guru.png",
+              height: 80,
+            )),
             10.height,
             FadeInLeft(
               child: CustomButton(
                 icon: "assets/images/ic_google.png",
                 text: 'Sign in with Google',
                 onPressed: controller.signInWithGoogle,
+              ),
+            ),
+            15.height,
+            Visibility(
+              visible: Platform.isIOS,
+              child: FadeInRight(
+                child: CustomButton(
+                  icon: "assets/images/ic-apple.png",
+                  text: 'Sign in with Apple',
+                  onPressed: controller.signInWithApple,
+                ),
               ),
             ),
           ],
@@ -68,7 +82,7 @@ class CustomButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Visibility(
-              visible: icon!="",
+              visible: icon != "",
               child: Image.asset(
                 icon,
                 height: 25,
