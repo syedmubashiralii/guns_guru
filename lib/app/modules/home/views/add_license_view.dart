@@ -1,29 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
+import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
+import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class LicenseDetailsForm extends StatelessWidget {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController issuingAuthorityController =
-      TextEditingController();
-  final TextEditingController trackingNumberController =
-      TextEditingController();
-  final TextEditingController licenseNumberController = TextEditingController();
-  final TextEditingController ammunitionLimitController =
-      TextEditingController();
-  final TextEditingController dateOfIssuanceController =
-      TextEditingController();
-  final TextEditingController validTillController = TextEditingController();
-  final TextEditingController issuanceQuotaController = TextEditingController();
-
-  String weaponType = 'Anti Material';
-  String jurisdiction = 'All Pakistan';
-
+class AddLicenseView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: ColorHelper.primaryColor,
         foregroundColor: Colors.white,
@@ -32,26 +22,40 @@ class LicenseDetailsForm extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey,
+          key: controller.licenseFormKey,
           child: ListView(
             children: [
               10.height,
-              TextFormField(
-                controller: issuingAuthorityController,
+              DropdownButtonFormField<String>(
+                value: controller.issuingAuthority.value,
                 decoration: const InputDecoration(
                   labelText: 'Issuing Authority',
                   border: OutlineInputBorder(),
                 ),
+                items: AppConstants.issuingAuthorities.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: SizedBox(
+                        width: Get.width * .6,
+                        child: Text(
+                          value,
+                          overflow: TextOverflow.ellipsis,
+                        )),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  controller.issuingAuthority.value = newValue!;
+                },
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Issuing Authority is required';
+                  if (value == null) {
+                    return 'Weapon Type is required';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              20.height,
               TextFormField(
-                controller: trackingNumberController,
+                controller: controller.trackingNumberController,
                 decoration: const InputDecoration(
                   labelText: 'Tracking Number',
                   border: OutlineInputBorder(),
@@ -63,9 +67,9 @@ class LicenseDetailsForm extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              20.height,
               TextFormField(
-                controller: licenseNumberController,
+                controller: controller.licenseNumberController,
                 decoration: const InputDecoration(
                   labelText: 'License Number',
                   border: OutlineInputBorder(),
@@ -77,9 +81,9 @@ class LicenseDetailsForm extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              20.height,
               TextFormField(
-                controller: ammunitionLimitController,
+                controller: controller.ammunitionLimitController,
                 decoration: const InputDecoration(
                   labelText: 'Ammunition Limit',
                   border: OutlineInputBorder(),
@@ -91,21 +95,21 @@ class LicenseDetailsForm extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              20.height,
               DropdownButtonFormField<String>(
-                value: weaponType,
+                value: controller.caliber.value,
                 decoration: const InputDecoration(
-                  labelText: 'Weapon Type',
+                  labelText: 'Caliber',
                   border: OutlineInputBorder(),
                 ),
-                items: ['Anti Material', 'Carbine'].map((String value) {
+                items: AppConstants.caliber.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(),
                 onChanged: (newValue) {
-                  weaponType = newValue!;
+                  controller.caliber.value = newValue!;
                 },
                 validator: (value) {
                   if (value == null) {
@@ -114,14 +118,19 @@ class LicenseDetailsForm extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              20.height,
               TextFormField(
-                controller: dateOfIssuanceController,
+                controller: controller.dateOfIssuanceController,
+                readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'Date of Issuance',
                   border: OutlineInputBorder(),
+                  suffixIcon: Icon(Icons.date_range),
                   hintText: 'DD/MM/YYYY',
                 ),
+                onTap: () async {
+                  controller.dateOfIssuanceController.text = await datePicker();
+                },
                 keyboardType: TextInputType.datetime,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -134,14 +143,19 @@ class LicenseDetailsForm extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              20.height,
               TextFormField(
-                controller: validTillController,
+                readOnly: true,
+                controller: controller.validTillController,
                 decoration: const InputDecoration(
                   labelText: 'Valid Till',
                   border: OutlineInputBorder(),
+                  suffixIcon: Icon(Icons.date_range),
                   hintText: 'DD/MM/YYYY',
                 ),
+                onTap: () async {
+                  controller.validTillController.text = await datePicker();
+                },
                 keyboardType: TextInputType.datetime,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -154,22 +168,21 @@ class LicenseDetailsForm extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              20.height,
               DropdownButtonFormField<String>(
-                value: jurisdiction,
+                value: controller.jurisdiction.value,
                 decoration: const InputDecoration(
                   labelText: 'Jurisdiction',
                   border: OutlineInputBorder(),
                 ),
-                items:
-                    ['All Pakistan', 'Provincial - Punjab'].map((String value) {
+                items: AppConstants.jurisdictions.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(),
                 onChanged: (newValue) {
-                  jurisdiction = newValue!;
+                  controller.jurisdiction.value = newValue!;
                 },
                 validator: (value) {
                   if (value == null) {
@@ -178,36 +191,54 @@ class LicenseDetailsForm extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
-              TextFormField(
-                controller: issuanceQuotaController,
+              20.height,
+              DropdownButtonFormField<String>(
+                value: controller.issuaingQuota.value,
                 decoration: const InputDecoration(
                   labelText: 'Issuance Quota',
                   border: OutlineInputBorder(),
                 ),
+                items: AppConstants.issuingQuota.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  controller.issuaingQuota.value = newValue!;
+                },
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
+                  if (value == null) {
                     return 'Issuance Quota is required';
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Implement file picker here
-                },
-                child: const Text('Upload License Picture'),
-              ),
-              const SizedBox(height: 20),
+              20.height,
+              Obx(() {
+                return controller.licensePicture.value == null
+                    ? DarkButton(
+                        onTap: () async {
+                          String? path = await pickImage(controller.picker);
+                          if (path != null && path.isNotEmpty) {
+                            controller.licensePicture.value = File(path);
+                          }
+                        },
+                        text: "Upload License Picture",
+                      )
+                    : Image.file(
+                        controller.licensePicture.value!,
+                        height: 200,
+                        width: double.infinity,
+                        fit: BoxFit.contain,
+                      );
+              }),
+              10.height,
               DarkButton(
-                onTap: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Process the form data
-                  }
-                },
+                onTap: controller.saveLicenseForm,
                 text: "Submit",
               ),
+              20.height
             ],
           ),
         ),

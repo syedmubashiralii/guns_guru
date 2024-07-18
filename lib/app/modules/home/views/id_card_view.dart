@@ -1,13 +1,7 @@
-import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:guns_guru/app/modules/home/controllers/cnic_scanner.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
-import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
-import 'package:guns_guru/app/modules/home/views/auth_view.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -65,7 +59,10 @@ class IDCardScreen extends GetView<HomeController> {
               }),
             ),
             Spacer(),
-            DarkButton(onTap: controller.loadRecordFromCard,text: "Upload",),
+            DarkButton(
+              onTap: controller.loadRecordFromCard,
+              text: "Upload",
+            ),
             20.height,
           ],
         ),
@@ -73,4 +70,3 @@ class IDCardScreen extends GetView<HomeController> {
     );
   }
 }
-
