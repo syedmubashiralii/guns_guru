@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/views/add_license_view.dart';
+import 'package:guns_guru/app/modules/home/views/license_detail_view.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
@@ -38,7 +39,7 @@ class LicenseListView extends GetView<HomeController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Welcome ${controller.userModel![AppConstants.Name]}",
+              "Welcome ${controller.userModel!.value[AppConstants.Name]}",
               style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.black.withOpacity(.7)),
@@ -51,16 +52,16 @@ class LicenseListView extends GetView<HomeController> {
             10.height,
             Expanded(
               child: controller.userModel == null ||
-                      !controller.userModel!.containsKey(AppConstants.license)
+                      !controller.userModel!.value.containsKey(AppConstants.license)
                   ? const Center(
                       child: Text("No License Found"),
                     )
                   : ListView.builder(
                       itemCount:
-                          controller.userModel![AppConstants.license].length,
+                          controller.userModel!.value[AppConstants.license].length,
                       itemBuilder: (context, index) {
                         final license =
-                            controller.userModel![AppConstants.license][index];
+                            controller.userModel!.value[AppConstants.license][index];
                         return Container(
                           margin: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 10),
@@ -79,6 +80,10 @@ class LicenseListView extends GetView<HomeController> {
                             ],
                           ),
                           child: ListTile(
+                            onTap: (){
+                              controller.selectedLicenseIndex.value=index;
+                              Get.to(const LicenseDetailView());
+                            },
                             title: Text(
                                 'License Number: ${license[AppConstants.licenseNumber]}'),
                             subtitle: Column(

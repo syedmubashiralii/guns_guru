@@ -19,6 +19,19 @@ class AppConstants {
   static String licenseJurisdiction='licenseJurisdiction';
   static String licenseIssuaingQuota='licenseIssuaingQuota';
   static String licensePicture='licensePicture';
+  static String ammunitionDetail='ammunitionDetail';
+  static String weaponDetails='weaponDetails';
+  static String weaponCaliber='weaponCaliber';
+  static String weaponType='weaponType';
+  static String weaponNo='weaponNo';
+  static String weaponMake='weaponMake';
+  static String weaponModel='weaponModel';
+  static const String ammunitionPurchaseDate = 'ammunitionPurchaseDate';
+  static const String ammunitionPurchasedFrom = 'ammunitionPurchasedFrom';
+  static const String ammunitionBrand = 'ammunitionBrand';
+  static const String ammunitionCaliber = 'ammunitionCaliber';
+  static const String ammunitionQuantityPurchased = 'ammunitionQuantityPurchased';
+
 
   static List<String> issuingAuthorities = [
     "Islamabad Capital Territory Administration",
@@ -54,5 +67,13 @@ class AppConstants {
     "12 Gauge",
     "10mm Auto",
     ".50 BMG"
+  ];
+
+  static List<String> make = [
+    "Make",
+  ];
+
+  static List<String> model = [
+    "Model",
   ];
 }

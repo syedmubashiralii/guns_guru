@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:guns_guru/app/modules/home/controllers/cnic_scanner.dart';
@@ -27,12 +28,14 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 class HomeController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final licenseFormKey = GlobalKey<FormState>();
+  final weaponFormKey = GlobalKey<FormState>();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final ImagePicker picker = ImagePicker();
   final firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   Rx<File?> frontImage = Rx<File?>(null);
   Rx<File?> backImage = Rx<File?>(null);
+  RxInt selectedLicenseIndex = 0.obs;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController cnicController = TextEditingController();
@@ -46,14 +49,21 @@ class HomeController extends GetxController {
   TextEditingController ammunitionLimitController = TextEditingController();
   TextEditingController dateOfIssuanceController = TextEditingController();
   TextEditingController validTillController = TextEditingController();
+  //weapon fields
+  TextEditingController weaponTypeController = TextEditingController();
+  TextEditingController weaponNumberController = TextEditingController();
 
   RxString caliber = '9mm'.obs;
   RxString issuingAuthority = "Sindh Home Department".obs;
   RxString jurisdiction = "All Pakistan".obs;
   RxString issuaingQuota = "CM Quota".obs;
   Rx<File?> licensePicture = Rx<File?>(null);
+  RxString weaponCaliber = "9mm".obs;
+  RxString weaponMake = "Make".obs;
+  RxString weaponModel = "Model".obs;
+
   //
-  Map<String, dynamic>? userModel;
+  RxMap<String, dynamic>? userModel;
 
   @override
   void onReady() {
@@ -76,24 +86,24 @@ class HomeController extends GetxController {
     }
   }
 
-  onLoginSuccesfull(){
+  onLoginSuccesfull() {
     if (userModel != null &&
-          userModel!.containsKey(AppConstants.CNICFrontSide) &&
-          userModel![AppConstants.CNICFrontSide].toString().isNotEmpty) {
-        if (userModel!.containsKey(AppConstants.Name) &&
-            userModel![AppConstants.Name].toString().isNotEmpty) {
-          if (userModel!.containsKey(AppConstants.license) &&
-              userModel![AppConstants.license].isNotEmpty) {
-            Get.to(const LicenseListView());
-          } else {
-            Get.to(AddLicenseView());
-          }
+        userModel!.value.containsKey(AppConstants.CNICFrontSide) &&
+        userModel!.value[AppConstants.CNICFrontSide].toString().isNotEmpty) {
+      if (userModel!.value.containsKey(AppConstants.Name) &&
+          userModel!.value[AppConstants.Name].toString().isNotEmpty) {
+        if (userModel!.value.containsKey(AppConstants.license) &&
+            userModel!.value[AppConstants.license].isNotEmpty) {
+          Get.to(const LicenseListView());
         } else {
-          Get.off(UserProfileView());
+          Get.to(AddLicenseView());
         }
       } else {
-        Get.off(IDCardScreen());
+        Get.off(UserProfileView());
       }
+    } else {
+      Get.off(IDCardScreen());
+    }
   }
 
   User? getLoggedFirebaseUser() {
@@ -164,7 +174,7 @@ class HomeController extends GetxController {
       if (Get.isDialogOpen!) {
         Get.back();
       }
-     onLoginSuccesfull();
+      onLoginSuccesfull();
     } catch (e) {
       if (Get.isDialogOpen!) {
         Get.back();
@@ -186,7 +196,7 @@ class HomeController extends GetxController {
       if (documentSnapshot.exists) {
         Map<String, dynamic> data =
             documentSnapshot.data() as Map<String, dynamic>;
-        userModel = data;
+        userModel = data.obs;
       } else {
         // Document does not exist, create it with default values
         final defaultData = {
@@ -202,6 +212,7 @@ class HomeController extends GetxController {
         await firestore.collection('users').doc(documentId).set(defaultData);
       }
     } catch (error) {
+      print(error.toString());
       Get.snackbar('Error', 'Failed to load user data');
     }
   }
@@ -301,7 +312,8 @@ class HomeController extends GetxController {
       String? licensePic = await uploadImage(File(licensePicture.value!.path));
 
       List<Map<String, dynamic>> licenses = [];
-      if (userModel != null && userModel!.containsKey(AppConstants.license)) {
+      if (userModel != null &&
+          userModel!.value.containsKey(AppConstants.license)) {
         licenses =
             List<Map<String, dynamic>>.from(userModel![AppConstants.license]);
       }
@@ -332,8 +344,44 @@ class HomeController extends GetxController {
     }
   }
 
-  signOut(){
+  Future<void> saveWeaponDetail() async {
+    if (weaponFormKey.currentState?.validate() ?? false) {
+      Get.back();
+      Get.dialog(const LoadingDialog());
+      Map<String, dynamic> weaponDetailValue = {
+        AppConstants.weaponCaliber: weaponCaliber.value,
+        AppConstants.weaponType: weaponTypeController.text,
+        AppConstants.weaponNo: weaponNumberController.text,
+        AppConstants.weaponMake: weaponMake.value,
+        AppConstants.weaponModel: weaponModel.value,
+      };
+      var licenses = userModel![AppConstants.license];
+      if (licenses != null &&
+          selectedLicenseIndex.value >= 0 &&
+          selectedLicenseIndex.value < licenses.length) {
+        licenses[selectedLicenseIndex.value][AppConstants.weaponDetails] =
+            weaponDetailValue;
+        await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
+          AppConstants.license: licenses,
+        });
+        await loadUserData(firebaseAuth.currentUser!.uid);
+        userModel!.refresh();
+        if (Get.isDialogOpen!) {
+          Get.back();
+        }
+      } else {
+        log("Invalid license index or licenses are null");
+      }
+    } else {
+      if (Get.isDialogOpen!) {
+        Get.back();
+      }
+      log("Form validation failed");
+    }
+  }
+
+  signOut() {
     firebaseAuth.signOut();
-    Get.offAll(SplashView());
+    Get.offAll(const SplashView());
   }
 }
