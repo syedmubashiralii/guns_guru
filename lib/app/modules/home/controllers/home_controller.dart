@@ -11,6 +11,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:guns_guru/app/modules/home/controllers/cnic_scanner.dart';
+import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
 import 'package:guns_guru/app/modules/home/views/auth_view.dart';
 import 'package:guns_guru/app/modules/home/views/add_license_view.dart';
@@ -69,6 +70,7 @@ class HomeController extends GetxController {
   void onReady() {
     super.onReady();
     isUserLogged();
+    Get.put(HomeExtensionController());
   }
 
   Future<bool> isUserLogged() async {

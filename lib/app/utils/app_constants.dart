@@ -33,6 +33,21 @@ class AppConstants {
   static const String ammunitionQuantityPurchased = 'ammunitionQuantityPurchased';
 
 
+  static const String weaponFiringRecord = 'weaponFiringRecord';
+  static const String weaponFiringDate = 'weaponfiringDate';
+  static const String weaponFiringLocation = 'weaponFiringLocation';
+  static const String weaponFiringShotsFired = 'weaponFiringShotsFired';
+  static const String weaponFiringNotes = 'weaponFiringNotes';
+
+
+
+   static const String weaponServiceRecord = 'weaponServiceRecord';
+  static const String weaponServiceDate = 'weaponServiceDate';
+  static const String weaponServicePartsChanged = 'weaponServicePartsChanged';
+  static const String weaponServiceDoneBy = 'weaponServiceDoneBy';
+  static const String weaponServiceNotes = 'weaponServiceNotes';
+
+
   static List<String> issuingAuthorities = [
     "Islamabad Capital Territory Administration",
     "Punjab Home Department",

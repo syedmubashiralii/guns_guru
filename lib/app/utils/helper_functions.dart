@@ -32,10 +32,16 @@ Future<String> datePicker() async {
   );
 
   if (picked != null) {
-    var month=picked.month<10?"0${picked.month}":"${picked.month}";
-    var day=picked.day<10?"0${picked.day}":"${picked.day}";
+    var month = picked.month < 10 ? "0${picked.month}" : "${picked.month}";
+    var day = picked.day < 10 ? "0${picked.day}" : "${picked.day}";
     return "$day/$month/${picked.year}";
   } else {
     return "";
+  }
+}
+
+closeDialog() {
+  if (Get.isDialogOpen!) {
+    Get.back();
   }
 }
