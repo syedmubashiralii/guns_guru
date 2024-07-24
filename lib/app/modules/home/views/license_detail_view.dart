@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:guns_guru/app/modules/home/controllers/add_ammunition_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/views/add_ammunition_stock_view.dart';
 import 'package:guns_guru/app/modules/home/views/add_weapon_detail.dart';
+import 'package:guns_guru/app/modules/home/views/weapon_logbook_view.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/custom_container.dart';
@@ -14,6 +15,8 @@ class LicenseDetailView extends GetView<HomeController> {
   const LicenseDetailView({
     Key? key,
   }) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +35,6 @@ class LicenseDetailView extends GetView<HomeController> {
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Obx(() {
-            var license = controller.userModel!.value[AppConstants.license]
-                [controller.selectedLicenseIndex.value];
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -48,22 +49,25 @@ class LicenseDetailView extends GetView<HomeController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                          'License Number: ${license[AppConstants.licenseNumber]}'),
+                          'License Number: ${controller.userModel!.value[AppConstants.license][controller.selectedLicenseIndex.value][AppConstants.licenseNumber]}'),
                       Text(
-                          'Weapon No: ${license[AppConstants.licenseTrackingNumber]}'),
-                      Text('Type: ${license[AppConstants.licenseCalibre]}'),
+                          'Weapon No: ${controller.userModel!.value[AppConstants.license][controller.selectedLicenseIndex.value][AppConstants.licenseTrackingNumber]}'),
                       Text(
-                          'Ammunition Limit: ${license[AppConstants.licenseAmmunitionLimit]}'),
+                          'Type: ${controller.userModel!.value[AppConstants.license][controller.selectedLicenseIndex.value][AppConstants.licenseCalibre]}'),
                       Text(
-                          'Issuance Date: ${license[AppConstants.licenseDateOfIssuance]}'),
+                          'Ammunition Limit: ${controller.userModel!.value[AppConstants.license][controller.selectedLicenseIndex.value][AppConstants.licenseAmmunitionLimit]}'),
                       Text(
-                          'Valid Till: ${license[AppConstants.licenseValidTill]}'),
+                          'Issuance Date: ${controller.userModel!.value[AppConstants.license][controller.selectedLicenseIndex.value][AppConstants.licenseDateOfIssuance]}'),
                       Text(
-                          'Issuing Authority: ${license[AppConstants.licenseIssuingAuthority]}'),
+                          'Valid Till: ${controller.userModel!.value[AppConstants.license][controller.selectedLicenseIndex.value][AppConstants.licenseValidTill]}'),
                       Text(
-                          'Jurisdiction: ${license[AppConstants.licenseJurisdiction]}'),
+                          'Issuing Authority: ${controller.userModel!.value[AppConstants.license][controller.selectedLicenseIndex.value][AppConstants.licenseIssuingAuthority]}'),
+                      Text(
+                          'Jurisdiction: ${controller.userModel!.value[AppConstants.license][controller.selectedLicenseIndex.value][AppConstants.licenseJurisdiction]}'),
                       Image.network(
-                        license[AppConstants.licensePicture],
+                        controller.userModel!.value[AppConstants.license]
+                                [controller.selectedLicenseIndex.value]
+                            [AppConstants.licensePicture],
                         width: 100,
                         height: 100,
                         fit: BoxFit.cover,
@@ -82,23 +86,28 @@ class LicenseDetailView extends GetView<HomeController> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      license.containsKey(AppConstants.weaponDetails)
+                      controller
+                              .userModel!
+                              .value[AppConstants.license]
+                                  [controller.selectedLicenseIndex.value]
+                              .containsKey(AppConstants.weaponDetails)
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                    'Weapon No: ${license[AppConstants.weaponDetails][AppConstants.weaponNo]}'),
+                                    'Weapon No: ${controller.userModel!.value[AppConstants.license][controller.selectedLicenseIndex.value][AppConstants.weaponDetails][AppConstants.weaponNo]}'),
                                 Text(
-                                    'Weapon Type: ${license[AppConstants.weaponDetails][AppConstants.weaponType]}'),
+                                    'Weapon Type: ${controller.userModel!.value[AppConstants.license][controller.selectedLicenseIndex.value][AppConstants.weaponDetails][AppConstants.weaponType]}'),
                                 15.height,
                                 Container(
                                   width: Get.width * .54,
                                   child: DarkButton(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Get.to(WeaponLogBookView());
+                                    },
                                     text: 'Manage Weapon logbook',
                                   ),
-                                ),
-                                // Add more weapon details here
+                                )
                               ],
                             )
                           : Column(
@@ -111,15 +120,14 @@ class LicenseDetailView extends GetView<HomeController> {
                                       color: Colors.black.withOpacity(.7)),
                                 ),
                                 15.height,
-                                Container(
-                                  width: Get.width * .35,
-                                  child: DarkButton(
-                                    onTap: () {
-                                      Get.to(const AddWeaponDetail());
-                                    },
-                                    text: 'Add Weapon',
-                                  ),
-                                ),
+                                SizedBox(
+                                    width: Get.width * .35,
+                                    child: DarkButton(
+                                      onTap: () {
+                                        Get.to(const AddWeaponDetail());
+                                      },
+                                      text: 'Add Weapon',
+                                    )),
                               ],
                             ),
                     ],
@@ -137,12 +145,22 @@ class LicenseDetailView extends GetView<HomeController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       10.height,
-                      license.containsKey(AppConstants.weaponDetails) &&
-                              license.containsKey(AppConstants.ammunitionDetail)
+                      controller
+                                  .userModel!
+                                  .value[AppConstants.license]
+                                      [controller.selectedLicenseIndex.value]
+                                  .containsKey(AppConstants.weaponDetails) &&
+                              controller
+                                  .userModel!
+                                  .value[AppConstants.license]
+                                      [controller.selectedLicenseIndex.value]
+                                  .containsKey(AppConstants.ammunitionDetail)
                           ? Column(
                               children: [
-                                for (var record in license[
-                                    AppConstants.ammunitionDetail]) ...[
+                                for (var record in controller.userModel!.value[
+                                            AppConstants.license]
+                                        [controller.selectedLicenseIndex.value]
+                                    [AppConstants.ammunitionDetail]) ...[
                                   Container(
                                     margin: EdgeInsets.all(4),
                                     decoration: BoxDecoration(
@@ -166,12 +184,16 @@ class LicenseDetailView extends GetView<HomeController> {
                                   color: Colors.black.withOpacity(.7)),
                             ),
                       10.height,
-                      license.containsKey(AppConstants.weaponDetails)
+                      controller
+                              .userModel!
+                              .value[AppConstants.license]
+                                  [controller.selectedLicenseIndex.value]
+                              .containsKey(AppConstants.weaponDetails)
                           ? Container(
                               width: Get.width * .3,
                               child: DarkButton(
                                 onTap: () {
-                                  Get.put(AddAmmunitionController());
+                                 
                                   Get.to(AddAmmunitionStockView());
                                 },
                                 text: 'Add Stock',

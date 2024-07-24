@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:guns_guru/app/modules/home/controllers/add_ammunition_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
@@ -11,7 +11,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '../controllers/home_controller.dart';
 
-class AddAmmunitionStockView extends GetView<AddAmmunitionController> {
+class AddAmmunitionStockView extends GetView<HomeExtensionController> {
   const AddAmmunitionStockView({super.key});
 
   @override
