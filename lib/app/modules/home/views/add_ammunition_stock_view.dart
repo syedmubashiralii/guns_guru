@@ -6,8 +6,8 @@ import 'package:guns_guru/app/modules/home/controllers/home_extension_controller
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
+import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 import '../controllers/home_controller.dart';
 

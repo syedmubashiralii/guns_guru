@@ -6,7 +6,7 @@ import 'package:guns_guru/app/modules/home/views/license_detail_view.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:guns_guru/app/utils/extensions.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -29,7 +29,8 @@ class LicenseListView extends GetView<HomeController> {
           height: 40,
         ),
         actions: [
-          IconButton(onPressed: controller.signOut, icon: const Icon(Icons.logout))
+          IconButton(
+              onPressed: controller.signOut, icon: const Icon(Icons.logout))
         ],
       ),
       body: Padding(
@@ -39,7 +40,7 @@ class LicenseListView extends GetView<HomeController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Welcome ${controller.userModel!.value[AppConstants.Name]}",
+              "Welcome ${controller.userModel.value.fullname??""}",
               style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.black.withOpacity(.7)),
@@ -51,70 +52,132 @@ class LicenseListView extends GetView<HomeController> {
             ),
             10.height,
             Expanded(
-              child: controller.userModel == null ||
-                      !controller.userModel!.value.containsKey(AppConstants.license)
+              child: controller.userModel.value.license == null ||
+                      controller.userModel.value.license!.isEmpty
                   ? const Center(
                       child: Text("No License Found"),
                     )
                   : ListView.builder(
-                      itemCount:
-                          controller.userModel!.value[AppConstants.license].length,
+                      itemCount: controller
+                          .userModel.value.license!.length,
                       itemBuilder: (context, index) {
-                        final license =
-                            controller.userModel!.value[AppConstants.license][index];
+                        final license = controller
+                            .userModel.value.license![index];
+                        String weaponNo = license
+                                    .weaponDetails!=null &&
+                                license.weaponDetails!
+                                    .weaponNo!=null
+                            ? license.weaponDetails!.weaponNo ?? "N/A"
+                            : 'N/A';
                         return Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: Colors.black.withOpacity(0.2)),
-                            // borderRadius: BorderRadius.circular(10),÷\
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                spreadRadius: 1,
-                                blurRadius: 1,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                          child: ListTile(
-                            onTap: (){
-                              controller.selectedLicenseIndex.value=index;
-                              Get.to(const LicenseDetailView());
-                            },
-                            title: Text(
-                                'License Number: ${license[AppConstants.licenseNumber]}'),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    'Tracking No: ${license[AppConstants.licenseTrackingNumber]}'),
-                                Text(
-                                    'Type: ${license[AppConstants.licenseCalibre]}'),
+                            padding: const EdgeInsets.all(12),
+                            margin: const EdgeInsets.symmetric(vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color: Colors.black.withOpacity(0.2)),
+                              // borderRadius: BorderRadius.circular(10),÷\
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 1,
+                                  blurRadius: 1,
+                                  offset: const Offset(0, 1),
+                                ),
                               ],
                             ),
-                            leading: Image.network(
-                              license[AppConstants.licensePicture],
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                            ),
-                            trailing: CircleAvatar(
-                                radius: 12,
-                                backgroundColor: ColorHelper.primaryColor,
-                                child: const Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.white,
-                                  size: 12,
-                                )),
-                          ),
-                        );
+                            child: InkWell(
+                              onTap: () {
+                                controller.selectedLicenseIndex.value = index;
+                                Get.to(const LicenseDetailView());
+                              },
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        license.licensePicture??""),
+                                  ),
+                                  15.width,
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${license.licenseNumber??""}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          'License No',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 10),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          weaponNo,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              color: weaponNo == "N/A"
+                                                  ? Colors.red
+                                                  : Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          'Weapon No',
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 10),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          license.licenseCalibre??"",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          'Caliber',
+                                          style: TextStyle(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 10),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  15.width,
+                                  CircleAvatar(
+                                      radius: 10,
+                                      backgroundColor: ColorHelper.primaryColor,
+                                      child: const Icon(
+                                        Icons.arrow_forward_ios,
+                                        color: Colors.white,
+                                        size: 12,
+                                      )),
+                                ],
+                              ),
+                            ));
                       },
                     ),
             ),
-            20.height,
             DarkButton(
                 onTap: () {
                   Get.to(AddLicenseView());

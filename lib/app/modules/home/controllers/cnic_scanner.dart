@@ -3,7 +3,6 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class CnicScanner {
   /// it will pick your image either form Gallery or from Camera

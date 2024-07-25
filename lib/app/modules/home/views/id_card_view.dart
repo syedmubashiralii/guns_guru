@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:guns_guru/app/utils/extensions.dart';
 
 class IDCardScreen extends GetView<HomeController> {
   @override
@@ -15,7 +15,7 @@ class IDCardScreen extends GetView<HomeController> {
           centerTitle: true,
           title: const Text(
             'Upload ID Card',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white,fontSize: 15),
           )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

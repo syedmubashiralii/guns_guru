@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:guns_guru/app/utils/extensions.dart';
 
 import '../controllers/home_controller.dart';
 

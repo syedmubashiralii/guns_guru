@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/banner_card.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:guns_guru/app/utils/extensions.dart';
 
 class WeaponDetailContainer extends StatelessWidget {
   const WeaponDetailContainer({
     super.key,
-    required this.license,
+    required this.weaponDetails,
   });
 
-  final  license;
+  final WeaponDetails weaponDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class WeaponDetailContainer extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Text(license[AppConstants.weaponMake],
+                  Text(weaponDetails.weaponMake??"",
                       style: TextStyle(
                           fontSize: 18, fontWeight: FontWeight.bold)),
                   Text('Make',
@@ -33,7 +34,7 @@ class WeaponDetailContainer extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Text(license[AppConstants.weaponModel],
+                  Text(weaponDetails.weaponModel??"",
                       style: TextStyle(
                           fontSize: 18, fontWeight: FontWeight.bold)),
                   Text('Model',
@@ -41,7 +42,7 @@ class WeaponDetailContainer extends StatelessWidget {
                           fontSize: 12, fontWeight: FontWeight.normal)),
                 ],
               ),
-              Text(license[AppConstants.weaponCaliber],
+              Text(weaponDetails.weaponCaliber??"",
                   style: TextStyle(
                       fontSize: 18, fontWeight: FontWeight.bold)),
             ],
@@ -54,7 +55,7 @@ class WeaponDetailContainer extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Text(license[AppConstants.weaponNo],
+                  Text(weaponDetails.weaponNo??"",
                       style: TextStyle(
                           fontSize: 18, fontWeight: FontWeight.bold)),
                   Text('Weapon No',

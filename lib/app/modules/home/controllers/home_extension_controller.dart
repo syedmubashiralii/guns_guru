@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
-import 'package:guns_guru/app/modules/home/views/add_weapon_firing_record.dart';
+import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
-import 'package:guns_guru/app/utils/default_snackbar.dart';
 import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 
@@ -20,7 +19,7 @@ class HomeExtensionController extends GetxController {
   TextEditingController caliberController = TextEditingController();
   TextEditingController quantityPurchasedController = TextEditingController();
 
-  ///
+  
   ///
   final firingRecordKey = GlobalKey<FormState>();
   final firingDateController = TextEditingController();
@@ -29,7 +28,6 @@ class HomeExtensionController extends GetxController {
   final firingNotesController = TextEditingController();
 
   ////
-  ///
   final serviceRecordKey = GlobalKey<FormState>();
   final serviceDateController = TextEditingController();
   final serviceDoneByController = TextEditingController();
@@ -49,39 +47,33 @@ class HomeExtensionController extends GetxController {
         AppConstants.ammunitionQuantityPurchased:
             quantityPurchasedController.text,
       };
-      var licenses = homeController.userModel![AppConstants.license];
-      if (licenses != null &&
-          homeController.selectedLicenseIndex.value >= 0 &&
+      var licenses = homeController.userModel.value.license ?? [];
+      if (homeController.selectedLicenseIndex.value >= 0 &&
           homeController.selectedLicenseIndex.value < licenses.length) {
         if (licenses[homeController.selectedLicenseIndex.value]
-                [AppConstants.ammunitionDetail] ==
+                .ammunitionDetail ==
             null) {
-          licenses[homeController.selectedLicenseIndex.value]
-              [AppConstants.ammunitionDetail] = [];
+          licenses[homeController.selectedLicenseIndex.value].ammunitionDetail =
+              [];
         }
         licenses[homeController.selectedLicenseIndex.value]
-                [AppConstants.ammunitionDetail]
-            .add(ammoDetailValue);
-        log(licenses[homeController.selectedLicenseIndex.value]
-                [AppConstants.ammunitionDetail]
-            .toString());
+            .ammunitionDetail!
+            .add(AmmunitionDetail.fromJson(ammoDetailValue));
+
         await homeController.updateUserSpecificData(
             homeController.firebaseAuth.currentUser!.uid, {
-          AppConstants.license: licenses,
+          AppConstants.license:
+              licenses.map((license) => license.toMap()).toList()
         });
         await homeController
             .loadUserData(homeController.firebaseAuth.currentUser!.uid);
-        homeController.userModel!.refresh();
-        if (Get.isDialogOpen!) {
-          Get.back();
-        }
+        homeController.userModel.refresh();
+        closeDialog();
       } else {
         log("Invalid license index or licenses are null");
       }
     } else {
-      if (Get.isDialogOpen!) {
-        Get.back();
-      }
+      closeDialog();
       log("Form validation failed");
     }
   }
@@ -96,29 +88,27 @@ class HomeExtensionController extends GetxController {
         AppConstants.weaponFiringShotsFired: firingShotsFiredController.text,
       };
       try {
-        var licenses = homeController.userModel![AppConstants.license];
+        var licenses = homeController.userModel!.value.license;
         if (licenses != null &&
             homeController.selectedLicenseIndex.value >= 0 &&
             homeController.selectedLicenseIndex.value < licenses.length) {
           if (licenses[homeController.selectedLicenseIndex.value]
-                  [AppConstants.weaponFiringRecord] ==
+                  .weaponFiringRecord ==
               null) {
             licenses[homeController.selectedLicenseIndex.value]
-                [AppConstants.weaponFiringRecord] = [];
+                .weaponFiringRecord = [];
           }
           licenses[homeController.selectedLicenseIndex.value]
-                  [AppConstants.weaponFiringRecord]
-              .add(firingRecord);
-          log(licenses[homeController.selectedLicenseIndex.value]
-                  [AppConstants.ammunitionDetail]
-              .toString());
+              .weaponFiringRecord!
+              .add(WeaponFiringRecord.fromJson(firingRecord));
           await homeController.updateUserSpecificData(
               homeController.firebaseAuth.currentUser!.uid, {
-            AppConstants.license: licenses,
+            AppConstants.license:
+                licenses.map((license) => license.toMap()).toList(),
           });
           await homeController
               .loadUserData(homeController.firebaseAuth.currentUser!.uid);
-          homeController.userModel!.refresh();
+          homeController.userModel.refresh();
         } else {
           log("Invalid license index or licenses are null");
         }
@@ -141,22 +131,23 @@ class HomeExtensionController extends GetxController {
         AppConstants.weaponServiceNotes: serviceNotesController.text,
       };
       try {
-        var licenses = homeController.userModel![AppConstants.license];
+        var licenses = homeController.userModel!.value.license;
         if (licenses != null &&
             homeController.selectedLicenseIndex.value >= 0 &&
             homeController.selectedLicenseIndex.value < licenses.length) {
           if (licenses[homeController.selectedLicenseIndex.value]
-                  [AppConstants.weaponServiceRecord] ==
+                  .weaponServiceRecord ==
               null) {
             licenses[homeController.selectedLicenseIndex.value]
-                [AppConstants.weaponServiceRecord] = [];
+                .weaponServiceRecord = [];
           }
           licenses[homeController.selectedLicenseIndex.value]
-                  [AppConstants.weaponServiceRecord]
-              .add(serviceRecord);
+              .weaponServiceRecord!
+              .add(WeaponServiceRecord.fromJson(serviceRecord));
           await homeController.updateUserSpecificData(
               homeController.firebaseAuth.currentUser!.uid, {
-            AppConstants.license: licenses,
+            AppConstants.license:
+                licenses.map((license) => license.toMap()).toList(),
           });
           await homeController
               .loadUserData(homeController.firebaseAuth.currentUser!.uid);

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:guns_guru/app/utils/extensions.dart';
 
 class AuthView extends GetView<HomeController> {
   const AuthView({super.key});

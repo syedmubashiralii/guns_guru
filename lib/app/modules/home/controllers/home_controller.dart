@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:guns_guru/app/modules/home/controllers/cnic_scanner.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
+import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/views/auth_view.dart';
 import 'package:guns_guru/app/modules/home/views/add_license_view.dart';
 import 'package:guns_guru/app/modules/home/views/license_list_view.dart';
@@ -20,10 +22,10 @@ import 'package:guns_guru/app/modules/home/views/splash_view.dart';
 import 'package:guns_guru/app/modules/home/views/user_profile_view.dart';
 import 'package:guns_guru/app/modules/home/views/id_card_view.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
+import 'package:guns_guru/app/utils/default_snackbar.dart';
 import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class HomeController extends GetxController {
@@ -64,7 +66,8 @@ class HomeController extends GetxController {
   RxString weaponModel = "Model".obs;
 
   //
-  RxMap<String, dynamic>? userModel;
+  // RxMap<String, dynamic>? userModel;
+  Rx<UserModel> userModel = UserModel().obs;
 
   @override
   void onReady() {
@@ -89,13 +92,12 @@ class HomeController extends GetxController {
   }
 
   onLoginSuccesfull() {
-    if (userModel != null &&
-        userModel!.value.containsKey(AppConstants.CNICFrontSide) &&
-        userModel!.value[AppConstants.CNICFrontSide].toString().isNotEmpty) {
-      if (userModel!.value.containsKey(AppConstants.Name) &&
-          userModel!.value[AppConstants.Name].toString().isNotEmpty) {
-        if (userModel!.value.containsKey(AppConstants.license) &&
-            userModel!.value[AppConstants.license].isNotEmpty) {
+    if (userModel.value.cnicFrontSide != null &&
+        userModel.value.cnicFrontSide!.isNotEmpty) {
+      if (userModel.value.fullname != null &&
+          userModel.value.fullname!.isNotEmpty) {
+        if (userModel.value.license != null &&
+            userModel.value.license!.isNotEmpty) {
           Get.to(const LicenseListView());
         } else {
           Get.to(AddLicenseView());
@@ -144,7 +146,7 @@ class HomeController extends GetxController {
         Get.back();
       }
       if (!e.toString().contains('popup_closed_by_user')) {
-        snackBar(Get.context!, title: e.toString());
+        DefaultSnackbar.show("Error",  e.toString());
       }
     }
   }
@@ -182,7 +184,7 @@ class HomeController extends GetxController {
         Get.back();
       }
       if (!e.toString().contains('popup_closed_by_user')) {
-        snackBar(navigator!.context, title: e.toString());
+        DefaultSnackbar.show('Error',  e.toString());
       }
       if (kDebugMode) {
         print("error in signing with google : $e");
@@ -198,20 +200,16 @@ class HomeController extends GetxController {
       if (documentSnapshot.exists) {
         Map<String, dynamic> data =
             documentSnapshot.data() as Map<String, dynamic>;
-        userModel = data.obs;
+        // userModel = data.obs;
+        userModel.value = UserModel.fromJson(data);
+        print(userModel.toJson().toString());
       } else {
         // Document does not exist, create it with default values
-        final defaultData = {
-          AppConstants.Name: '',
-          AppConstants.CNIC: '',
-          AppConstants.DOB: '',
-          AppConstants.Address: '',
-          AppConstants.City: '',
-          AppConstants.CNICFrontSide: '',
-          AppConstants.CNICBackSide: '',
-          AppConstants.UID: documentId,
-        };
-        await firestore.collection('users').doc(documentId).set(defaultData);
+        final defaultData = UserModel();
+        await firestore
+            .collection('users')
+            .doc(documentId)
+            .set(defaultData.toJson());
       }
     } catch (error) {
       print(error.toString());
@@ -238,33 +236,35 @@ class HomeController extends GetxController {
       CollectionReference users =
           FirebaseFirestore.instance.collection('users');
       await users.doc(userId).update(newData);
-      snackBar(navigator!.context, title: 'User data updated successfully');
     } catch (e) {
       print('Error updating user data: $e');
     }
   }
 
   loadRecordFromCard() async {
-    if (frontImage.value != null && backImage.value != null) {
-      Get.dialog(const LoadingDialog());
-      CnicModel cnicModel = await CnicScanner().scanCnic(
-          imageToScan: InputImage.fromFilePath(frontImage.value!.path));
-      nameController.text = cnicModel.cnicHolderName ?? "";
-      dobController.text = cnicModel.cnicHolderDateOfBirth ?? "";
-      cnicController.text = cnicModel.cnicNumber ?? "";
-      String frontSide = await uploadImage(frontImage.value!);
-      await updateUserSpecificData(firebaseAuth.currentUser!.uid,
-          {AppConstants.CNICFrontSide: frontSide});
-      String backSide = await uploadImage(frontImage.value!);
-      await updateUserSpecificData(
-          firebaseAuth.currentUser!.uid, {AppConstants.CNICBackSide: backSide});
-      await loadUserData(firebaseAuth.currentUser!.uid);
-      if (Get.isDialogOpen!) {
-        Get.back();
+    try {
+      if (frontImage.value != null && backImage.value != null) {
+        Get.dialog(const LoadingDialog());
+        CnicModel cnicModel = await CnicScanner().scanCnic(
+            imageToScan: InputImage.fromFilePath(frontImage.value!.path));
+        nameController.text = cnicModel.cnicHolderName ?? "";
+        dobController.text = cnicModel.cnicHolderDateOfBirth ?? "";
+        cnicController.text = cnicModel.cnicNumber ?? "";
+        String frontSide = await uploadImage(frontImage.value!);
+        await updateUserSpecificData(firebaseAuth.currentUser!.uid,
+            {AppConstants.CNICFrontSide: frontSide});
+        String backSide = await uploadImage(frontImage.value!);
+        await updateUserSpecificData(firebaseAuth.currentUser!.uid,
+            {AppConstants.CNICBackSide: backSide});
+        await loadUserData(firebaseAuth.currentUser!.uid);
+        closeDialog();
+        Get.to(UserProfileView());
+      } else {
+        DefaultSnackbar.show('Title',"Please Enter Cnic Images First");
       }
-      Get.to(UserProfileView());
-    } else {
-      snackBar(navigator!.context, title: "Please Enter Cnic Images First");
+    } catch (e) {
+      closeDialog();
+      print(e.toString());
     }
   }
 
@@ -291,9 +291,7 @@ class HomeController extends GetxController {
         AppConstants.City: cityController.text
       });
       await loadUserData(firebaseAuth.currentUser!.uid);
-      if (Get.isDialogOpen!) {
-        Get.back();
-      }
+      closeDialog();
       //TODO: add navigation
       onLoginSuccesfull();
     } else {
@@ -305,7 +303,7 @@ class HomeController extends GetxController {
     if (licenseFormKey.currentState?.validate() ?? false) {
       licenseFormKey.currentState?.save();
       if (licensePicture.value == null) {
-        snackBar(navigator!.context, title: "Please Select license picture");
+        DefaultSnackbar.show('Error', "Please Select license picture");
         return;
       }
 
@@ -313,14 +311,11 @@ class HomeController extends GetxController {
 
       String? licensePic = await uploadImage(File(licensePicture.value!.path));
 
-      List<Map<String, dynamic>> licenses = [];
-      if (userModel != null &&
-          userModel!.value.containsKey(AppConstants.license)) {
-        licenses =
-            List<Map<String, dynamic>>.from(userModel![AppConstants.license]);
-      }
+      List<License> licenses = [];
 
-      licenses.add({
+      licenses = userModel.value.license ?? [];
+
+      licenses.add(License.fromJson({
         AppConstants.licenseTrackingNumber: trackingNumberController.text,
         AppConstants.licenseNumber: licenseNumberController.text,
         AppConstants.licenseAmmunitionLimit: ammunitionLimitController.text,
@@ -331,10 +326,11 @@ class HomeController extends GetxController {
         AppConstants.licenseDateOfIssuance: dateOfIssuanceController.text,
         AppConstants.licenseJurisdiction: jurisdiction.value,
         AppConstants.licensePicture: licensePic
-      });
+      }));
 
       await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
-        AppConstants.license: licenses,
+        AppConstants.license:
+            licenses.map((license) => license.toMap()).toList(),
       });
       await loadUserData(firebaseAuth.currentUser!.uid);
       if (Get.isDialogOpen!) {
@@ -357,17 +353,17 @@ class HomeController extends GetxController {
         AppConstants.weaponMake: weaponMake.value,
         AppConstants.weaponModel: weaponModel.value,
       };
-      var licenses = userModel![AppConstants.license];
-      if (licenses != null &&
-          selectedLicenseIndex.value >= 0 &&
+      var licenses = userModel.value.license ?? [];
+      if (selectedLicenseIndex.value >= 0 &&
           selectedLicenseIndex.value < licenses.length) {
-        licenses[selectedLicenseIndex.value][AppConstants.weaponDetails] =
-            weaponDetailValue;
+        licenses[selectedLicenseIndex.value].weaponDetails =
+            WeaponDetails.fromJson(weaponDetailValue);
         await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
-          AppConstants.license: licenses,
+          AppConstants.license:
+              licenses.map((license) => license.toMap()).toList(),
         });
         await loadUserData(firebaseAuth.currentUser!.uid);
-        userModel!.refresh();
+        userModel.refresh();
         if (Get.isDialogOpen!) {
           Get.back();
         }
@@ -384,6 +380,8 @@ class HomeController extends GetxController {
 
   signOut() {
     firebaseAuth.signOut();
+    GoogleSignIn().signOut();
     Get.offAll(const SplashView());
+    isUserLogged();
   }
 }

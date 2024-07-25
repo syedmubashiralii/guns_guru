@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
+import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/widgets/weapon_detail_container.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/banner_card.dart';
 import 'package:guns_guru/app/utils/dark_button.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:guns_guru/app/utils/extensions.dart';
 
 class AddWeaponFiringRecord extends GetView<HomeExtensionController> {
   @override
   Widget build(BuildContext context) {
-    var license =
-        controller.homeController.userModel!.value[AppConstants.license]
-                [controller.homeController.selectedLicenseIndex.value]
-            [AppConstants.weaponDetails];
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -34,7 +31,14 @@ class AddWeaponFiringRecord extends GetView<HomeExtensionController> {
             const Text('Weapon Firing Record',
                 style: TextStyle(fontWeight: FontWeight.w500)),
             10.height,
-            WeaponDetailContainer(license: license),
+            WeaponDetailContainer(
+                weaponDetails: controller
+                    .homeController
+                    .userModel
+                    .value
+                    .license![
+                        controller.homeController.selectedLicenseIndex.value]
+                    .weaponDetails!),
             20.height,
             BannerCard(
               title: 'FIRING RECORD',
