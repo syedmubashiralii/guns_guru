@@ -18,6 +18,13 @@ bool isNumeric(String s) {
   return double.tryParse(s) != null;
 }
 
+bool isNumericInt(String s) {
+  if (s == null) {
+    return false;
+  }
+  return int.tryParse(s) != null;
+}
+
 String sha256ofString(String input) {
   final bytes = utf8.encode(input);
   final digest = sha256.convert(bytes);

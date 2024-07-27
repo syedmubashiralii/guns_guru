@@ -4,10 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
-import 'package:guns_guru/app/utils/dark_button.dart';
+import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 
-import '../controllers/home_controller.dart';
+import '../../controllers/home_controller.dart';
 
 class AddWeaponDetail extends GetView<HomeController> {
   const AddWeaponDetail({super.key});

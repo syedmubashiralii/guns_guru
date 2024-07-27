@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
-import 'package:guns_guru/app/utils/dark_button.dart';
+import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 
@@ -17,7 +17,11 @@ class AddLicenseView extends GetView<HomeController> {
       appBar: AppBar(
         backgroundColor: ColorHelper.primaryColor,
         foregroundColor: Colors.white,
-        title: const Text('Add License Details'),
+        centerTitle: true,
+        title: const Text(
+          'Add License Details',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -88,9 +92,13 @@ class AddLicenseView extends GetView<HomeController> {
                   labelText: 'Ammunition Limit',
                   border: OutlineInputBorder(),
                 ),
+                keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Ammunition Limit is required';
+                  }
+                  if (!isNumericInt(value)) {
+                    return 'Ammunition Limit must numeric Value';
                   }
                   return null;
                 },

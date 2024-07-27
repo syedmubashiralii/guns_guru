@@ -15,12 +15,12 @@ import 'package:guns_guru/app/modules/home/controllers/cnic_scanner.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
-import 'package:guns_guru/app/modules/home/views/auth_view.dart';
-import 'package:guns_guru/app/modules/home/views/add_license_view.dart';
-import 'package:guns_guru/app/modules/home/views/license_list_view.dart';
-import 'package:guns_guru/app/modules/home/views/splash_view.dart';
-import 'package:guns_guru/app/modules/home/views/user_profile_view.dart';
-import 'package:guns_guru/app/modules/home/views/id_card_view.dart';
+import 'package:guns_guru/app/modules/home/views/auth/auth_view.dart';
+import 'package:guns_guru/app/modules/home/views/license/add_license_view.dart';
+import 'package:guns_guru/app/modules/home/views/license/license_list_view.dart';
+import 'package:guns_guru/app/modules/home/views/auth/splash_view.dart';
+import 'package:guns_guru/app/modules/home/views/auth/add_user_profile_view.dart';
+import 'package:guns_guru/app/modules/home/views/auth/id_card_view.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/default_snackbar.dart';
 import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
@@ -57,13 +57,13 @@ class HomeController extends GetxController {
   TextEditingController weaponNumberController = TextEditingController();
 
   RxString caliber = '9mm'.obs;
-  RxString issuingAuthority = "Sindh Home Department".obs;
+  RxString issuingAuthority = "Sindh".obs;
   RxString jurisdiction = "All Pakistan".obs;
-  RxString issuaingQuota = "CM Quota".obs;
+  RxString issuaingQuota = "Federal Interior Minister".obs;
   Rx<File?> licensePicture = Rx<File?>(null);
   RxString weaponCaliber = "9mm".obs;
-  RxString weaponMake = "Make".obs;
-  RxString weaponModel = "Model".obs;
+  RxString weaponMake = "Glock".obs;
+  RxString weaponModel = "AK-47".obs;
 
   //
   // RxMap<String, dynamic>? userModel;
@@ -104,7 +104,7 @@ class HomeController extends GetxController {
           Get.to(AddLicenseView());
         }
       } else {
-        Get.off(UserProfileView());
+        Get.off(AddUserProfileView());
       }
     } else {
       Get.off(IDCardScreen());
@@ -259,7 +259,7 @@ class HomeController extends GetxController {
             {AppConstants.CNICBackSide: backSide});
         await loadUserData(firebaseAuth.currentUser!.uid);
         closeDialog();
-        Get.to(UserProfileView());
+        Get.to(AddUserProfileView());
       } else {
         DefaultSnackbar.show('Title',"Please Enter Cnic Images First");
       }
@@ -379,9 +379,9 @@ class HomeController extends GetxController {
     }
   }
 
-  signOut() {
-    firebaseAuth.signOut();
-    GoogleSignIn().signOut();
+  signOut()async {
+   await  firebaseAuth.signOut();
+   await GoogleSignIn().signOut();
     Get.offAll(const SplashView());
     isUserLogged();
   }

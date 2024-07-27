@@ -25,7 +25,7 @@ class CustomRadioButton extends StatelessWidget {
             onChanged: onChanged,
           ),
           5.width,
-          Text(title)
+          Flexible(child: Text(title,))
         ],
       ),
     );

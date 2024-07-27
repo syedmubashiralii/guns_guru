@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/routes/app_pages.dart';
@@ -20,7 +21,9 @@ void main() async {
       theme:  ThemeData(
         colorScheme: const ColorScheme.light(primary:  Colors.black),
         buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-        brightness: Brightness.light
+        brightness: Brightness.light,
+            textTheme: GoogleFonts.latoTextTheme(),
+
       ),
         builder: (BuildContext context, Widget? child) {
           final MediaQueryData data = MediaQuery.of(context);
@@ -35,7 +38,6 @@ void main() async {
         debugShowCheckedModeBanner: false,
         title: "Guns Guru",
         initialRoute: AppPages.INITIAL,
-        // theme: ThemeData(fontFamily: "SFProDisplay"),
         getPages: AppPages.routes),
   );
 }

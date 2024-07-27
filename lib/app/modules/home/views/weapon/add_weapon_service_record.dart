@@ -4,9 +4,9 @@ import 'package:guns_guru/app/modules/home/controllers/home_extension_controller
 import 'package:guns_guru/app/modules/home/widgets/weapon_detail_widget.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
-import 'package:guns_guru/app/utils/banner_card.dart';
-import 'package:guns_guru/app/utils/custom_radio_button.dart';
-import 'package:guns_guru/app/utils/dark_button.dart';
+import 'package:guns_guru/app/utils/widgets/banner_card.dart';
+import 'package:guns_guru/app/utils/widgets/custom_radio_button.dart';
+import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 
 class AddWeaponServiceRecord extends GetView<HomeExtensionController> {
@@ -123,6 +123,29 @@ class AddWeaponServiceRecord extends GetView<HomeExtensionController> {
 }
 
 class PartsChangedSection extends GetView<HomeExtensionController> {
+  final List<String> weaponParts = [
+    'Fire Pin',
+    'Barrel',
+    'Trigger',
+    'Hammer',
+    'Slide',
+    'Magazine',
+    'Chamber',
+    'Stock',
+    'Grip',
+    'Muzzle',
+    'Sight',
+    'Bolt',
+    'Receiver',
+    'Recoil Spring',
+    'Safety',
+    'Forearm/Fore-end',
+    'Ejector',
+    'Extractor',
+    'Gas System',
+    'Trigger Guard'
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -133,44 +156,25 @@ class PartsChangedSection extends GetView<HomeExtensionController> {
           style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
         ),
         Wrap(
-          children: [
-            Obx(() {
+          children: weaponParts.map((part) {
+            return Obx(() {
               return CustomRadioButton(
-                firePin1: controller.servicePartsChangedList.value
-                        .contains('Fire Pin')
+                firePin1: controller.servicePartsChangedList.value.contains(part)
                     ? true
                     : false,
                 onChanged: controller.homeController.fromServiceDetail.isTrue
                     ? (v) {}
                     : (v) {
                         if (v == true) {
-                          controller.servicePartsChangedList.add('Fire Pin');
+                          controller.servicePartsChangedList.add(part);
                         } else {
-                          controller.servicePartsChangedList.remove('Fire Pin');
+                          controller.servicePartsChangedList.remove(part);
                         }
                       },
-                title: 'Fire Pin',
+                title: part,
               );
-            }),
-            Obx(() {
-              return CustomRadioButton(
-                firePin1:
-                    controller.servicePartsChangedList.value.contains('Barrel')
-                        ? true
-                        : false,
-                onChanged: controller.homeController.fromServiceDetail.isTrue
-                    ? (v) {}
-                    : (v) {
-                        if (v == true) {
-                          controller.servicePartsChangedList.add('Barrel');
-                        } else {
-                          controller.servicePartsChangedList.remove('Barrel');
-                        }
-                      },
-                title: 'Barrel',
-              );
-            }),
-          ],
+            });
+          }).toList(),
         ),
       ],
     );

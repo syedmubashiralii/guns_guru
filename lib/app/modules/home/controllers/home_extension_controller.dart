@@ -8,11 +8,11 @@ import 'package:get/get_rx/get_rx.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
+import 'package:guns_guru/app/utils/default_snackbar.dart';
 import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 
 class HomeExtensionController extends GetxController {
-
   HomeController homeController = Get.find();
   final ammunitionStockFormKey = GlobalKey<FormState>();
   TextEditingController purchaseDateController = TextEditingController();
@@ -21,7 +21,6 @@ class HomeExtensionController extends GetxController {
   TextEditingController caliberController = TextEditingController();
   TextEditingController quantityPurchasedController = TextEditingController();
 
-  
   ///
   final firingRecordKey = GlobalKey<FormState>();
   final firingDateController = TextEditingController();
@@ -37,10 +36,28 @@ class HomeExtensionController extends GetxController {
 
   RxList servicePartsChangedList = [].obs;
 
-  
-
   Future<void> addAmmunitionStock() async {
     if (ammunitionStockFormKey.currentState?.validate() ?? false) {
+      if (calculateRemainingQuota(
+              homeController
+                      .userModel
+                      .value
+                      .license![homeController.selectedLicenseIndex.value]
+                      .ammunitionDetail ??
+                  [],
+              int.parse(homeController
+                      .userModel
+                      .value
+                      .license![homeController.selectedLicenseIndex.value]
+                      .licenseAmmunitionLimit ??
+                  '0')) <
+          int.parse(quantityPurchasedController.text)) {
+       DefaultSnackbar.show(
+    'Error', "Please verify your remaining quota before entering the record."
+);
+
+        return;
+      }
       Get.back();
       Get.dialog(const LoadingDialog());
       Map<String, dynamic> ammoDetailValue = {

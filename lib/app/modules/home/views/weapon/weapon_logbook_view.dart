@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
-import 'package:guns_guru/app/modules/home/views/add_weapon_firing_record.dart';
-import 'package:guns_guru/app/modules/home/views/add_weapon_service_record.dart';
+import 'package:guns_guru/app/modules/home/views/weapon/add_weapon_firing_record.dart';
+import 'package:guns_guru/app/modules/home/views/weapon/add_weapon_service_record.dart';
 import 'package:guns_guru/app/modules/home/widgets/weapon_detail_widget.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
-import 'package:guns_guru/app/utils/banner_card.dart';
-import 'package:guns_guru/app/utils/dark_button.dart';
+import 'package:guns_guru/app/utils/widgets/banner_card.dart';
+import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/widgets/custom_label_text.dart';
 

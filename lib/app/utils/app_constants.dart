@@ -49,27 +49,22 @@ class AppConstants {
 
 
   static List<String> issuingAuthorities = [
-    "Islamabad Capital Territory Administration",
-    "Punjab Home Department",
-    "Sindh Home Department",
-    "Khyber Pakhtunkhwa Home Department",
-    "Balochistan Home Department",
-    "Azad Jammu and Kashmir Home Department",
-    "Gilgit-Baltistan Home Department"
+    "Federal",
+    "KPK",
+    "Punjab",
+    "Balochistan",
+    "Sindh",
   ];
 
   static List<String> jurisdictions = [
     "All Pakistan",
-    "Islamabad Capital Territory",
+    "KPK",
     "Punjab",
     "Sindh",
-    "Khyber Pakhtunkhwa",
     "Balochistan",
-    "Azad Jammu and Kashmir",
-    "Gilgit-Baltistan"
   ];
 
-  static List<String> issuingQuota = ["CM Quota"];
+  static List<String> issuingQuota = ["Federal Interior Minister","CM","⁠Home Secretary","⁠Home Minister","DC"];
 
   static List<String> caliber = [
     "9mm",
@@ -84,11 +79,53 @@ class AppConstants {
     ".50 BMG"
   ];
 
+  static List<String> serviceType=['Full Service','Partial Service'];
+
   static List<String> make = [
-    "Make",
-  ];
+  "Glock",
+  "Colt",
+  "Kalashnikov Concern",
+  "ArmaLite",
+  "Remington",
+  "Beretta",
+  "Smith & Wesson",
+  "Sig Sauer",
+  "Heckler & Koch",
+  "Winchester",
+  "Ruger",
+  "Mossberg",
+  "FN Herstal",
+  "Springfield Armory",
+  "Magnum Research",
+  "CZ (Česká zbrojovka)",
+  "Benelli",
+  "Walther",
+  "Taurus",
+  "Browning"
+];
+
 
   static List<String> model = [
-    "Model",
-  ];
+  "Glock 17",
+  "Colt M1911",
+  "AK-47",
+  "AR-15",
+  "Remington 870",
+  "Beretta 92",
+  "Smith & Wesson M&P",
+  "Sig Sauer P226",
+  "Heckler & Koch MP5",
+  "Winchester Model 70",
+  "Ruger 10/22",
+  "Mossberg 500",
+  "FN SCAR",
+  "Springfield XD",
+  "Desert Eagle",
+  "CZ 75",
+  "Benelli M4",
+  "Walther PPK",
+  "Taurus PT92",
+  "Browning Hi-Power"
+];
+
 }

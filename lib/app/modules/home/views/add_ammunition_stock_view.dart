@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
-import 'package:guns_guru/app/utils/dark_button.dart';
+import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 
@@ -34,7 +34,7 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                 child: ListView(children: [
                   10.height,
                   const Text(
-                    "WEAPON DETAIL",
+                    "ADD AMMUNITION STOCK",
                     style: TextStyle(
                         fontWeight: FontWeight.w600, color: Colors.black),
                   ),
@@ -43,10 +43,11 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                     controller: controller.purchaseDateController,
                     decoration: const InputDecoration(
                         labelText: 'Purchase Date',
-                         suffixIcon: const Icon(Icons.calendar_today),
+                        suffixIcon: const Icon(Icons.calendar_today),
                         border: OutlineInputBorder(),
                         hintText: 'DD/MM/YYYY'),
                     keyboardType: TextInputType.datetime,
+                    readOnly: true,
                     onTap: () async {
                       DateTime? pickedDate = await showDatePicker(
                         context: context,
@@ -56,7 +57,7 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                       );
                       if (pickedDate != null) {
                         controller.purchaseDateController.text =
-                            "${pickedDate.day<10?'0${pickedDate.day}':pickedDate.day}/${pickedDate.month<10?'0${pickedDate.month}':pickedDate.month}/${pickedDate.year}";
+                            "${pickedDate.day < 10 ? '0${pickedDate.day}' : pickedDate.day}/${pickedDate.month < 10 ? '0${pickedDate.month}' : pickedDate.month}/${pickedDate.year}";
                       }
                     },
                     validator: (value) {
@@ -80,7 +81,6 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                     controller: controller.purchasedFromController,
                     decoration: const InputDecoration(
                         labelText: 'Purchased From',
-                       
                         border: OutlineInputBorder(),
                         hintText: 'Purchased From'),
                     keyboardType: TextInputType.datetime,
@@ -138,6 +138,9 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                       return null;
                     },
                   ),
+                  10.height,
+                  Text(
+                      "Note: Your Remaining Quota is ${calculateRemainingQuota(controller.homeController.userModel.value.license![controller.homeController.selectedLicenseIndex.value].ammunitionDetail ?? [], int.parse(controller.homeController.userModel.value.license![controller.homeController.selectedLicenseIndex.value].licenseAmmunitionLimit ?? '0'))}"),
                   40.height,
                   DarkButton(onTap: controller.addAmmunitionStock, text: "Add")
                 ]))));

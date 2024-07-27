@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
-import 'package:guns_guru/app/modules/home/views/add_weapon_detail.dart';
-import 'package:guns_guru/app/modules/home/views/weapon_logbook_view.dart';
-import 'package:guns_guru/app/utils/banner_card.dart';
-import 'package:guns_guru/app/utils/dark_button.dart';
+import 'package:guns_guru/app/modules/home/views/weapon/add_weapon_detail.dart';
+import 'package:guns_guru/app/modules/home/views/weapon/weapon_logbook_view.dart';
+import 'package:guns_guru/app/utils/widgets/banner_card.dart';
+import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/custom_label_text.dart';
 
 class WeaponDetailWidget extends StatelessWidget {
-  const WeaponDetailWidget({
-    super.key,
-    required this.license,
-    required this.isButtonShown
-  });
+  const WeaponDetailWidget(
+      {super.key, required this.license, required this.isButtonShown});
 
   final License license;
   final bool isButtonShown;
@@ -31,13 +28,11 @@ class WeaponDetailWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 '${license.weaponDetails?.weaponMake ?? ""}',
@@ -54,16 +49,14 @@ class WeaponDetailWidget extends StatelessWidget {
                         ),
                         Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 '${license.weaponDetails?.weaponModel ?? ""}',
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: Colors.black,
-                                    fontWeight: FontWeight.bold
-                                    ),
+                                    fontWeight: FontWeight.bold),
                               ),
                               const CustomLabelText(
                                 text: 'Model',
@@ -73,12 +66,9 @@ class WeaponDetailWidget extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                              license.weaponDetails
-                                      ?.weaponCaliber ??
-                                  "",
+                              license.weaponDetails?.weaponCaliber ?? "",
                               style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold)),
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
                         )
                       ],
                     ),
@@ -86,13 +76,11 @@ class WeaponDetailWidget extends StatelessWidget {
                     const Divider(),
                     5.height,
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 '${license.weaponDetails?.weaponNo ?? ""}',
@@ -109,8 +97,7 @@ class WeaponDetailWidget extends StatelessWidget {
                         ),
                         Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 '${license.weaponDetails?.weaponType ?? ""}',
@@ -125,13 +112,14 @@ class WeaponDetailWidget extends StatelessWidget {
                             ],
                           ),
                         ),
-                         Expanded(
+                        Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                calculateShotsFired(license.weaponFiringRecord??[]).toString(),
+                                calculateShotsFired(
+                                        license.weaponFiringRecord ?? [])
+                                    .toString(),
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     color: Colors.black,
@@ -145,25 +133,26 @@ class WeaponDetailWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                   Visibility(
-                    visible: isButtonShown==true,
-                     child: Column(
-                      children: [
-                         5.height,
-                      const Divider(),
-                      15.height,
-                      Container(
-                        width: Get.width * .54,
-                        child: DarkButton(
-                          onTap: () {
-                            Get.to(WeaponLogBookView());
-                          },
-                          text: 'Manage Weapon logbook',
-                        ),
-                      )
-                      ],
-                     ),
-                   )
+                    Visibility(
+                      visible: isButtonShown == true,
+                      child: Column(
+                        children: [
+                          5.height,
+                          const Divider(),
+                          15.height,
+                          Container(
+                            width: Get.width * .54,
+                            child: DarkButton(
+                                buttonColor: Colors.black.withOpacity(.7),
+                                fontSize: 10,
+                                onTap: () {
+                                  Get.to(WeaponLogBookView());
+                                },
+                                text: 'Manage Weapon logbook'),
+                          )
+                        ],
+                      ),
+                    )
                   ],
                 )
               : Column(
@@ -177,13 +166,15 @@ class WeaponDetailWidget extends StatelessWidget {
                     ),
                     15.height,
                     SizedBox(
-                        width: Get.width * .35,
-                        child: DarkButton(
+                      width: Get.width * .35,
+                      child: DarkButton(
+                          buttonColor: Colors.black.withOpacity(.7),
+                          fontSize: 10,
                           onTap: () {
                             Get.to(const AddWeaponDetail());
                           },
-                          text: 'Add Weapon',
-                        )),
+                          text: 'Add Weapon'),
+                    ),
                   ],
                 ),
         ],

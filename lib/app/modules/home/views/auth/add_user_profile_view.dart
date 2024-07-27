@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
-import 'package:guns_guru/app/utils/dark_button.dart';
+import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 
-import '../controllers/home_controller.dart';
+import '../../controllers/home_controller.dart';
 
-class UserProfileView extends GetView<HomeController> {
+class AddUserProfileView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +17,7 @@ class UserProfileView extends GetView<HomeController> {
           centerTitle: true,
           title: const Text(
             'User Profile',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: Colors.white,fontSize: 16,fontWeight: FontWeight.w500),
           )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -34,15 +34,15 @@ class UserProfileView extends GetView<HomeController> {
                       TextFormField(
                         controller: controller.nameController,
                         decoration: const InputDecoration(
-                          labelText: 'First Name',
+                          labelText: 'Full Name',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'First Name is required';
+                            return 'Full Name is required';
                           }
                           if (value.length > 50) {
-                            return 'First Name cannot be longer than 50 characters';
+                            return 'Full Name cannot be longer than 50 characters';
                           }
                           return null;
                         },
@@ -74,6 +74,19 @@ class UserProfileView extends GetView<HomeController> {
                               border: OutlineInputBorder(),
                               hintText: 'DD/MM/YYYY'),
                           keyboardType: TextInputType.datetime,
+                          readOnly: true,
+                          onTap: () async {
+                              DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime(1990,1,1),
+                                firstDate: DateTime(1900),
+                                lastDate: DateTime.now(),
+                              );
+                              if (pickedDate != null) {
+                                controller.dobController.text =
+                                    "${pickedDate.day<10?'0${pickedDate.day}':pickedDate.day}/${pickedDate.month<10?'0${pickedDate.month}':pickedDate.month}/${pickedDate.year}";
+                              }
+                            },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Date of Birth is required';

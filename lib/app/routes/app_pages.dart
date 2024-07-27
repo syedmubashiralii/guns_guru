@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:guns_guru/app/modules/home/views/splash_view.dart';
+import 'package:guns_guru/app/modules/home/views/auth/splash_view.dart';
 
 import '../modules/home/bindings/home_binding.dart';
-import '../modules/home/views/user_profile_view.dart';
+import '../modules/home/views/auth/add_user_profile_view.dart';
 
 part 'app_routes.dart';
 

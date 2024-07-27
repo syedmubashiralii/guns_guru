@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
-import 'package:guns_guru/app/utils/banner_card.dart';
+import 'package:guns_guru/app/utils/widgets/banner_card.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/widgets/custom_label_text.dart';
 
