@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:crypto/crypto.dart';
 
@@ -44,4 +45,25 @@ closeDialog() {
   if (Get.isDialogOpen!) {
     Get.back();
   }
+}
+
+int calculateAmmunitionStock(List<AmmunitionDetail> ammunition) {
+  var total = 0;
+  for (var detail in ammunition) {
+    total += int.parse(detail.ammunitionQuantityPurchased ?? "0");
+  }
+  return total;
+}
+
+int calculateRemainingQuota(List<AmmunitionDetail> ammunition,int totalQuota){
+   int stock= calculateAmmunitionStock(ammunition??[]);
+   return totalQuota-stock;
+}
+
+int calculateShotsFired(List<WeaponFiringRecord> firingRecord){
+  var shots=0;
+  for (var detail in firingRecord) {
+    shots += int.parse(detail.weaponFiringShotsFired ?? "0");
+  }
+  return shots;
 }

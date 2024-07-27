@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
@@ -11,6 +12,7 @@ import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 
 class HomeExtensionController extends GetxController {
+
   HomeController homeController = Get.find();
   final ammunitionStockFormKey = GlobalKey<FormState>();
   TextEditingController purchaseDateController = TextEditingController();
@@ -34,6 +36,8 @@ class HomeExtensionController extends GetxController {
   final serviceNotesController = TextEditingController();
 
   RxList servicePartsChangedList = [].obs;
+
+  
 
   Future<void> addAmmunitionStock() async {
     if (ammunitionStockFormKey.currentState?.validate() ?? false) {

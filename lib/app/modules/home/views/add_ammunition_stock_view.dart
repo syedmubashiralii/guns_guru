@@ -43,9 +43,22 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                     controller: controller.purchaseDateController,
                     decoration: const InputDecoration(
                         labelText: 'Purchase Date',
+                         suffixIcon: const Icon(Icons.calendar_today),
                         border: OutlineInputBorder(),
                         hintText: 'DD/MM/YYYY'),
-                        keyboardType: TextInputType.datetime,
+                    keyboardType: TextInputType.datetime,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime.now(),
+                      );
+                      if (pickedDate != null) {
+                        controller.purchaseDateController.text =
+                            "${pickedDate.day<10?'0${pickedDate.day}':pickedDate.day}/${pickedDate.month<10?'0${pickedDate.month}':pickedDate.month}/${pickedDate.year}";
+                      }
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Purchase Date is required';
@@ -67,23 +80,15 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                     controller: controller.purchasedFromController,
                     decoration: const InputDecoration(
                         labelText: 'Purchased From',
+                       
                         border: OutlineInputBorder(),
-                        hintText: 'DD/MM/YYYY'),
-                         keyboardType: TextInputType.datetime,
+                        hintText: 'Purchased From'),
+                    keyboardType: TextInputType.datetime,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Purchased From is required';
                       }
 
-                      RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                      if (!dateRegex.hasMatch(value)) {
-                        return 'Please enter a valid date format: DD/MM/YYYY';
-                      }
-                      List<String> parts = value.split('/');
-                      if (parts.length != 3 ||
-                          parts.any((part) => !isNumeric(part))) {
-                        return 'Date must be in numeric format: DD/MM/YYYY';
-                      }
                       return null;
                     },
                   ),

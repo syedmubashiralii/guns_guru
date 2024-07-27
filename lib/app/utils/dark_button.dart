@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
@@ -7,12 +9,17 @@ class DarkButton extends StatelessWidget {
    DarkButton({
     super.key,
     required this.onTap,
-    required this.text
+    required this.text,
+    this.buttonColor,
+    this.fontSize
   });
 
   final HomeController controller=Get.find();
   VoidCallback onTap;
+  Color? buttonColor;
+  double? fontSize;
   String text;
+
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +31,13 @@ class DarkButton extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(color: Colors.white, width: 1),
           borderRadius: BorderRadius.circular(8),
-          color: ColorHelper.primaryColor,
+          color:buttonColor?? ColorHelper.primaryColor,
         ),
         alignment: Alignment.center,
         padding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child:
-            Text(text, style: const TextStyle(color: Colors.white)),
+            Text(text, style:  TextStyle(color: Colors.white,fontSize:fontSize?? 15)),
       ),
     );
   }

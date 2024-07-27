@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/routes/app_pages.dart';
+import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/firebase_options.dart';
 
 void main() async {
@@ -12,8 +14,14 @@ void main() async {
   );
 
   Get.put(HomeController(),permanent: true);
+  Get.put(HomeExtensionController());
   runApp(
     GetMaterialApp(
+      theme:  ThemeData(
+        colorScheme: const ColorScheme.light(primary:  Colors.black),
+        buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+        brightness: Brightness.light
+      ),
         builder: (BuildContext context, Widget? child) {
           final MediaQueryData data = MediaQuery.of(context);
           return MediaQuery(

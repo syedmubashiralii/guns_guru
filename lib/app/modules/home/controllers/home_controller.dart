@@ -69,15 +69,16 @@ class HomeController extends GetxController {
   // RxMap<String, dynamic>? userModel;
   Rx<UserModel> userModel = UserModel().obs;
 
+ RxBool fromFiringRecordDetail=false.obs;
+ RxBool fromServiceDetail=false.obs;
+
   @override
   void onReady() {
     super.onReady();
     isUserLogged();
-    Get.put(HomeExtensionController());
   }
 
   Future<bool> isUserLogged() async {
-    //  await firebaseAuth.signOut();
     User? firebaseUser = getLoggedFirebaseUser();
     await Future.delayed(const Duration(seconds: 3));
     if (firebaseUser == null) {
