@@ -6,6 +6,7 @@ import 'package:guns_guru/app/modules/home/views/license/license_detail_view.dar
 import 'package:guns_guru/app/modules/home/widgets/renewal_button_widget.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
+import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 
@@ -43,8 +44,14 @@ class LicenseListView extends GetView<HomeController> {
                   fontWeight: FontWeight.w600,
                   color: Colors.black.withOpacity(.7)),
             ),
-            15.height,
-            RenewalButtonWidget(),
+            Visibility(
+              visible: isAnyLicenseValidionExpire(controller.userModel.value.license??[]),
+                child: Column(
+              children: [
+                15.height,
+                RenewalButtonWidget(),
+              ],
+            )),
             10.height,
             const Text(
               "LICENSE DETAILS",
@@ -79,7 +86,7 @@ class LicenseListView extends GetView<HomeController> {
                               color: Colors.black.withOpacity(0.1),
                               spreadRadius: 1,
                               blurRadius: 1,
-                              offset: const Offset(0, 1),
+                              offset: const Offset(0, 1)
                             ),
                           ],
                         ),
@@ -198,5 +205,3 @@ class LicenseListView extends GetView<HomeController> {
     );
   }
 }
-
-

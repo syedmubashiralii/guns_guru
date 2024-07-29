@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/utils/default_snackbar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:crypto/crypto.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -121,4 +123,22 @@ void sendSMS(String phoneNumber, String message) async {
     } else {
       throw 'Could not launch $smsUri';
     }
+  }
+
+
+  bool isAnyLicenseValidionExpire(List<License> licenses ) {
+    final currentDate = DateTime.now();
+    final oneMonthFromNow = currentDate.add(Duration(days: 30));
+    final dateFormat = DateFormat('dd/MM/yyyy');
+
+    for (var license in licenses) {
+      log(license.licenseValidTill!.toString());
+      final licenseValidTill = dateFormat.parse(license.licenseValidTill!);
+
+      if (licenseValidTill.isAfter(currentDate) && licenseValidTill.isBefore(oneMonthFromNow)) {
+        return true;
+      }
+    }
+
+    return false;
   }
