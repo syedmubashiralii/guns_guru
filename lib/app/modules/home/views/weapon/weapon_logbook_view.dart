@@ -32,10 +32,14 @@ class WeaponLogBookView extends GetView<HomeController> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            WeaponDetailWidget(
-              license: controller.userModel.value
-                  .license![controller.selectedLicenseIndex.value],
-              isButtonShown: false,
+            Obx(
+              () {
+                return WeaponDetailWidget(
+                  license: controller.userModel.value
+                      .license![controller.selectedLicenseIndex.value],
+                  isButtonShown: false,
+                );
+              }
             ),
             20.height,
             BannerCard(

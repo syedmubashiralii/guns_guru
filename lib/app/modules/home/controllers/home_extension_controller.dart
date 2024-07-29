@@ -52,9 +52,8 @@ class HomeExtensionController extends GetxController {
                       .licenseAmmunitionLimit ??
                   '0')) <
           int.parse(quantityPurchasedController.text)) {
-       DefaultSnackbar.show(
-    'Error', "Please verify your remaining quota before entering the record."
-);
+        DefaultSnackbar.show('Error',
+            "Please verify your remaining quota before entering the record.");
 
         return;
       }
@@ -109,7 +108,25 @@ class HomeExtensionController extends GetxController {
         AppConstants.weaponFiringShotsFired: firingShotsFiredController.text,
       };
       try {
-        var licenses = homeController.userModel!.value.license;
+        if (calculateAmmunitionStock(homeController
+                        .userModel
+                        .value
+                        .license?[homeController.selectedLicenseIndex.value]
+                        .ammunitionDetail ??
+                    []) -
+                calculateShotsFired(homeController
+                        .userModel
+                        .value
+                        .license?[homeController.selectedLicenseIndex.value]
+                        .weaponFiringRecord ??
+                    []) <
+            int.parse(firingShotsFiredController.text)) {
+          DefaultSnackbar.show("Error",
+              "The number of shots fired should not exceed the remaining stock. Please check your stock levels.");
+              closeDialog();
+          return;
+        }
+        var licenses = homeController.userModel.value.license;
         if (licenses != null &&
             homeController.selectedLicenseIndex.value >= 0 &&
             homeController.selectedLicenseIndex.value < licenses.length) {

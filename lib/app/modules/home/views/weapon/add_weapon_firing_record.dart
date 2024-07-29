@@ -5,7 +5,9 @@ import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/widgets/weapon_detail_widget.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
+import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/banner_card.dart';
+import 'package:guns_guru/app/utils/widgets/custom_label_text.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 
@@ -116,6 +118,28 @@ class AddWeaponFiringRecord extends GetView<HomeExtensionController> {
                         border: OutlineInputBorder(),
                       ),
                       maxLines: 3,
+                    ),
+                    10.height,
+                    Text(
+                      "Note: Your Remaining Firing Stock is  ${calculateAmmunitionStock(controller
+                                          .homeController
+                                          .userModel
+                                          .value
+                                          .license![controller.homeController
+                                              .selectedLicenseIndex.value]
+                                          .ammunitionDetail ??
+                                      []) -
+                                  calculateShotsFired(controller
+                                          .homeController
+                                          .userModel
+                                          .value
+                                          .license![controller.homeController
+                                              .selectedLicenseIndex.value]
+                                          .weaponFiringRecord ??
+                                      [])}",
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 13,
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     20.height,
                     Visibility(

@@ -57,6 +57,7 @@ class LicenseDetailView extends GetView<HomeController> {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
                                 child: Column(
@@ -72,7 +73,41 @@ class LicenseDetailView extends GetView<HomeController> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     const CustomLabelText(
-                                      text: 'InStock',
+                                      text: 'Total Ammos',
+                                    ),
+                                    Text(
+                                      "-" +
+                                          (calculateShotsFired(
+                                                  license.weaponFiringRecord ??
+                                                      []))
+                                              .toString(),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const CustomLabelText(
+                                      text: 'Shots Fired',
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: Divider(),
+                                    ),
+                                    Text(
+                                      (calculateAmmunitionStock(
+                                                  license.ammunitionDetail ??
+                                                      []) -
+                                              calculateShotsFired(
+                                                  license.weaponFiringRecord ??
+                                                      []))
+                                          .toString(),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const CustomLabelText(
+                                      text: 'Remainig Firing Stock',
                                     ),
                                   ],
                                 ),
@@ -108,8 +143,23 @@ class LicenseDetailView extends GetView<HomeController> {
                             ],
                           ),
                           5.height,
-                          const Divider(),
+                          const Divider(
+                            thickness: 3,
+                          ),
                           5.height,
+                          const Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Ammunition Stock: ",
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          10.height,
                           license.weaponDetails != null &&
                                   license.ammunitionDetail != null
                               ? Column(
@@ -190,7 +240,7 @@ class LicenseDetailView extends GetView<HomeController> {
                                     ]
                                   ],
                                 )
-                              : SizedBox()
+                              : const SizedBox()
                         ],
                       ),
                       10.height,
