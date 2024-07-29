@@ -44,8 +44,8 @@ class LicenseListView extends GetView<HomeController> {
                   color: Colors.black.withOpacity(.7)),
             ),
             15.height,
-            // RenewalButtonWidget(),
-            // 10.height,
+            RenewalButtonWidget(),
+            10.height,
             const Text(
               "LICENSE DETAILS",
               style:

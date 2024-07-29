@@ -8,6 +8,7 @@ import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
+import 'package:guns_guru/app/utils/widgets/source_selection_dialog.dart';
 
 class AddLicenseView extends GetView<HomeController> {
   @override
@@ -227,7 +228,16 @@ class AddLicenseView extends GetView<HomeController> {
                 return controller.licensePicture.value == null
                     ? DarkButton(
                         onTap: () async {
-                          String? path = await pickImage(controller.picker);
+                          String source = '';
+                          await showChoiceDialog(onCameraTap: () {
+                            source = "Camera";
+                            Get.back();
+                          }, onGalleryTap: () {
+                            source = "Gallery";
+                            Get.back();
+                          });
+                          String? path =
+                              await pickImage(controller.picker, source);
                           if (path != null && path.isNotEmpty) {
                             controller.licensePicture.value = File(path);
                           }

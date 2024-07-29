@@ -45,6 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+<array>
+  <string>sms</string>
+  <string>tel</string>
+</array>
 	<key>PermissionGroupNotifications</key>
     	<string>Allow GUNS GURU to send notifications?</string>
     	<key>NSPhotoLibraryUsageDescription</key>

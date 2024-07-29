@@ -25,6 +25,7 @@ import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/default_snackbar.dart';
 import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
+import 'package:guns_guru/app/utils/widgets/source_selection_dialog.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -270,7 +271,15 @@ class HomeController extends GetxController {
   }
 
   pickAndSetImage(bool isFront) async {
-    String? path = await pickImage(picker);
+    String source='';
+    await showChoiceDialog(onCameraTap: (){
+      source="Camera";
+      Get.back();
+    },onGalleryTap: (){
+      source="Gallery";
+      Get.back();
+    });
+    String? path = await pickImage(picker,source);
     if (path != null && path.isNotEmpty) {
       if (isFront) {
         frontImage.value = File(path);
@@ -289,11 +298,11 @@ class HomeController extends GetxController {
         AppConstants.CNIC: cnicController.text,
         AppConstants.DOB: dobController.text,
         AppConstants.Address: addressController.text,
-        AppConstants.City: cityController.text
+        AppConstants.City: cityController.text,
+        AppConstants.UID:FirebaseAuth.instance.currentUser?.uid??""
       });
       await loadUserData(firebaseAuth.currentUser!.uid);
       closeDialog();
-      //TODO: add navigation
       onLoginSuccesfull();
     } else {
       print('Validation failed');
