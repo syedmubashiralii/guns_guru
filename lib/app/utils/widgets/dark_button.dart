@@ -1,43 +1,37 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 
 class DarkButton extends StatelessWidget {
-   DarkButton({
-    super.key,
+  const DarkButton({
+    Key? key,
     required this.onTap,
     required this.text,
     this.buttonColor,
-    this.fontSize
-  });
+    this.fontSize,
+  }) : super(key: key);
 
-  final HomeController controller=Get.find();
-  VoidCallback onTap;
-  Color? buttonColor;
-  double? fontSize;
-  String text;
-
+  final VoidCallback onTap;
+  final Color? buttonColor;
+  final double? fontSize;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      splashColor: Colors.white.withOpacity(.3),
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 1),
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        splashFactory: InkRipple.splashFactory,
+        overlayColor: Colors.white.withOpacity(0.2),
+        backgroundColor: ColorHelper.primaryColor,
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-          color:buttonColor?? ColorHelper.primaryColor,
         ),
-        alignment: Alignment.center,
-        padding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        child:
-            Text(text, style:  TextStyle(color: Colors.white,fontSize:fontSize?? 15)),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: Colors.white, fontSize: 13,fontWeight: FontWeight.normal),
       ),
     );
   }

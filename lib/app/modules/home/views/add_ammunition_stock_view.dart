@@ -16,6 +16,8 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.caliberController.text=controller.homeController.userModel.value
+                .license![controller.homeController.selectedLicenseIndex.value].licenseCalibre??"";
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -83,7 +85,7 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                         labelText: 'Purchased From',
                         border: OutlineInputBorder(),
                         hintText: 'Purchased From'),
-                    keyboardType: TextInputType.datetime,
+                    keyboardType: TextInputType.name,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Purchased From is required';
@@ -107,8 +109,9 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                     },
                   ),
                   20.height,
-                  TextFormField(
+                   TextFormField(
                     controller: controller.caliberController,
+                    readOnly: true,
                     decoration: const InputDecoration(
                       labelText: 'Caliber',
                       border: OutlineInputBorder(),
@@ -120,6 +123,7 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                       return null;
                     },
                   ),
+                 
                   20.height,
                   TextFormField(
                     controller: controller.quantityPurchasedController,
@@ -142,7 +146,8 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                   Text(
                       "Note: Your Remaining Quota is ${calculateRemainingQuota(controller.homeController.userModel.value.license![controller.homeController.selectedLicenseIndex.value].ammunitionDetail ?? [], int.parse(controller.homeController.userModel.value.license![controller.homeController.selectedLicenseIndex.value].licenseAmmunitionLimit ?? '0'))}"),
                   40.height,
-                  DarkButton(onTap: controller.addAmmunitionStock, text: "Add")
+                  DarkButton(
+                    onTap: controller.addAmmunitionStock, text: "Add")
                 ]))));
   }
 }

@@ -140,16 +140,13 @@ class WeaponDetailWidget extends StatelessWidget {
                           5.height,
                           const Divider(),
                           15.height,
-                          Container(
-                            width: Get.width * .54,
-                            child: DarkButton(
-                                buttonColor: Colors.black.withOpacity(.7),
-                                fontSize: 10,
-                                onTap: () {
-                                  Get.to(WeaponLogBookView());
-                                },
-                                text: 'Manage Weapon logbook'),
-                          )
+                          DarkButton(
+                              buttonColor: Colors.black.withOpacity(.7),
+                              fontSize: 10,
+                              onTap: () {
+                                Get.to(WeaponLogBookView());
+                              },
+                              text: 'Manage Weapon logbook')
                         ],
                       ),
                     )
@@ -165,16 +162,13 @@ class WeaponDetailWidget extends StatelessWidget {
                           color: Colors.black.withOpacity(.7)),
                     ),
                     15.height,
-                    SizedBox(
-                      width: Get.width * .35,
-                      child: DarkButton(
-                          buttonColor: Colors.black.withOpacity(.7),
-                          fontSize: 10,
-                          onTap: () {
-                            Get.to(const AddWeaponDetail());
-                          },
-                          text: 'Add Weapon'),
-                    ),
+                    DarkButton(
+                        buttonColor: Colors.black.withOpacity(.7),
+                        fontSize: 10,
+                        onTap: () {
+                          Get.to(const AddWeaponDetail());
+                        },
+                        text: 'Add Weapon'),
                   ],
                 ),
         ],

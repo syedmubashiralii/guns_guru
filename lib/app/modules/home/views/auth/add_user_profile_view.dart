@@ -4,7 +4,6 @@ import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
-
 import '../../controllers/home_controller.dart';
 
 class AddUserProfileView extends GetView<HomeController> {
@@ -142,9 +141,12 @@ class AddUserProfileView extends GetView<HomeController> {
                 ),
               ),
               10.height,
-              DarkButton(
-                onTap: controller.saveForm,
-                text: "Submit",
+              SizedBox(
+                width: Get.width,
+                child: DarkButton(
+                  onTap: controller.saveForm,
+                  text: "Submit",
+                ),
               ),
               20.height,
             ],

@@ -19,6 +19,7 @@ class AppConstants {
   static String licenseJurisdiction='licenseJurisdiction';
   static String licenseIssuaingQuota='licenseIssuaingQuota';
   static String licensePicture='licensePicture';
+  static String licenseValidated='licenseValidated';
   static String ammunitionDetail='ammunitionDetail';
   static String weaponDetails='weaponDetails';
   static String weaponCaliber='weaponCaliber';
@@ -97,7 +98,7 @@ class AppConstants {
   "FN Herstal",
   "Springfield Armory",
   "Magnum Research",
-  "CZ (Česká zbrojovka)",
+  "CZ (Czech armory)",
   "Benelli",
   "Walther",
   "Taurus",

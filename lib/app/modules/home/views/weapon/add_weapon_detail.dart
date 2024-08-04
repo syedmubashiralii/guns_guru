@@ -14,6 +14,8 @@ class AddWeaponDetail extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.weaponCaliber.value=controller.userModel.value
+                .license![controller.selectedLicenseIndex.value].licenseCalibre??"";
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -37,26 +39,14 @@ class AddWeaponDetail extends GetView<HomeController> {
                         fontWeight: FontWeight.w600, color: Colors.black),
                   ),
                   20.height,
-                  DropdownButtonFormField<String>(
-                    value: controller.weaponCaliber.value,
+                  
+                  TextFormField(
+                    initialValue: controller.weaponCaliber.value,
+                    readOnly: true,
                     decoration: const InputDecoration(
                       labelText: 'Caliber',
                       border: OutlineInputBorder(),
                     ),
-                    items: AppConstants.caliber.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: SizedBox(
-                            width: Get.width * .6,
-                            child: Text(
-                              value,
-                              overflow: TextOverflow.ellipsis,
-                            )),
-                      );
-                    }).toList(),
-                    onChanged: (newValue) {
-                      controller.weaponCaliber.value = newValue!;
-                    },
                     validator: (value) {
                       if (value == null) {
                         return 'Weapon caliber is required';
@@ -69,6 +59,7 @@ class AddWeaponDetail extends GetView<HomeController> {
                     controller: controller.weaponTypeController,
                     decoration: const InputDecoration(
                       labelText: 'Type',
+                      hintText: 'Pistol',
                       border: OutlineInputBorder(),
                     ),
                     validator: (value) {
@@ -149,7 +140,8 @@ class AddWeaponDetail extends GetView<HomeController> {
                     },
                   ),
                   40.height,
-                  DarkButton(onTap: controller.saveWeaponDetail, text: "Add")
+                  DarkButton(
+                    onTap: controller.saveWeaponDetail, text: "Add")
                 ]))));
   }
 }

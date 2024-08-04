@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/views/license/add_license_view.dart';
+import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
@@ -43,16 +44,14 @@ class RenewalButtonWidget extends StatelessWidget {
                         TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
                   ),
                   15.height,
-                  SizedBox(
-                    width: Get.width * .35,
-                    child: DarkButton(
-                      fontSize: 11,
-                      buttonColor: Colors.black.withOpacity(.7),
-                      onTap: () {
-                        sendSMS('+1-555-010-999', 'Hello, this is a test message!');
-                      },
-                      text: "Renew my License",
-                    ),
+                  DarkButton(
+                    fontSize: 11,
+                    buttonColor: Colors.black.withOpacity(.7),
+                    onTap: () {
+                      // Get.dialog(LoadingDialog());
+                      sendSMS('+1-555-010-999', 'Hello, this is a test message!');
+                    },
+                    text: "Renew my License",
                   ),
                   15.height,
                 ],

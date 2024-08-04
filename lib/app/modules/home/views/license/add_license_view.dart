@@ -138,7 +138,7 @@ class AddLicenseView extends GetView<HomeController> {
                   hintText: 'DD/MM/YYYY',
                 ),
                 onTap: () async {
-                  controller.dateOfIssuanceController.text = await datePicker();
+                  controller.dateOfIssuanceController.text = await datePicker(lastDate:DateTime.now());
                 },
                 keyboardType: TextInputType.datetime,
                 validator: (value) {
@@ -225,31 +225,44 @@ class AddLicenseView extends GetView<HomeController> {
               ),
               20.height,
               Obx(() {
-                return controller.licensePicture.value == null
-                    ? DarkButton(
-                        onTap: () async {
-                          String source = '';
-                          await showChoiceDialog(onCameraTap: () {
-                            source = "Camera";
-                            Get.back();
-                          }, onGalleryTap: () {
-                            source = "Gallery";
-                            Get.back();
-                          });
-                          String? path =
-                              await pickImage(controller.picker, source);
-                          if (path != null && path.isNotEmpty) {
-                            controller.licensePicture.value = File(path);
-                          }
-                        },
-                        text: "Upload License Picture",
-                      )
-                    : Image.file(
-                        controller.licensePicture.value!,
-                        height: 200,
-                        width: double.infinity,
-                        fit: BoxFit.contain,
-                      );
+                return InkWell(
+                  onTap: () async {
+                    String source = '';
+                    await showChoiceDialog(onCameraTap: () {
+                      source = "Camera";
+                      Get.back();
+                    }, onGalleryTap: () {
+                      source = "Gallery";
+                      Get.back();
+                    });
+                    if (source != '') {
+                      String? path = await pickImage(controller.picker, source);
+                      if (path != null && path.isNotEmpty) {
+                        controller.licensePicture.value = File(path);
+                      }
+                    }
+                  },
+                  child: controller.licensePicture.value == null
+                      ? Container(
+                          height: 80,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black)),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add),
+                              Text("Add license Picture"),
+                            ],
+                          ),
+                        )
+                      : Image.file(
+                          controller.licensePicture.value!,
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
+                );
               }),
               10.height,
               DarkButton(

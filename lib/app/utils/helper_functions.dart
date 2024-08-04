@@ -6,7 +6,9 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
+import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/default_snackbar.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:crypto/crypto.dart';
 import 'package:intl/intl.dart';
@@ -29,20 +31,63 @@ Future<String?> pickImage(ImagePicker picker, String source) async {
           : await Permission.storage.request().isGranted;
     }
     if (galleryPermission == true) {
-      pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      var galleryFile = await picker.pickImage(source: ImageSource.gallery);
+      if (galleryFile != null) {
+        CroppedFile? croppedFile = await cropImage(galleryFile.path);
+        if (croppedFile != null) {
+          pickedFile = XFile(croppedFile!.path);
+        }
+      }
     } else {
       DefaultSnackbar.show("Error", "Please Allow Gallery Permission First");
     }
   } else {
     bool cameraPermission = await Permission.camera.request().isGranted;
     if (cameraPermission == true) {
-      pickedFile = await picker.pickImage(source: ImageSource.camera);
+      var cameraFile = await picker.pickImage(source: ImageSource.camera);
+      if (cameraFile != null) {
+        CroppedFile? croppedFile = await cropImage(cameraFile.path);
+        if (croppedFile != null) {
+          pickedFile = XFile(croppedFile!.path);
+        }
+      }
     } else {
       DefaultSnackbar.show("Error", "Please Allow Camera Permission First");
     }
   }
 
   return pickedFile!.path ?? "";
+}
+
+Future<CroppedFile?> cropImage(String path) async {
+  final croppedFile = await ImageCropper().cropImage(
+    sourcePath: path,
+    compressFormat: ImageCompressFormat.jpg,
+    compressQuality: 100,
+    uiSettings: [
+      AndroidUiSettings(
+        toolbarTitle: 'Cropper',
+        toolbarColor: ColorHelper.primaryColor,
+        toolbarWidgetColor: Colors.white,
+        initAspectRatio: CropAspectRatioPreset.original,
+        lockAspectRatio: true,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio4x3,
+        ],
+      ),
+      IOSUiSettings(
+        title: 'Cropper',
+        aspectRatioPresets: [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio4x3,
+        ],
+      ),
+    ],
+  );
+  return croppedFile;
 }
 
 Future<bool> galleryPermission() async {
@@ -71,12 +116,12 @@ String sha256ofString(String input) {
   return digest.toString();
 }
 
-Future<String> datePicker() async {
+Future<String> datePicker({DateTime? lastDate}) async {
   final DateTime? picked = await showDatePicker(
     context: navigator!.context,
     initialDate: DateTime.now(),
     firstDate: DateTime(1900),
-    lastDate: DateTime(2100),
+    lastDate: lastDate ?? DateTime(2040),
   );
 
   if (picked != null) {
@@ -115,30 +160,60 @@ int calculateShotsFired(List<WeaponFiringRecord> firingRecord) {
   return shots;
 }
 
-
 void sendSMS(String phoneNumber, String message) async {
-    final smsUri = 'sms:$phoneNumber?body=${Uri.encodeComponent(message)}';
-    if (await canLaunchUrl(Uri.parse(smsUri))) {
-      await launchUrl(Uri.parse(smsUri));
-    } else {
-      throw 'Could not launch $smsUri';
+  final smsUri = 'sms:$phoneNumber?body=${Uri.encodeComponent(message)}';
+  if (await canLaunchUrl(Uri.parse(smsUri))) {
+    await launchUrl(Uri.parse(smsUri));
+  } else {
+    throw 'Could not launch $smsUri';
+  }
+}
+
+bool isAnyLicenseValidionExpire(List<License> licenses) {
+  final currentDate = DateTime.now();
+  final oneMonthFromNow = currentDate.add(Duration(days: 30));
+  final dateFormat = DateFormat('dd/MM/yyyy');
+
+  for (var license in licenses) {
+    log(license.licenseValidTill!.toString());
+    final licenseValidTill = dateFormat.parse(license.licenseValidTill!);
+
+    if (currentDate.isAfter(licenseValidTill) &&
+        licenseValidTill.isBefore(oneMonthFromNow)) {
+      return true;
     }
   }
 
+  return false;
+}
 
-  bool isAnyLicenseValidionExpire(List<License> licenses ) {
-    final currentDate = DateTime.now();
-    final oneMonthFromNow = currentDate.add(Duration(days: 30));
-    final dateFormat = DateFormat('dd/MM/yyyy');
+bool checkLicenseValidation(License license) {
+  final currentDate = DateTime.now();
+  final oneMonthFromNow = currentDate.add(Duration(days: 30));
+  final dateFormat = DateFormat('dd/MM/yyyy');
 
-    for (var license in licenses) {
-      log(license.licenseValidTill!.toString());
-      final licenseValidTill = dateFormat.parse(license.licenseValidTill!);
+  log(license.licenseValidTill!.toString());
+  final licenseValidTill = dateFormat.parse(license.licenseValidTill!);
 
-      if (licenseValidTill.isAfter(currentDate) && licenseValidTill.isBefore(oneMonthFromNow)) {
-        return true;
-      }
-    }
-
-    return false;
+  if (currentDate.isAfter(licenseValidTill) &&
+      licenseValidTill.isBefore(oneMonthFromNow)) {
+    return true;
   }
+
+  return false;
+}
+
+checkIsAfterCurrentDate(License license) {
+  final currentDate = DateTime.now();
+  final dateFormat = DateFormat('dd/MM/yyyy');
+  final licenseValidTill = dateFormat.parse(license.licenseValidTill!);
+
+  if (currentDate.isAfter(licenseValidTill)) {
+    print(licenseValidTill);
+    print(currentDate);
+    print("enterrrrrr");
+    return true;
+  }
+
+  return false;
+}

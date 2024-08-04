@@ -59,6 +59,13 @@ class WeaponLogBookView extends GetView<HomeController> {
                 content: Obx(() {
                   return Column(
                     children: [
+                        if (controller
+                              .userModel
+                              .value
+                              .license![controller.selectedLicenseIndex.value]
+                              .weaponFiringRecord ==
+                          null)
+                       Text("No record found"),
                       if (controller
                               .userModel
                               .value
@@ -94,15 +101,12 @@ class WeaponLogBookView extends GetView<HomeController> {
                               record.weaponFiringShotsFired ?? "",
                             ),
                           ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: Get.width * .37,
-                        child: DarkButton(
-                            buttonColor: Colors.black.withOpacity(.7),
-                            fontSize: 10,
-                            onTap: () {},
-                            text: 'View Complete Details'),
-                      ),
+                      // const SizedBox(height: 10),
+                      // DarkButton(
+                      //     buttonColor: Colors.black.withOpacity(.7),
+                      //     fontSize: 10,
+                      //     onTap: () {},
+                      //     text: 'View Complete Details'),
                     ],
                   );
                 })),
@@ -123,6 +127,13 @@ class WeaponLogBookView extends GetView<HomeController> {
                 content: Obx(() {
                   return Column(
                     children: [
+                      if (controller
+                              .userModel
+                              .value
+                              .license![controller.selectedLicenseIndex.value]
+                              .weaponServiceRecord ==
+                          null)
+                          Text("No record found"),
                       if (controller
                               .userModel
                               .value
@@ -155,20 +166,17 @@ class WeaponLogBookView extends GetView<HomeController> {
                             child: _buildServiceRecord(
                               record.weaponServiceDate ?? "",
                               record.weaponServiceDoneBy ?? "",
-                              record.weaponServicePartsChanged!.isEmpty
+                              record.weaponServicePartsChanged!.isNotEmpty
                                   ? "Yes"
                                   : "No",
                             ),
                           ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        width: Get.width * .37,
-                        child: DarkButton(
-                            buttonColor: Colors.black.withOpacity(.7),
-                            fontSize: 10,
-                            onTap: () {},
-                            text: 'View Complete Details'),
-                      ),
+                      // const SizedBox(height: 10),
+                      // DarkButton(
+                      //     buttonColor: Colors.black.withOpacity(.7),
+                      //     fontSize: 10,
+                      //     onTap: () {},
+                      //     text: 'View Complete Details'),
                     ],
                   );
                 })),

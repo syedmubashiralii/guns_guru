@@ -14,17 +14,18 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  Get.put(HomeController(),permanent: true);
+  Get.put(HomeController(), permanent: true);
   Get.put(HomeExtensionController());
   runApp(
     GetMaterialApp(
-      theme:  ThemeData(
-        colorScheme: const ColorScheme.light(primary:  Colors.black),
-        buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-        brightness: Brightness.light,
-            textTheme: GoogleFonts.latoTextTheme(),
-
-      ),
+        theme: ThemeData(
+          colorScheme: const ColorScheme.light(primary: Colors.black),
+          buttonTheme:
+              const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+          brightness: Brightness.light,
+          textTheme: GoogleFonts.latoTextTheme(),
+        ),
+        defaultTransition: Transition.cupertino,
         builder: (BuildContext context, Widget? child) {
           final MediaQueryData data = MediaQuery.of(context);
           return MediaQuery(

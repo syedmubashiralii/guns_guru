@@ -38,7 +38,7 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['address'] = this.address;
     data['city'] = this.city;
     data['cnic'] = this.cnic;
@@ -54,7 +54,7 @@ class UserModel {
   }
 
   Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['address'] = this.address;
     data['city'] = this.city;
     data['cnic'] = this.cnic;
@@ -82,6 +82,7 @@ class License {
   String? licensePicture;
   String? licenseTrackingNumber;
   String? licenseValidTill;
+  bool? licenseValidated;
   WeaponDetails? weaponDetails;
   List<WeaponFiringRecord>? weaponFiringRecord;
   List<WeaponServiceRecord>? weaponServiceRecord;
@@ -97,6 +98,7 @@ class License {
       this.licenseNumber,
       this.licensePicture,
       this.licenseTrackingNumber,
+      this.licenseValidated,
       this.licenseValidTill,
       this.weaponDetails,
       this.weaponFiringRecord,
@@ -119,8 +121,9 @@ class License {
     licensePicture = json['licensePicture'];
     licenseTrackingNumber = json['licenseTrackingNumber'];
     licenseValidTill = json['licenseValidTill'];
+    licenseValidated = json['licenseValidated'];
     weaponDetails = json['weaponDetails'] != null
-        ? new WeaponDetails.fromJson(json['weaponDetails'])
+        ? WeaponDetails.fromJson(json['weaponDetails'])
         : null;
     if (json['weaponFiringRecord'] != null) {
       weaponFiringRecord = <WeaponFiringRecord>[];
@@ -152,6 +155,7 @@ class License {
     data['licensePicture'] = this.licensePicture;
     data['licenseTrackingNumber'] = this.licenseTrackingNumber;
     data['licenseValidTill'] = this.licenseValidTill;
+    data['licenseValidated'] = this.licenseValidated;
     if (this.weaponDetails != null) {
       data['weaponDetails'] = this.weaponDetails!.toJson();
     }
@@ -197,10 +201,6 @@ class License {
   }
 }
 
-
-
-
-
 class AmmunitionDetail {
   String? ammunitionBrand;
   String? ammunitionCaliber;
@@ -243,7 +243,6 @@ class AmmunitionDetail {
     return data;
   }
 }
-
 
 class WeaponDetails {
   String? weaponCaliber;
@@ -325,7 +324,6 @@ class WeaponFiringRecord {
     return data;
   }
 }
-
 
 class WeaponServiceRecord {
   String? weaponServiceDate;

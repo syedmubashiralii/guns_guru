@@ -97,6 +97,7 @@ class AddWeaponFiringRecord extends GetView<HomeExtensionController> {
                       readOnly: controller
                           .homeController.fromFiringRecordDetail.value,
                       controller: controller.firingShotsFiredController,
+                      keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         labelText: 'Shots Fired?',
                         border: OutlineInputBorder(),
@@ -104,6 +105,9 @@ class AddWeaponFiringRecord extends GetView<HomeExtensionController> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter shots fired';
+                        }
+                        if(!isNumeric(value)){
+                          return 'Shots fired should be numeric';
                         }
                         return null;
                       },

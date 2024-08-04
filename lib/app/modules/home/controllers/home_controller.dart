@@ -70,8 +70,8 @@ class HomeController extends GetxController {
   // RxMap<String, dynamic>? userModel;
   Rx<UserModel> userModel = UserModel().obs;
 
- RxBool fromFiringRecordDetail=false.obs;
- RxBool fromServiceDetail=false.obs;
+  RxBool fromFiringRecordDetail = false.obs;
+  RxBool fromServiceDetail = false.obs;
 
   @override
   void onReady() {
@@ -100,9 +100,9 @@ class HomeController extends GetxController {
           userModel.value.fullname!.isNotEmpty) {
         if (userModel.value.license != null &&
             userModel.value.license!.isNotEmpty) {
-          Get.to(const LicenseListView());
+          Get.off(const LicenseListView());
         } else {
-          Get.to(AddLicenseView());
+          Get.off(AddLicenseView());
         }
       } else {
         Get.off(AddUserProfileView());
@@ -148,7 +148,7 @@ class HomeController extends GetxController {
         Get.back();
       }
       if (!e.toString().contains('popup_closed_by_user')) {
-        DefaultSnackbar.show("Error",  e.toString());
+        DefaultSnackbar.show("Error", e.toString());
       }
     }
   }
@@ -186,7 +186,7 @@ class HomeController extends GetxController {
         Get.back();
       }
       if (!e.toString().contains('popup_closed_by_user')) {
-        DefaultSnackbar.show('Error',  e.toString());
+        DefaultSnackbar.show('Error', e.toString());
       }
       if (kDebugMode) {
         print("error in signing with google : $e");
@@ -262,7 +262,7 @@ class HomeController extends GetxController {
         closeDialog();
         Get.to(AddUserProfileView());
       } else {
-        DefaultSnackbar.show('Title',"Please Enter Cnic Images First");
+        DefaultSnackbar.show('Title', "Please Enter Cnic Images First");
       }
     } catch (e) {
       closeDialog();
@@ -271,20 +271,22 @@ class HomeController extends GetxController {
   }
 
   pickAndSetImage(bool isFront) async {
-    String source='';
-    await showChoiceDialog(onCameraTap: (){
-      source="Camera";
+    String source = '';
+    await showChoiceDialog(onCameraTap: () {
+      source = "Camera";
       Get.back();
-    },onGalleryTap: (){
-      source="Gallery";
+    }, onGalleryTap: () {
+      source = "Gallery";
       Get.back();
     });
-    String? path = await pickImage(picker,source);
-    if (path != null && path.isNotEmpty) {
-      if (isFront) {
-        frontImage.value = File(path);
-      } else {
-        backImage.value = File(path);
+    if (source != '') {
+      String? path = await pickImage(picker, source);
+      if (path != null && path.isNotEmpty) {
+        if (isFront) {
+          frontImage.value = File(path);
+        } else {
+          backImage.value = File(path);
+        }
       }
     }
   }
@@ -299,7 +301,7 @@ class HomeController extends GetxController {
         AppConstants.DOB: dobController.text,
         AppConstants.Address: addressController.text,
         AppConstants.City: cityController.text,
-        AppConstants.UID:FirebaseAuth.instance.currentUser?.uid??""
+        AppConstants.UID: FirebaseAuth.instance.currentUser?.uid ?? ""
       });
       await loadUserData(firebaseAuth.currentUser!.uid);
       closeDialog();
@@ -335,7 +337,8 @@ class HomeController extends GetxController {
         AppConstants.licenseIssuaingQuota: issuaingQuota.value,
         AppConstants.licenseDateOfIssuance: dateOfIssuanceController.text,
         AppConstants.licenseJurisdiction: jurisdiction.value,
-        AppConstants.licensePicture: licensePic
+        AppConstants.licensePicture: licensePic,
+        AppConstants.licenseValidated: false
       }));
 
       await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
@@ -388,9 +391,9 @@ class HomeController extends GetxController {
     }
   }
 
-  signOut()async {
-   await  firebaseAuth.signOut();
-   await GoogleSignIn().signOut();
+  signOut() async {
+    await firebaseAuth.signOut();
+    await GoogleSignIn().signOut();
     Get.offAll(const SplashView());
     isUserLogged();
   }
