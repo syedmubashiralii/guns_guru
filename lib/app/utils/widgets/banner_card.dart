@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 
 class BannerCard extends StatelessWidget {
@@ -27,11 +28,12 @@ class BannerCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            padding: EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10),
             height: 40,
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(.7),
-              borderRadius: BorderRadius.vertical(
+              // color: Colors.black.withOpacity(.7),
+              color: ColorHelper.primaryColor,
+              borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(8.0),
               ),
             ),
@@ -41,7 +43,7 @@ class BannerCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w500,
                   ),
@@ -61,7 +63,7 @@ class BannerCard extends StatelessWidget {
                               ),
                             ),
                             5.width,
-                            Text(
+                            const Text(
                               'Add record',
                               style: TextStyle(
                                 color: Colors.white,
@@ -71,7 +73,7 @@ class BannerCard extends StatelessWidget {
                           ],
                         ),
                       )
-                    : SizedBox()
+                    : const SizedBox()
               ],
             ),
           ),
