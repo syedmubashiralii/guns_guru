@@ -7,12 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:guns_guru/app/modules/home/controllers/cnic_scanner.dart';
-import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/views/auth/auth_view.dart';
@@ -249,9 +246,9 @@ class HomeController extends GetxController {
         Get.dialog(const LoadingDialog());
         CnicModel cnicModel = await CnicScanner().scanCnic(
             imageToScan: InputImage.fromFilePath(frontImage.value!.path));
-        nameController.text = cnicModel.cnicHolderName ?? "";
-        dobController.text = cnicModel.cnicHolderDateOfBirth ?? "";
-        cnicController.text = cnicModel.cnicNumber ?? "";
+        nameController.text = cnicModel.cnicHolderName;
+        dobController.text = cnicModel.cnicHolderDateOfBirth;
+        cnicController.text = cnicModel.cnicNumber;
         String frontSide = await uploadImage(frontImage.value!);
         await updateUserSpecificData(firebaseAuth.currentUser!.uid,
             {AppConstants.CNICFrontSide: frontSide});
@@ -311,7 +308,7 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> saveLicenseForm() async {
+  Future<void> saveLicenseForm(bool fromEdit) async {
     if (licenseFormKey.currentState?.validate() ?? false) {
       licenseFormKey.currentState?.save();
       if (licensePicture.value == null) {
@@ -326,8 +323,7 @@ class HomeController extends GetxController {
       List<License> licenses = [];
 
       licenses = userModel.value.license ?? [];
-
-      licenses.add(License.fromJson({
+      License license=License.fromJson({
         AppConstants.licenseTrackingNumber: trackingNumberController.text,
         AppConstants.licenseNumber: licenseNumberController.text,
         AppConstants.licenseAmmunitionLimit: ammunitionLimitController.text,
@@ -339,7 +335,14 @@ class HomeController extends GetxController {
         AppConstants.licenseJurisdiction: jurisdiction.value,
         AppConstants.licensePicture: licensePic,
         AppConstants.licenseValidated: false
-      }));
+      });
+     if(fromEdit==true){
+      licenses[selectedLicenseIndex.value]=license;
+     }
+     else{
+      licenses.add(license);
+     }
+      
 
       await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
         AppConstants.license:
@@ -351,7 +354,9 @@ class HomeController extends GetxController {
       }
       onLoginSuccesfull();
     } else {
-      print('Validation failed');
+      if (kDebugMode) {
+        print('Validation failed');
+      }
     }
   }
 
@@ -394,6 +399,7 @@ class HomeController extends GetxController {
   signOut() async {
     await firebaseAuth.signOut();
     await GoogleSignIn().signOut();
+    userModel.value=UserModel();
     Get.offAll(const SplashView());
     isUserLogged();
   }

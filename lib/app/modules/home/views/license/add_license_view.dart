@@ -11,6 +11,8 @@ import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/source_selection_dialog.dart';
 
 class AddLicenseView extends GetView<HomeController> {
+  AddLicenseView({this.fromEditing});
+  bool? fromEditing;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -138,7 +140,8 @@ class AddLicenseView extends GetView<HomeController> {
                   hintText: 'DD/MM/YYYY',
                 ),
                 onTap: () async {
-                  controller.dateOfIssuanceController.text = await datePicker(lastDate:DateTime.now());
+                  controller.dateOfIssuanceController.text =
+                      await datePicker(lastDate: DateTime.now());
                 },
                 keyboardType: TextInputType.datetime,
                 validator: (value) {
@@ -266,8 +269,9 @@ class AddLicenseView extends GetView<HomeController> {
               }),
               10.height,
               DarkButton(
-                onTap: controller.saveLicenseForm,
-                text: "Submit",
+                onTap: () => controller
+                    .saveLicenseForm(fromEditing == true ? true : false),
+                text: fromEditing == true ? "Edit" : "Submit",
               ),
               20.height
             ],

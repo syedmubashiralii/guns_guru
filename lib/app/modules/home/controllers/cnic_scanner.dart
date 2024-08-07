@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,7 +12,7 @@ class CnicScanner {
   late ImageSource source;
 
   /// a model class to store cnic data
-  CnicModel _cnicDetails = CnicModel();
+  final CnicModel _cnicDetails = CnicModel();
 
   /// this var track record which side has been scanned
   /// and which needed to be scanned and prompt user accordingly
@@ -64,17 +64,17 @@ class CnicScanner {
         }
       }
     }
-    if (cnicDates.length > 0 &&
+    if (cnicDates.isNotEmpty &&
         _cnicDetails.cnicExpiryDate.length == 10 &&
         !cnicDates.contains(_cnicDetails.cnicExpiryDate)) {
       cnicDates.add(_cnicDetails.cnicExpiryDate);
     }
-    if (cnicDates.length > 0 &&
+    if (cnicDates.isNotEmpty &&
         _cnicDetails.cnicIssueDate.length == 10 &&
         !cnicDates.contains(_cnicDetails.cnicIssueDate)) {
       cnicDates.add(_cnicDetails.cnicIssueDate);
     }
-    if (cnicDates.length > 0 &&
+    if (cnicDates.isNotEmpty &&
         _cnicDetails.cnicExpiryDate.length == 10 &&
         !cnicDates.contains(_cnicDetails.cnicExpiryDate)) {
       cnicDates.add(_cnicDetails.cnicExpiryDate);
@@ -95,14 +95,18 @@ class CnicScanner {
       _cnicDetails.cnicExpiryDate = cnicDates[2].replaceAll(".", "/");
     }
     textDetector.close();
-    if (_cnicDetails.cnicNumber.length > 0 &&
-        _cnicDetails.cnicHolderDateOfBirth.length > 0 &&
-        _cnicDetails.cnicIssueDate.length > 0 &&
-        _cnicDetails.cnicExpiryDate.length > 0) {
-      print('==================== SMART CARD DETAILS $_cnicDetails');
+    if (_cnicDetails.cnicNumber.isNotEmpty &&
+        _cnicDetails.cnicHolderDateOfBirth.isNotEmpty &&
+        _cnicDetails.cnicIssueDate.isNotEmpty &&
+        _cnicDetails.cnicExpiryDate.isNotEmpty) {
+      if (kDebugMode) {
+        print('==================== SMART CARD DETAILS $_cnicDetails');
+      }
       return Future.value(_cnicDetails);
     } else {
-      print('==================== OLD CARD DETAILS $_cnicDetails');
+      if (kDebugMode) {
+        print('==================== OLD CARD DETAILS $_cnicDetails');
+      }
       // return await scanImage(imageSource: source);
       return Future.value(_cnicDetails);
     }

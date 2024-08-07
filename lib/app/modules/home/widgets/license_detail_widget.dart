@@ -1,22 +1,53 @@
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
+import 'package:guns_guru/app/modules/home/views/license/add_license_view.dart';
+import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
+import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/banner_card.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/widgets/custom_label_text.dart';
 
 class LicenseDetailWidget extends StatelessWidget {
-  const LicenseDetailWidget({
+  LicenseDetailWidget({
     super.key,
     required this.license,
   });
 
   final License license;
 
+  final HomeController controller = Get.find();
+
   @override
   Widget build(BuildContext context) {
     return BannerCard(
       title: 'LICENSE DETAIL',
+      isAddRecord: true,
+      buttonText: "Edit",
+      onTap: () async {
+        controller.issuingAuthority.value =
+            license.licenseIssuingAuthority ?? "";
+        controller.trackingNumberController.text =
+            license.licenseTrackingNumber ?? "";
+        controller.licenseNumberController.text = license.licenseNumber ?? "";
+        controller.ammunitionLimitController.text =
+            license.licenseAmmunitionLimit ?? "";
+        controller.caliber.value = license.licenseCalibre ?? "";
+        controller.dateOfIssuanceController.text =
+            license.licenseDateOfIssuance ?? "";
+        controller.validTillController.text = license.licenseValidTill ?? "";
+        controller.jurisdiction.value = license.licenseJurisdiction ?? "";
+        controller.issuaingQuota.value = license.licenseIssuaingQuota ?? "";
+        Get.dialog(LoadingDialog());
+        controller.licensePicture.value =
+            await urlToFile(license.licensePicture ?? "");
+        closeDialog();    
+        Get.to(AddLicenseView(
+          fromEditing: true,
+        ));
+      },
+      buttonIcon: Icons.edit,
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,8 +62,7 @@ class LicenseDetailWidget extends StatelessWidget {
                       '${license.licenseNumber}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     const CustomLabelText(
                       text: 'License No',
@@ -48,8 +78,7 @@ class LicenseDetailWidget extends StatelessWidget {
                       '${license.licenseTrackingNumber}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     const CustomLabelText(
                       text: 'Tracking No',
@@ -59,8 +88,7 @@ class LicenseDetailWidget extends StatelessWidget {
               ),
               Expanded(
                 child: CircleAvatar(
-                  backgroundImage:
-                      NetworkImage(license.licensePicture ?? ""),
+                  backgroundImage: NetworkImage(license.licensePicture ?? ""),
                 ),
               ),
             ],
@@ -79,8 +107,7 @@ class LicenseDetailWidget extends StatelessWidget {
                       '${license.licenseDateOfIssuance}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     const CustomLabelText(
                       text: 'Date of Issuance',
@@ -96,8 +123,7 @@ class LicenseDetailWidget extends StatelessWidget {
                       '${license.licenseValidTill}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     const CustomLabelText(
                       text: 'Valid Till',
@@ -113,8 +139,7 @@ class LicenseDetailWidget extends StatelessWidget {
                       '${license.licenseIssuaingQuota}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     const CustomLabelText(
                       text: 'Issuing Quota',
@@ -138,8 +163,7 @@ class LicenseDetailWidget extends StatelessWidget {
                       '${license.licenseCalibre}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     const CustomLabelText(
                       text: 'Caliber',
@@ -155,8 +179,7 @@ class LicenseDetailWidget extends StatelessWidget {
                       '${license.licenseAmmunitionLimit}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     const CustomLabelText(
                       text: 'Ammunition Limit',
@@ -172,8 +195,7 @@ class LicenseDetailWidget extends StatelessWidget {
                       '${license.licenseJurisdiction}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                          color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     const CustomLabelText(
                       text: 'Jurestriction',
@@ -188,5 +210,3 @@ class LicenseDetailWidget extends StatelessWidget {
     );
   }
 }
-
-

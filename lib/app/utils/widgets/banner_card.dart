@@ -6,6 +6,8 @@ class BannerCard extends StatelessWidget {
   final String title;
   final Widget content;
   final bool? isAddRecord;
+  final String? buttonText;
+  final IconData? buttonIcon;
   final VoidCallback? onTap;
 
   const BannerCard(
@@ -13,6 +15,8 @@ class BannerCard extends StatelessWidget {
       required this.title,
       required this.content,
       this.isAddRecord,
+      this.buttonIcon,
+      this.buttonText,
       this.onTap})
       : super(key: key);
 
@@ -54,17 +58,21 @@ class BannerCard extends StatelessWidget {
                         child: Row(
                           children: [
                             CircleAvatar(
-                              backgroundColor: Colors.white,
+                              backgroundColor: buttonText == "Edit"
+                                  ? Colors.transparent
+                                  : Colors.white,
                               radius: 8,
                               child: Icon(
-                                Icons.add,
-                                color: Colors.black.withOpacity(.7),
+                                buttonIcon ?? Icons.add,
+                                color: buttonText == "Edit"
+                                    ? Colors.white
+                                    : Colors.black.withOpacity(.7),
                                 size: 16,
                               ),
                             ),
                             5.width,
-                            const Text(
-                              'Add record',
+                            Text(
+                              buttonText ?? 'Add record',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,

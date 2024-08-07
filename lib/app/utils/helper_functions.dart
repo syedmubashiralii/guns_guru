@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
@@ -70,7 +72,7 @@ Future<CroppedFile?> cropImage(String path) async {
         toolbarColor: ColorHelper.primaryColor,
         toolbarWidgetColor: Colors.white,
         initAspectRatio: CropAspectRatioPreset.original,
-        lockAspectRatio: true,
+        lockAspectRatio: false,
         aspectRatioPresets: [
           CropAspectRatioPreset.original,
           CropAspectRatioPreset.square,
@@ -133,7 +135,7 @@ Future<String> datePicker({DateTime? lastDate}) async {
   }
 }
 
-closeDialog() {
+void closeDialog() {
   if (Get.isDialogOpen!) {
     Get.back();
   }
@@ -178,7 +180,7 @@ bool isAnyLicenseValidionExpire(List<License> licenses) {
     log(license.licenseValidTill!.toString());
     final licenseValidTill = dateFormat.parse(license.licenseValidTill!);
 
-    if (currentDate.isAfter(licenseValidTill) &&
+    if (currentDate.isAfter(licenseValidTill) ||
         licenseValidTill.isBefore(oneMonthFromNow)) {
       return true;
     }
@@ -195,7 +197,7 @@ bool checkLicenseValidation(License license) {
   log(license.licenseValidTill!.toString());
   final licenseValidTill = dateFormat.parse(license.licenseValidTill!);
 
-  if (currentDate.isAfter(licenseValidTill) &&
+  if (currentDate.isAfter(licenseValidTill) ||
       licenseValidTill.isBefore(oneMonthFromNow)) {
     return true;
   }
@@ -203,7 +205,7 @@ bool checkLicenseValidation(License license) {
   return false;
 }
 
-checkIsAfterCurrentDate(License license) {
+bool checkIsAfterCurrentDate(License license) {
   final currentDate = DateTime.now();
   final dateFormat = DateFormat('dd/MM/yyyy');
   final licenseValidTill = dateFormat.parse(license.licenseValidTill!);
@@ -217,3 +219,17 @@ checkIsAfterCurrentDate(License license) {
 
   return false;
 }
+
+Future<File> urlToFile(String imageUrl) async {
+  // Get the temporary directory
+  final Directory tempDir = await getTemporaryDirectory();
+  // Create a file path for the image
+  final String filePath = '${tempDir.path}/temp_image.png';
+  // Download the image
+  final http.Response response = await http.get(Uri.parse(imageUrl));
+  // Save the image as a file
+  final File file = File(filePath);
+  await file.writeAsBytes(response.bodyBytes);
+  return file;
+}
+
