@@ -5,7 +5,10 @@ class UserModel {
   String? cnicBackSide;
   String? cnicFrontSide;
   String? dob;
-  String? fullname;
+  String? gender;
+  String? firstname;
+  String? phoneno;
+  String? lastname;
   List<License>? license;
   String? uid;
 
@@ -16,7 +19,10 @@ class UserModel {
       this.cnicBackSide,
       this.cnicFrontSide,
       this.dob,
-      this.fullname,
+      this.gender,
+      this.firstname,
+      this.phoneno,
+      this.lastname,
       this.license,
       this.uid});
 
@@ -27,7 +33,10 @@ class UserModel {
     cnicBackSide = json['cnic_back_side'];
     cnicFrontSide = json['cnic_front_side'];
     dob = json['dob'];
-    fullname = json['fullname'];
+    phoneno= json['phoneno'];
+    gender=json['gender'];
+    firstname = json['firstname'];
+    lastname= json['lastname'];
     if (json['license'] != null) {
       license = <License>[];
       json['license'].forEach((v) {
@@ -42,10 +51,13 @@ class UserModel {
     data['address'] = this.address;
     data['city'] = this.city;
     data['cnic'] = this.cnic;
+    data['gender'] = this.gender;
     data['cnic_back_side'] = this.cnicBackSide;
     data['cnic_front_side'] = this.cnicFrontSide;
     data['dob'] = this.dob;
-    data['fullname'] = this.fullname;
+    data['phoneno'] = this.phoneno;
+    data['firstname'] = this.firstname;
+    data['lastname'] = this.lastname;
     if (this.license != null) {
       data['license'] = this.license!.map((v) => v.toJson()).toList();
     }
@@ -61,7 +73,10 @@ class UserModel {
     data['cnic_back_side'] = this.cnicBackSide;
     data['cnic_front_side'] = this.cnicFrontSide;
     data['dob'] = this.dob;
-    data['fullname'] = this.fullname;
+    data['gender']=this.gender;
+    data['phoneno'] = this.phoneno;
+    data['firstname'] = this.firstname;
+    data['lastname'] = this.lastname;
     if (this.license != null) {
       data['license'] = this.license!.map((v) => v.toMap()).toList();
     }
@@ -186,6 +201,7 @@ class License {
     data['licensePicture'] = this.licensePicture;
     data['licenseTrackingNumber'] = this.licenseTrackingNumber;
     data['licenseValidTill'] = this.licenseValidTill;
+    data['licenseValidated'] = this.licenseValidated;
     if (this.weaponDetails != null) {
       data['weaponDetails'] = this.weaponDetails!.toMap();
     }

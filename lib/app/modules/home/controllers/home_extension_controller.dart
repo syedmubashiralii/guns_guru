@@ -1,11 +1,13 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
+import 'package:guns_guru/app/modules/home/models/consultancy_model.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/default_snackbar.dart';
@@ -14,6 +16,7 @@ import 'package:guns_guru/app/utils/helper_functions.dart';
 
 class HomeExtensionController extends GetxController {
   HomeController homeController = Get.find();
+  var _firestore = FirebaseFirestore.instance;
   final ammunitionStockFormKey = GlobalKey<FormState>();
   TextEditingController purchaseDateController = TextEditingController();
   TextEditingController purchasedFromController = TextEditingController();
@@ -123,7 +126,7 @@ class HomeExtensionController extends GetxController {
             int.parse(firingShotsFiredController.text)) {
           DefaultSnackbar.show("Error",
               "The number of shots fired should not exceed the remaining stock. Please check your stock levels.");
-              closeDialog();
+          closeDialog();
           return;
         }
         var licenses = homeController.userModel.value.license;
@@ -201,4 +204,46 @@ class HomeExtensionController extends GetxController {
       }
     }
   }
+
+  Future<List<Consultancy>> fetchConsultancyData() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('admin')
+        .doc('consultancy')
+        .get();
+
+    final List<dynamic> consultancyList = snapshot.data()?['consultancy'] ?? [];
+
+    return consultancyList.map((e) => Consultancy.fromMap(e)).toList();
+  }
+
+ Future<void> loadUtils() async {
+  try {
+    DocumentSnapshot doc = await _firestore.collection('admin').doc('utils').get();
+
+    AppConstants.caliber = List<String>.from(doc['callibers']);
+    AppConstants.caliber.sort((a, b) => a.compareTo(b)); // Sorting alphabetically
+    homeController.caliber.value = AppConstants.caliber[0];
+    homeController.weaponCaliber.value = AppConstants.caliber[0];
+
+    AppConstants.make = List<String>.from(doc['makes']);
+    AppConstants.make.sort((a, b) => a.compareTo(b)); // Sorting alphabetically
+    homeController.weaponMake.value = AppConstants.make[0];
+
+    AppConstants.model = List<String>.from(doc['models']);
+    AppConstants.model.sort((a, b) => a.compareTo(b)); // Sorting alphabetically
+    homeController.weaponModel.value = AppConstants.model[0];
+  } catch (e) {
+    print("errororoororo${e.toString()}");
+  } finally {}
+}
+
+
+  @override
+  void onReady() {
+    // TODO: implement onReady
+    super.onReady();
+    loadUtils();
+  }
+
+  
 }

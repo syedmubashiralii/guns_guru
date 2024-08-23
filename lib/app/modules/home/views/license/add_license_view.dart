@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
@@ -15,6 +17,11 @@ class AddLicenseView extends GetView<HomeController> {
   bool? fromEditing;
   @override
   Widget build(BuildContext context) {
+    if (AppConstants.caliber.isEmpty ||
+        AppConstants.make.isEmpty ||
+        AppConstants.model.isEmpty) {
+      Get.find<HomeExtensionController>().loadUtils();
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -67,6 +74,9 @@ class AddLicenseView extends GetView<HomeController> {
                   labelText: 'Tracking Number',
                   border: OutlineInputBorder(),
                 ),
+                inputFormatters: [
+                  UpperCaseTextFormatter(),
+                ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Tracking Number is required';
@@ -81,6 +91,9 @@ class AddLicenseView extends GetView<HomeController> {
                   labelText: 'License Number',
                   border: OutlineInputBorder(),
                 ),
+                inputFormatters: [
+                  UpperCaseTextFormatter(),
+                ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'License Number is required';
@@ -96,6 +109,11 @@ class AddLicenseView extends GetView<HomeController> {
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
+                inputFormatters: [
+                  UpperCaseTextFormatter(),
+                  FilteringTextInputFormatter
+                      .digitsOnly, 
+                ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Ammunition Limit is required';

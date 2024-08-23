@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
+import 'package:guns_guru/app/modules/home/models/consultancy_model.dart';
 import 'package:guns_guru/app/modules/home/views/license/add_license_view.dart';
 import 'package:guns_guru/app/modules/home/views/license/license_detail_view.dart';
 import 'package:guns_guru/app/modules/home/widgets/renewal_button_widget.dart';
@@ -43,7 +45,7 @@ class LicenseListView extends GetView<HomeController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Welcome, ${controller.userModel.value.fullname ?? ""}",
+                "Welcome, ${controller.userModel.value.firstname ?? ""} ${controller.userModel.value.lastname ?? ""}",
                 style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.black.withOpacity(.7)),
@@ -65,6 +67,7 @@ class LicenseListView extends GetView<HomeController> {
               ),
               10.height,
               Expanded(
+                flex: 1,
                 child: ListView(
                   children: [
                     if (controller.userModel.value.license == null ||
@@ -99,7 +102,8 @@ class LicenseListView extends GetView<HomeController> {
                                 ),
                                 child: InkWell(
                                   onTap: () {
-                                    controller.selectedLicenseIndex.value = index;
+                                    controller.selectedLicenseIndex.value =
+                                        index;
                                     Get.to(const LicenseDetailView());
                                   },
                                   child: Row(
@@ -147,7 +151,8 @@ class LicenseListView extends GetView<HomeController> {
                                                     color: weaponNo == "N/A"
                                                         ? Colors.red
                                                         : Colors.black,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                               const Text(
                                                 'Weapon No',
@@ -171,7 +176,8 @@ class LicenseListView extends GetView<HomeController> {
                                                 overflow: TextOverflow.ellipsis,
                                                 style: const TextStyle(
                                                     color: Colors.black,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                               const Text(
                                                 'Caliber',
@@ -187,32 +193,31 @@ class LicenseListView extends GetView<HomeController> {
                                       15.width,
                                       CircleAvatar(
                                         radius: 10,
-                                        backgroundColor: ColorHelper.primaryColor,
+                                        backgroundColor:
+                                            ColorHelper.primaryColor,
                                         child: const Icon(
                                           Icons.arrow_forward_ios,
                                           color: Colors.white,
                                           size: 12,
                                         ),
                                       ),
-                                    
                                     ],
                                   ),
                                 ),
                               ),
                             ),
-                         
-                           Visibility(
-                                  visible: checkLicenseValidation(license),
-                                  child: Row(
-                                    children: [
-                                      5.width,
-                                      const Icon(
-                                        Icons.warning,
-                                        color: Colors.red,
-                                      ),
-                                    ],
+                            Visibility(
+                              visible: checkLicenseValidation(license),
+                              child: Row(
+                                children: [
+                                  5.width,
+                                  const Icon(
+                                    Icons.warning,
+                                    color: Colors.red,
                                   ),
-                                ),
+                                ],
+                              ),
+                            ),
                           ],
                         );
                       }).toList(),
@@ -232,6 +237,79 @@ class LicenseListView extends GetView<HomeController> {
                   ],
                 ),
               ),
+              10.height,
+              Expanded(
+                  flex: controller.userModel.value.license == null ||
+                          controller.userModel.value.license!.isEmpty ||
+                          controller.userModel.value.license!.length < 2
+                      ? 2
+                      : 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "CONSULTANCY",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, color: Colors.black),
+                      ),
+                      20.height,
+                      Expanded(
+                        child: FutureBuilder<List<Consultancy>>(
+                          future: Get.find<HomeExtensionController>()
+                              .fetchConsultancyData(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return Center(
+                                  child: Text('No consultancy data available'));
+                            }
+
+                            final consultancyList = snapshot.data!;
+
+                            return ListView.builder(
+                              itemCount: consultancyList.length,
+                              itemBuilder: (context, index) {
+                                final consultancy = consultancyList[index];
+                                return Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 4),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Colors.black.withOpacity(0.2)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          spreadRadius: 1,
+                                          blurRadius: 1,
+                                          offset: const Offset(0, 1)),
+                                    ],
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    leading: Text((index + 1).toString() + "."),
+                                    title: Text(consultancy.name),
+                                    subtitle: Text(consultancy.description),
+                                    trailing: IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(Icons.arrow_forward)),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ))
             ],
           ),
         ),

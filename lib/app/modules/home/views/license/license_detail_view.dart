@@ -44,7 +44,7 @@ class LicenseDetailView extends GetView<HomeController> {
                 color: isAfter ? Colors.red : Colors.yellow,
                 child: Text(
                   isAfter
-                      ? 'Your license has been expired'
+                      ? 'Your license is expired'
                       : 'Your license is about to expire ',
                   style: const TextStyle(
                     color: Colors.black,
@@ -119,7 +119,7 @@ class LicenseDetailView extends GetView<HomeController> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           const CustomLabelText(
-                                            text: 'Shots Fired',
+                                            text: 'Shots Fired'
                                           ),
                                           const Padding(
                                             padding: EdgeInsets.only(right: 20),
@@ -136,7 +136,7 @@ class LicenseDetailView extends GetView<HomeController> {
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
                                                 color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.bold)
                                           ),
                                           const CustomLabelText(
                                             text: 'Remainig Firing Stock',

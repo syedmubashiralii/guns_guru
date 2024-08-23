@@ -23,7 +23,7 @@ class IDCardScreen extends GetView<HomeController> {
           children: [
             10.height,
             const Text(
-              "Import Front Side of CNIC",
+              "Import Front Side of NIC",
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
             5.height,
@@ -47,7 +47,7 @@ class IDCardScreen extends GetView<HomeController> {
             ),
             const SizedBox(height: 20),
             const Text(
-              "Import Back Side of CNIC",
+              "Import Back Side of NIC",
               style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
             5.height,
