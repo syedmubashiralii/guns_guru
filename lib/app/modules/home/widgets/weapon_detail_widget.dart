@@ -65,10 +65,17 @@ class WeaponDetailWidget extends StatelessWidget {
                           ),
                         ),
                         Expanded(
-                          child: Text(
-                              license.weaponDetails?.weaponCaliber ?? "",
-                              style: const TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          child: Column( crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  license.weaponDetails?.weaponCaliber ?? "",
+                                  style: const TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.bold)),
+                                      const CustomLabelText(
+                                text: 'Caliber',
+                              ),
+                            ],
+                          ),
                         )
                       ],
                     ),

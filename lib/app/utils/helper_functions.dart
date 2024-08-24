@@ -140,6 +140,10 @@ void closeDialog() {
     Get.back();
   }
 }
+  bool isValidPhoneNumber(String phoneNumber) {
+    final RegExp phoneRegExp = RegExp(r'^[0-9+]+$');
+    return phoneRegExp.hasMatch(phoneNumber);
+  }
 
 int calculateAmmunitionStock(List<AmmunitionDetail> ammunition) {
   var total = 0;

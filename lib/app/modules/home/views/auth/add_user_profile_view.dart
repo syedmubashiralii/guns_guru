@@ -85,7 +85,7 @@ class AddUserProfileView extends GetView<HomeController> {
                       TextFormField(
                         controller: controller.cnicController,
                         decoration: const InputDecoration(
-                            labelText: 'CNIC',
+                            labelText: 'CNIC NO',
                             border: OutlineInputBorder(),
                             hintText: '1111-1111111-1'),
                         keyboardType: TextInputType.number,

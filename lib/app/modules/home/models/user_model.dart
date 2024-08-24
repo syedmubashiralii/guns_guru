@@ -2,8 +2,8 @@ class UserModel {
   String? address;
   String? city;
   String? cnic;
-  String? cnicBackSide;
-  String? cnicFrontSide;
+  // String? cnicBackSide;
+  // String? cnicFrontSide;
   String? dob;
   String? gender;
   String? firstname;
@@ -16,8 +16,8 @@ class UserModel {
       {this.address,
       this.city,
       this.cnic,
-      this.cnicBackSide,
-      this.cnicFrontSide,
+      // this.cnicBackSide,
+      // this.cnicFrontSide,
       this.dob,
       this.gender,
       this.firstname,
@@ -30,8 +30,8 @@ class UserModel {
     address = json['address'];
     city = json['city'];
     cnic = json['cnic'];
-    cnicBackSide = json['cnic_back_side'];
-    cnicFrontSide = json['cnic_front_side'];
+    // cnicBackSide = json['cnic_back_side'];
+    // cnicFrontSide = json['cnic_front_side'];
     dob = json['dob'];
     phoneno= json['phoneno'];
     gender=json['gender'];
@@ -52,8 +52,8 @@ class UserModel {
     data['city'] = this.city;
     data['cnic'] = this.cnic;
     data['gender'] = this.gender;
-    data['cnic_back_side'] = this.cnicBackSide;
-    data['cnic_front_side'] = this.cnicFrontSide;
+    // data['cnic_back_side'] = this.cnicBackSide;
+    // data['cnic_front_side'] = this.cnicFrontSide;
     data['dob'] = this.dob;
     data['phoneno'] = this.phoneno;
     data['firstname'] = this.firstname;
@@ -70,8 +70,8 @@ class UserModel {
     data['address'] = this.address;
     data['city'] = this.city;
     data['cnic'] = this.cnic;
-    data['cnic_back_side'] = this.cnicBackSide;
-    data['cnic_front_side'] = this.cnicFrontSide;
+    // data['cnic_back_side'] = this.cnicBackSide;
+    // data['cnic_front_side'] = this.cnicFrontSide;
     data['dob'] = this.dob;
     data['gender']=this.gender;
     data['phoneno'] = this.phoneno;
@@ -94,6 +94,7 @@ class License {
   String? licenseIssuingAuthority;
   String? licenseJurisdiction;
   String? licenseNumber;
+  String? licenseweaponType;
   String? licensePicture;
   String? licenseTrackingNumber;
   String? licenseValidTill;
@@ -111,6 +112,7 @@ class License {
       this.licenseIssuingAuthority,
       this.licenseJurisdiction,
       this.licenseNumber,
+      this.licenseweaponType,
       this.licensePicture,
       this.licenseTrackingNumber,
       this.licenseValidated,
@@ -133,6 +135,7 @@ class License {
     licenseIssuingAuthority = json['licenseIssuingAuthority'];
     licenseJurisdiction = json['licenseJurisdiction'];
     licenseNumber = json['licenseNumber'];
+    licenseweaponType=json['weaponType'];
     licensePicture = json['licensePicture'];
     licenseTrackingNumber = json['licenseTrackingNumber'];
     licenseValidTill = json['licenseValidTill'];
@@ -161,6 +164,7 @@ class License {
           this.ammunitionDetail!.map((v) => v.toJson()).toList();
     }
     data['licenseAmmunitionLimit'] = this.licenseAmmunitionLimit;
+    data['weaponType'] =this.licenseweaponType;
     data['licenseCalibre'] = this.licenseCalibre;
     data['licenseDateOfIssuance'] = this.licenseDateOfIssuance;
     data['licenseIssuaingQuota'] = this.licenseIssuaingQuota;
@@ -193,6 +197,7 @@ class License {
     }
     data['licenseAmmunitionLimit'] = this.licenseAmmunitionLimit;
     data['licenseCalibre'] = this.licenseCalibre;
+    data['weaponType']=this.licenseweaponType;
     data['licenseDateOfIssuance'] = this.licenseDateOfIssuance;
     data['licenseIssuaingQuota'] = this.licenseIssuaingQuota;
     data['licenseIssuingAuthority'] = this.licenseIssuingAuthority;
@@ -266,13 +271,24 @@ class WeaponDetails {
   String? weaponModel;
   String? weaponNo;
   String? weaponType;
+  String? weaponauthorizedealername;
+  String? weaponauthorizedealeraddress;
+  String? weaponauthorizedealerphonenumber;
+  String? weaponpurchaserecipt;
+  String? weaponpurchasedate;
 
-  WeaponDetails(
-      {this.weaponCaliber,
-      this.weaponMake,
-      this.weaponModel,
-      this.weaponNo,
-      this.weaponType});
+  WeaponDetails({
+    this.weaponCaliber,
+    this.weaponMake,
+    this.weaponModel,
+    this.weaponNo,
+    this.weaponType,
+    this.weaponauthorizedealername,
+    this.weaponauthorizedealeraddress,
+    this.weaponauthorizedealerphonenumber,
+    this.weaponpurchaserecipt,
+    this.weaponpurchasedate,
+  });
 
   WeaponDetails.fromJson(Map<String, dynamic> json) {
     weaponCaliber = json['weaponCaliber'];
@@ -280,25 +296,40 @@ class WeaponDetails {
     weaponModel = json['weaponModel'];
     weaponNo = json['weaponNo'];
     weaponType = json['weaponType'];
+    weaponauthorizedealername = json['weaponauthorizedealername'];
+    weaponauthorizedealeraddress = json['weaponauthorizedealeraddress'];
+    weaponauthorizedealerphonenumber = json['weaponauthorizedealerphonenumber'];
+    weaponpurchaserecipt = json['weaponpurchaserecipt'];
+    weaponpurchasedate = json['weaponpurchasedate'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['weaponCaliber'] = this.weaponCaliber;
-    data['weaponMake'] = this.weaponMake;
-    data['weaponModel'] = this.weaponModel;
-    data['weaponNo'] = this.weaponNo;
-    data['weaponType'] = this.weaponType;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['weaponCaliber'] = weaponCaliber;
+    data['weaponMake'] = weaponMake;
+    data['weaponModel'] = weaponModel;
+    data['weaponNo'] = weaponNo;
+    data['weaponType'] = weaponType;
+    data['weaponauthorizedealername'] = weaponauthorizedealername;
+    data['weaponauthorizedealeraddress'] = weaponauthorizedealeraddress;
+    data['weaponauthorizedealerphonenumber'] = weaponauthorizedealerphonenumber;
+    data['weaponpurchaserecipt'] = weaponpurchaserecipt;
+    data['weaponpurchasedate'] = weaponpurchasedate;
     return data;
   }
 
   Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['weaponCaliber'] = this.weaponCaliber;
-    data['weaponMake'] = this.weaponMake;
-    data['weaponModel'] = this.weaponModel;
-    data['weaponNo'] = this.weaponNo;
-    data['weaponType'] = this.weaponType;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['weaponCaliber'] = weaponCaliber;
+    data['weaponMake'] = weaponMake;
+    data['weaponModel'] = weaponModel;
+    data['weaponNo'] = weaponNo;
+    data['weaponType'] = weaponType;
+    data['weaponauthorizedealername'] = weaponauthorizedealername;
+    data['weaponauthorizedealeraddress'] = weaponauthorizedealeraddress;
+    data['weaponauthorizedealerphonenumber'] = weaponauthorizedealerphonenumber;
+    data['weaponpurchaserecipt'] = weaponpurchaserecipt;
+    data['weaponpurchasedate'] = weaponpurchasedate;
     return data;
   }
 }

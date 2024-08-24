@@ -125,20 +125,42 @@ class AddLicenseView extends GetView<HomeController> {
                 },
               ),
               20.height,
-              DropdownButtonFormField<String>(
-                value: controller.caliber.value,
+              // DropdownButtonFormField<String>(
+              //   value: controller.caliber.value,
+              //   decoration: const InputDecoration(
+              //     labelText: 'Caliber',
+              //     border: OutlineInputBorder(),
+              //   ),
+              //   items: AppConstants.caliber.map((String value) {
+              //     return DropdownMenuItem<String>(
+              //       value: value,
+              //       child: Text(value),
+              //     );
+              //   }).toList(),
+              //   onChanged: (newValue) {
+              //     controller.caliber.value = newValue!;
+              //   },
+              //   validator: (value) {
+              //     if (value == null) {
+              //       return 'Weapon Type is required';
+              //     }
+              //     return null;
+              //   },
+              // ),
+               DropdownButtonFormField<String>(
+                value: controller.licenseWeaponType.value,
                 decoration: const InputDecoration(
-                  labelText: 'Caliber',
+                  labelText: 'Weapon Type',
                   border: OutlineInputBorder(),
                 ),
-                items: AppConstants.caliber.map((String value) {
+                items: AppConstants.weaponTypeList.map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(),
                 onChanged: (newValue) {
-                  controller.caliber.value = newValue!;
+                  controller.licenseWeaponType.value = newValue!;
                 },
                 validator: (value) {
                   if (value == null) {

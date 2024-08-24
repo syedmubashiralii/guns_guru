@@ -34,6 +34,7 @@ class LicenseDetailWidget extends StatelessWidget {
         controller.ammunitionLimitController.text =
             license.licenseAmmunitionLimit ?? "";
         controller.caliber.value = license.licenseCalibre ?? "";
+        controller.licenseWeaponType.value=license.licenseweaponType??"";
         controller.dateOfIssuanceController.text =
             license.licenseDateOfIssuance ?? "";
         controller.validTillController.text = license.licenseValidTill ?? "";
@@ -160,13 +161,13 @@ class LicenseDetailWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${license.licenseCalibre}',
+                      '${license.licenseweaponType}',
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                     const CustomLabelText(
-                      text: 'Caliber',
+                      text: 'Weapon Type',
                     ),
                   ],
                 ),

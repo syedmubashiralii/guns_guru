@@ -50,6 +50,16 @@ class LicenseListView extends GetView<HomeController> {
                     fontWeight: FontWeight.w600,
                     color: Colors.black.withOpacity(.7)),
               ),
+              10.height,
+              Text(
+                "This application is only for the license holders issued by the competent authority. Please select one of the options to proceed further:\n"
+                "A. Add your arms license\n"
+                "B. Consultancy (issuance of new license, renewal etc.).",
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 13,
+                    color: Colors.black),
+              ),
               Visibility(
                   visible: isAnyLicenseValidionExpire(
                       controller.userModel.value.license ?? []),
@@ -61,9 +71,9 @@ class LicenseListView extends GetView<HomeController> {
                   )),
               10.height,
               const Text(
-                "LICENSE DETAILS",
+                "A. LICENSE DETAILS",
                 style:
-                    TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
+                    TextStyle(fontWeight: FontWeight.w600, color: Colors.black,fontSize: 17),
               ),
               10.height,
               Expanded(
@@ -172,7 +182,7 @@ class LicenseListView extends GetView<HomeController> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                license.licenseCalibre ?? "",
+                                                license.licenseweaponType ?? "",
                                                 overflow: TextOverflow.ellipsis,
                                                 style: const TextStyle(
                                                     color: Colors.black,
@@ -180,7 +190,7 @@ class LicenseListView extends GetView<HomeController> {
                                                         FontWeight.bold),
                                               ),
                                               const Text(
-                                                'Caliber',
+                                                'Weapon Type',
                                                 style: TextStyle(
                                                     color: Colors.grey,
                                                     fontWeight: FontWeight.bold,
@@ -191,11 +201,11 @@ class LicenseListView extends GetView<HomeController> {
                                         ),
                                       ),
                                       15.width,
-                                      CircleAvatar(
+                                      const CircleAvatar(
                                         radius: 10,
                                         backgroundColor:
                                             ColorHelper.primaryColor,
-                                        child: const Icon(
+                                        child: Icon(
                                           Icons.arrow_forward_ios,
                                           color: Colors.white,
                                           size: 12,
@@ -232,7 +242,7 @@ class LicenseListView extends GetView<HomeController> {
                         controller.validTillController.clear();
                         Get.to(AddLicenseView());
                       },
-                      text: "Add Another License",
+                      text: "Add License",
                     ),
                   ],
                 ),
@@ -248,9 +258,9 @@ class LicenseListView extends GetView<HomeController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "CONSULTANCY",
+                        "B. CONSULTANCY",
                         style: TextStyle(
-                            fontWeight: FontWeight.w600, color: Colors.black),
+                            fontWeight: FontWeight.w600, color: Colors.black,fontSize: 17),
                       ),
                       20.height,
                       Expanded(
@@ -260,13 +270,14 @@ class LicenseListView extends GetView<HomeController> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(
+                                  child: CircularProgressIndicator());
                             } else if (snapshot.hasError) {
                               return Center(
                                   child: Text('Error: ${snapshot.error}'));
                             } else if (!snapshot.hasData ||
                                 snapshot.data!.isEmpty) {
-                              return Center(
+                              return const Center(
                                   child: Text('No consultancy data available'));
                             }
 
@@ -300,7 +311,7 @@ class LicenseListView extends GetView<HomeController> {
                                     subtitle: Text(consultancy.description),
                                     trailing: IconButton(
                                         onPressed: () {},
-                                        icon: Icon(Icons.arrow_forward)),
+                                        icon: const Icon(Icons.arrow_forward)),
                                   ),
                                 );
                               },

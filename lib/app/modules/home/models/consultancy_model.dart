@@ -12,4 +12,19 @@ class Consultancy {
       price: map['price']
     );
   }
+   factory Consultancy.fromJson(Map<String, dynamic> json) {
+    return Consultancy(
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
+      price: json['price'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'description': description,
+      'price': price,
+    };
+  }
 }

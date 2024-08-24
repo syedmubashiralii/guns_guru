@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/models/consultancy_model.dart';
+import 'package:guns_guru/app/modules/home/models/model_make_model.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/default_snackbar.dart';
@@ -228,10 +229,16 @@ class HomeExtensionController extends GetxController {
     AppConstants.make = List<String>.from(doc['makes']);
     AppConstants.make.sort((a, b) => a.compareTo(b)); // Sorting alphabetically
     homeController.weaponMake.value = AppConstants.make[0];
-
-    AppConstants.model = List<String>.from(doc['models']);
-    AppConstants.model.sort((a, b) => a.compareTo(b)); // Sorting alphabetically
-    homeController.weaponModel.value = AppConstants.model[0];
+    List<dynamic> modelsData = doc['models'];
+      AppConstants.model = modelsData.map((item) {
+        if (item is Map<String, dynamic>) {
+          return Model.fromJson(item);
+        } else {
+          return Model(model: '', make: ''); // Fallback for unexpected data
+        }
+      }).toList();
+    AppConstants.model.sort((a, b) => a.model.compareTo(b.model)); // Sorting alphabetically
+    homeController.weaponModel.value = AppConstants.model[0].model;
   } catch (e) {
     print("errororoororo${e.toString()}");
   } finally {}
@@ -240,7 +247,6 @@ class HomeExtensionController extends GetxController {
 
   @override
   void onReady() {
-    // TODO: implement onReady
     super.onReady();
     loadUtils();
   }

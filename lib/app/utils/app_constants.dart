@@ -1,3 +1,5 @@
+import 'package:guns_guru/app/modules/home/models/model_make_model.dart';
+
 class AppConstants {
   static String FirstName = 'firstname';
   static String LastName = 'lastname';
@@ -27,7 +29,13 @@ class AppConstants {
   static String weaponDetails = 'weaponDetails';
   static String weaponCaliber = 'weaponCaliber';
   static String weaponType = 'weaponType';
+  static String weaponAuthorizeDealerName = 'weaponauthorizedealername';
+  static String weaponAuthorizeDealerAddress = 'weaponauthorizedealeraddress';
+  static String weaponAuthorizeDealerPhoneNumber =
+      'weaponauthorizedealerphonenumber';
   static String weaponNo = 'weaponNo';
+  static String weaponPurchaseRecipt = 'weaponpurchaserecipt';
+  static String weaponPurchaseDate = 'weaponpurchasedate';
   static String weaponMake = 'weaponMake';
   static String weaponModel = 'weaponModel';
   static const String ammunitionPurchaseDate = 'ammunitionPurchaseDate';
@@ -71,6 +79,13 @@ class AppConstants {
     "⁠Home Secretary",
     "⁠Home Minister",
     "DC"
+  ];
+
+  static List<String> weaponTypeList = [
+    'PISTOL',
+    'RIFLE',
+    'SHOTGUN',
+    'REVOLVER'
   ];
 
   static List<String> caliber = [
@@ -133,7 +148,7 @@ class AppConstants {
     // "Browning"
   ];
 
-  static List<String> model = [
+  static List<Model> model = [
     // "Glock 17",
     // "Colt M1911",
     // "AK-47",

@@ -48,7 +48,7 @@ class HomeController extends GetxController {
   TextEditingController dobController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
-  RxString selectedGender="MALE".obs;
+  RxString selectedGender = "MALE".obs;
   TextEditingController phoneNoTextEditingController = TextEditingController();
   RxBool isPhoneNumberValid = false.obs;
 
@@ -59,10 +59,16 @@ class HomeController extends GetxController {
   TextEditingController dateOfIssuanceController = TextEditingController();
   TextEditingController validTillController = TextEditingController();
   //weapon fields
-  TextEditingController weaponTypeController = TextEditingController();
+  TextEditingController authorizeDealerName = TextEditingController();
+  TextEditingController authorizeDealerAddress = TextEditingController();
+  TextEditingController authorizeDealerPhoneNo = TextEditingController();
+  TextEditingController weaponPurchaseDate = TextEditingController();
+  RxString weaponType = "PISTOL".obs;
   TextEditingController weaponNumberController = TextEditingController();
+  Rx<File?> weaponPurchaseReceipt = Rx<File?>(null);
 
   RxString caliber = '9mm'.obs;
+  RxString licenseWeaponType = 'PISTOL'.obs;
   RxString issuingAuthority = "Sindh".obs;
   RxString jurisdiction = "All Pakistan".obs;
   RxString issuaingQuota = "Federal Interior Minister".obs;
@@ -99,22 +105,22 @@ class HomeController extends GetxController {
   }
 
   onLoginSuccesfull() {
-    if (userModel.value.cnicFrontSide != null &&
-        userModel.value.cnicFrontSide!.isNotEmpty) {
+    // if (userModel.value.cnicFrontSide != null &&
+    //     userModel.value.cnicFrontSide!.isNotEmpty) {
       if (userModel.value.firstname != null &&
           userModel.value.firstname!.isNotEmpty) {
         // if (userModel.value.license != null &&
         //     userModel.value.license!.isNotEmpty) {
-          Get.off(const LicenseListView());
+        Get.off(const LicenseListView());
         // } else {
-          // Get.off(AddLicenseView());
+        // Get.off(AddLicenseView());
         // }
       } else {
         Get.off(AddUserProfileView());
       }
-    } else {
-      Get.off(IDCardScreen());
-    }
+    // } else {
+    //   Get.off(IDCardScreen());
+    // }
   }
 
   User? getLoggedFirebaseUser() {
@@ -248,32 +254,32 @@ class HomeController extends GetxController {
     }
   }
 
-  loadRecordFromCard() async {
-    try {
-      if (frontImage.value != null && backImage.value != null) {
-        Get.dialog(const LoadingDialog());
-        CnicModel cnicModel = await CnicScanner().scanCnic(
-            imageToScan: InputImage.fromFilePath(frontImage.value!.path));
-        firstNameController.text = cnicModel.cnicHolderName;
-        dobController.text = cnicModel.cnicHolderDateOfBirth;
-        cnicController.text = cnicModel.cnicNumber;
-        String frontSide = await uploadImage(frontImage.value!);
-        await updateUserSpecificData(firebaseAuth.currentUser!.uid,
-            {AppConstants.CNICFrontSide: frontSide});
-        String backSide = await uploadImage(frontImage.value!);
-        await updateUserSpecificData(firebaseAuth.currentUser!.uid,
-            {AppConstants.CNICBackSide: backSide});
-        await loadUserData(firebaseAuth.currentUser!.uid);
-        closeDialog();
-        Get.to(AddUserProfileView());
-      } else {
-        DefaultSnackbar.show('Title', "Please Enter Cnic Images First");
-      }
-    } catch (e) {
-      closeDialog();
-      print(e.toString());
-    }
-  }
+  // loadRecordFromCard() async {
+  //   try {
+  //     if (frontImage.value != null && backImage.value != null) {
+  //       Get.dialog(const LoadingDialog());
+  //       CnicModel cnicModel = await CnicScanner().scanCnic(
+  //           imageToScan: InputImage.fromFilePath(frontImage.value!.path));
+  //       firstNameController.text = cnicModel.cnicHolderName;
+  //       dobController.text = cnicModel.cnicHolderDateOfBirth;
+  //       cnicController.text = cnicModel.cnicNumber;
+  //       String frontSide = await uploadImage(frontImage.value!);
+  //       await updateUserSpecificData(firebaseAuth.currentUser!.uid,
+  //           {AppConstants.CNICFrontSide: frontSide});
+  //       String backSide = await uploadImage(frontImage.value!);
+  //       await updateUserSpecificData(firebaseAuth.currentUser!.uid,
+  //           {AppConstants.CNICBackSide: backSide});
+  //       await loadUserData(firebaseAuth.currentUser!.uid);
+  //       closeDialog();
+  //       Get.to(AddUserProfileView());
+  //     } else {
+  //       DefaultSnackbar.show('Title', "Please Enter Cnic Images First");
+  //     }
+  //   } catch (e) {
+  //     closeDialog();
+  //     print(e.toString());
+  //   }
+  // }
 
   pickAndSetImage(bool isFront) async {
     String source = '';
@@ -338,7 +344,7 @@ class HomeController extends GetxController {
         AppConstants.licenseTrackingNumber: trackingNumberController.text,
         AppConstants.licenseNumber: licenseNumberController.text,
         AppConstants.licenseAmmunitionLimit: ammunitionLimitController.text,
-        AppConstants.licenseCalibre: caliber.value,
+        AppConstants.weaponType: licenseWeaponType.value,
         AppConstants.licenseIssuingAuthority: issuingAuthority.value,
         AppConstants.licenseValidTill: validTillController.text,
         AppConstants.licenseIssuaingQuota: issuaingQuota.value,
@@ -371,12 +377,27 @@ class HomeController extends GetxController {
 
   Future<void> saveWeaponDetail() async {
     if (weaponFormKey.currentState?.validate() ?? false) {
+      if (!isValidPhoneNumber(authorizeDealerPhoneNo.text)) {
+        DefaultSnackbar.show("Error",
+            "Please enter a valid phone number containing only digits");
+        return;
+      }
       Get.back();
       Get.dialog(const LoadingDialog());
+
+      String? weaponReceipt = weaponPurchaseReceipt.value == null
+          ? ''
+          : await uploadImage(File(weaponPurchaseReceipt.value!.path));
       Map<String, dynamic> weaponDetailValue = {
         AppConstants.weaponCaliber: weaponCaliber.value,
-        AppConstants.weaponType: weaponTypeController.text,
+        AppConstants.weaponType: weaponType.value,
+        AppConstants.weaponAuthorizeDealerName: authorizeDealerName.text,
+        AppConstants.weaponAuthorizeDealerAddress: authorizeDealerAddress.text,
+        AppConstants.weaponAuthorizeDealerPhoneNumber:
+            authorizeDealerPhoneNo.text,
         AppConstants.weaponNo: weaponNumberController.text,
+        AppConstants.weaponPurchaseRecipt: weaponReceipt,
+        AppConstants.weaponPurchaseDate: weaponPurchaseDate.text,
         AppConstants.weaponMake: weaponMake.value,
         AppConstants.weaponModel: weaponModel.value,
       };
