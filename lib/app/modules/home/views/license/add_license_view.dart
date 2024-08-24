@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -40,29 +41,38 @@ class AddLicenseView extends GetView<HomeController> {
           child: ListView(
             children: [
               10.height,
-              DropdownButtonFormField<String>(
-                value: controller.issuingAuthority.value,
-                decoration: const InputDecoration(
-                  labelText: 'Issuing Authority',
-                  border: OutlineInputBorder(),
+              DropdownSearch<String>(
+                popupProps: const PopupProps.menu(
+                  showSearchBox: true, // Enables the search box in the dropdown
+                  searchFieldProps: TextFieldProps(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Search Issuing Authority',
+                    ),
+                  ),
                 ),
-                items: AppConstants.issuingAuthorities.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: SizedBox(
-                        width: Get.width * .6,
-                        child: Text(
-                          value,
-                          overflow: TextOverflow.ellipsis,
-                        )),
-                  );
-                }).toList(),
+                items: AppConstants
+                    .issuingAuthorities, // The list of issuing authorities
+                dropdownDecoratorProps: const DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(
+                    labelText: 'Issuing Authority',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                selectedItem: controller.issuingAuthority.value,
                 onChanged: (newValue) {
                   controller.issuingAuthority.value = newValue!;
                 },
+                dropdownBuilder: (context, selectedItem) => SizedBox(
+                  width: Get.width * .6,
+                  child: Text(
+                    selectedItem ?? '',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
                 validator: (value) {
                   if (value == null) {
-                    return 'Weapon Type is required';
+                    return 'Issuing Authority is required';
                   }
                   return null;
                 },
@@ -111,8 +121,7 @@ class AddLicenseView extends GetView<HomeController> {
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   UpperCaseTextFormatter(),
-                  FilteringTextInputFormatter
-                      .digitsOnly, 
+                  FilteringTextInputFormatter.digitsOnly,
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -147,18 +156,25 @@ class AddLicenseView extends GetView<HomeController> {
               //     return null;
               //   },
               // ),
-               DropdownButtonFormField<String>(
-                value: controller.licenseWeaponType.value,
-                decoration: const InputDecoration(
-                  labelText: 'Weapon Type',
-                  border: OutlineInputBorder(),
+              DropdownSearch<String>(
+                popupProps: const PopupProps.menu(
+                  showSearchBox: true, // Enables the search box in the dropdown
+                  searchFieldProps: TextFieldProps(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Search Weapon Type',
+                    ),
+                  ),
                 ),
-                items: AppConstants.weaponTypeList.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                items: AppConstants
+                    .weaponTypeList, // The list of weapon types to display
+                dropdownDecoratorProps: const DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(
+                    labelText: 'Weapon Type',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                selectedItem: controller.licenseWeaponType.value,
                 onChanged: (newValue) {
                   controller.licenseWeaponType.value = newValue!;
                 },
@@ -221,18 +237,25 @@ class AddLicenseView extends GetView<HomeController> {
                 },
               ),
               20.height,
-              DropdownButtonFormField<String>(
-                value: controller.jurisdiction.value,
-                decoration: const InputDecoration(
-                  labelText: 'Jurisdiction',
-                  border: OutlineInputBorder(),
+              DropdownSearch<String>(
+                popupProps: const PopupProps.menu(
+                  showSearchBox: true, // Enables the search box in the dropdown
+                  searchFieldProps: TextFieldProps(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Search Jurisdiction',
+                    ),
+                  ),
                 ),
-                items: AppConstants.jurisdictions.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                items: AppConstants
+                    .jurisdictions, // The list of jurisdictions to display
+                dropdownDecoratorProps: const DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(
+                    labelText: 'Jurisdiction',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                selectedItem: controller.jurisdiction.value,
                 onChanged: (newValue) {
                   controller.jurisdiction.value = newValue!;
                 },
@@ -244,18 +267,25 @@ class AddLicenseView extends GetView<HomeController> {
                 },
               ),
               20.height,
-              DropdownButtonFormField<String>(
-                value: controller.issuaingQuota.value,
-                decoration: const InputDecoration(
-                  labelText: 'Issuance Quota',
-                  border: OutlineInputBorder(),
+              DropdownSearch<String>(
+                popupProps: const PopupProps.menu(
+                  showSearchBox: true, // Enables the search box in the dropdown
+                  searchFieldProps: TextFieldProps(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Search Issuance Quota',
+                    ),
+                  ),
                 ),
-                items: AppConstants.issuingQuota.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                items: AppConstants
+                    .issuingQuota, // The list of issuance quotas to display
+                dropdownDecoratorProps: const DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(
+                    labelText: 'Issuance Quota',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                selectedItem: controller.issuaingQuota.value,
                 onChanged: (newValue) {
                   controller.issuaingQuota.value = newValue!;
                 },

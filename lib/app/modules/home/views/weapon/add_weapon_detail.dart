@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -76,18 +77,25 @@ class AddWeaponDetail extends GetView<HomeController> {
                     },
                   ),
                   20.height,
-                  DropdownButtonFormField<String>(
-                    value: controller.weaponCaliber.value,
-                    decoration: const InputDecoration(
-                      labelText: 'Caliber',
-                      border: OutlineInputBorder(),
+                  DropdownSearch<String>(
+                    popupProps: const PopupProps.menu(
+                      showSearchBox:
+                          true, // Enables the search box in the dropdown
+                      searchFieldProps: const TextFieldProps(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Search Caliber',
+                        ),
+                      ),
                     ),
-                    items: AppConstants.caliber.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+                    items: AppConstants.caliber, // The list of caliber values
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: 'Caliber',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    selectedItem: controller.weaponCaliber.value,
                     onChanged: (newValue) {
                       controller.weaponCaliber.value = newValue!;
                     },
@@ -109,7 +117,7 @@ class AddWeaponDetail extends GetView<HomeController> {
                       UpperCaseTextFormatter(),
                     ],
                     validator: (value) {
-                      if (value == null||value.isEmpty) {
+                      if (value == null || value.isEmpty) {
                         return 'Authorize dealer name is required';
                       }
                       return null;
@@ -126,7 +134,7 @@ class AddWeaponDetail extends GetView<HomeController> {
                       UpperCaseTextFormatter(),
                     ],
                     validator: (value) {
-                      if (value == null||value.isEmpty) {
+                      if (value == null || value.isEmpty) {
                         return 'Authorize dealer address is required';
                       }
                       return null;
@@ -138,7 +146,7 @@ class AddWeaponDetail extends GetView<HomeController> {
                     decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.symmetric(vertical: 14.0),
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       hintText: "Authorize Dealer Phone Number".tr,
                       counterText: "",
                     ),
@@ -159,18 +167,26 @@ class AddWeaponDetail extends GetView<HomeController> {
                     },
                   ),
                   20.height,
-                  DropdownButtonFormField<String>(
-                    value: controller.weaponType.value,
-                    decoration: const InputDecoration(
-                      labelText: 'Weapon Type',
-                      border: OutlineInputBorder(),
+                  DropdownSearch<String>(
+                    popupProps: const PopupProps.menu(
+                      showSearchBox:
+                          true, // Enables the search box in the dropdown
+                      searchFieldProps: const TextFieldProps(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Search Weapon Type',
+                        ),
+                      ),
                     ),
-                    items: AppConstants.weaponTypeList.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
+                    items: AppConstants
+                        .weaponTypeList, // The list of weapon types to display
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: 'Weapon Type',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    selectedItem: controller.weaponType.value,
                     onChanged: (newValue) {
                       controller.weaponType.value = newValue!;
                     },
@@ -196,23 +212,36 @@ class AddWeaponDetail extends GetView<HomeController> {
                     },
                   ),
                   20.height,
-                  DropdownButtonFormField<String>(
-                    value: controller.weaponMake.value,
-                    decoration: const InputDecoration(
-                      labelText: 'Make',
-                      border: OutlineInputBorder(),
-                    ),
-                    items: AppConstants.make.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: SizedBox(
+                  DropdownSearch<String>(
+                    popupProps: PopupProps.menu(
+                      showSearchBox:
+                          true, // Enables the search box in the dropdown
+                      searchFieldProps: const TextFieldProps(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Search Make',
+                        ),
+                      ),
+                      itemBuilder: (context, item, isSelected) {
+                        return ListTile(
+                          title: SizedBox(
                             width: Get.width * .6,
                             child: Text(
-                              value,
+                              item,
                               overflow: TextOverflow.ellipsis,
-                            )),
-                      );
-                    }).toList(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    items: AppConstants.make, // The list of makes to display
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: 'Make',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    selectedItem: controller.weaponMake.value,
                     onChanged: (newValue) {
                       controller.weaponMake.value = newValue!;
                     },
@@ -224,23 +253,38 @@ class AddWeaponDetail extends GetView<HomeController> {
                     },
                   ),
                   20.height,
-                  DropdownButtonFormField<String>(
-                    value: controller.weaponModel.value,
-                    decoration: const InputDecoration(
-                      labelText: 'Model',
-                      border: OutlineInputBorder(),
-                    ),
-                    items: AppConstants.model.map((Model value) {
-                      return DropdownMenuItem<String>(
-                        value: value.model,
-                        child: SizedBox(
+                  DropdownSearch<String>(
+                    popupProps: PopupProps.menu(
+                      showSearchBox:
+                          true, // Enables the search box in the dropdown
+                      searchFieldProps: const TextFieldProps(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Search Model',
+                        ),
+                      ),
+                      itemBuilder: (context, item, isSelected) {
+                        return ListTile(
+                          title: SizedBox(
                             width: Get.width * .6,
                             child: Text(
-                              value.model,
+                              item,
                               overflow: TextOverflow.ellipsis,
-                            )),
-                      );
-                    }).toList(),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    items: AppConstants.model
+                        .map((model) => model.model)
+                        .toList(), // Extracting the model names
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: 'Model',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    selectedItem: controller.weaponModel.value,
                     onChanged: (newValue) {
                       controller.weaponModel.value = newValue!;
                     },
