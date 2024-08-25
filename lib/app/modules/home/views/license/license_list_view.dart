@@ -1,14 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
-import 'package:guns_guru/app/modules/home/models/consultancy_model.dart';
 import 'package:guns_guru/app/modules/home/views/consultancy/consultancy_service.dart';
 import 'package:guns_guru/app/modules/home/views/license/add_license_view.dart';
 import 'package:guns_guru/app/modules/home/views/license/license_detail_view.dart';
 import 'package:guns_guru/app/modules/home/widgets/renewal_button_widget.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
-import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/dialogs/app_exit_dialog.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/app_drawer.dart';
@@ -129,7 +126,7 @@ class LicenseListView extends GetView<HomeController> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '${license.licenseNumber ?? ""}',
+                                        license.licenseNumber ?? "",
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                             color: Colors.black,
@@ -225,7 +222,7 @@ class LicenseListView extends GetView<HomeController> {
                       ),
                     ],
                   );
-                }).toList(),
+                }),
               30.height,
               DarkButton(
                 onTap: () {
@@ -288,7 +285,7 @@ class LicenseListView extends GetView<HomeController> {
                             homeExtensionController
                                 .selectedConsultancyIndex
                                 .value = index;
-                            Get.to(ConsultancyService());
+                            Get.to(const ConsultancyService());
                           },
                           icon: const Icon(Icons.arrow_forward),
                         ),

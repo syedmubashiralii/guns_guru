@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,20 +8,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:guns_guru/app/modules/home/controllers/cnic_scanner.dart';
-import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
-import 'package:guns_guru/app/modules/home/models/consultancy_model.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/views/auth/auth_view.dart';
-import 'package:guns_guru/app/modules/home/views/license/add_license_view.dart';
 import 'package:guns_guru/app/modules/home/views/license/license_list_view.dart';
 import 'package:guns_guru/app/modules/home/views/auth/splash_view.dart';
 import 'package:guns_guru/app/modules/home/views/auth/add_user_profile_view.dart';
-import 'package:guns_guru/app/modules/home/views/auth/id_card_view.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/default_snackbar.dart';
 import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
