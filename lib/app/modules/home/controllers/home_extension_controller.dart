@@ -40,8 +40,10 @@ class HomeExtensionController extends GetxController {
 
   RxList servicePartsChangedList = [].obs;
 
-  RxString ammoBrand="Federal Premium".obs;
-  RxString typeOfRound="Full Metal Jacket (FMJ)".obs;
+  RxString ammoBrand = "Federal Premium".obs;
+  RxString typeOfRound = "Full Metal Jacket (FMJ)".obs;
+  RxList<Consultancy> consultancyList = <Consultancy>[].obs;
+  RxInt selectedConsultancyIndex = 0.obs;
 
   Future<void> addAmmunitionStock() async {
     if (ammunitionStockFormKey.currentState?.validate() ?? false) {
@@ -210,39 +212,47 @@ class HomeExtensionController extends GetxController {
     }
   }
 
-  Future<List<Consultancy>> fetchConsultancyData() async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('admin')
-        .doc('consultancy')
-        .get();
+  Future<void> fetchConsultancyData() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('admin')
+          .doc('consultancy')
+          .get();
 
-    final List<dynamic> consultancyList = snapshot.data()?['consultancy'] ?? [];
+      final List<dynamic> consultancyData =
+          snapshot.data()?['consultancy'] ?? [];
+      final consultancyListData =
+          consultancyData.map((e) => Consultancy.fromMap(e)).toList();
 
-    return consultancyList.map((e) => Consultancy.fromMap(e)).toList();
+      consultancyList.value = consultancyListData;
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
- Future<void> loadUtils() async {
-  try {
-    DocumentSnapshot doc = await _firestore.collection('admin').doc('utils').get();
+  Future<void> loadUtils() async {
+    try {
+      DocumentSnapshot doc =
+          await _firestore.collection('admin').doc('utils').get();
 
-    AppConstants.caliber = List<String>.from(doc['callibers']);
-    AppConstants.caliber.sort((a, b) => a.compareTo(b)); // Sorting alphabetically
-    homeController.caliber.value = AppConstants.caliber[0];
-    homeController.weaponCaliber.value = AppConstants.caliber[0];
+      AppConstants.caliber = List<String>.from(doc['callibers']);
+      AppConstants.caliber
+          .sort((a, b) => a.compareTo(b)); // Sorting alphabetically
+      homeController.caliber.value = AppConstants.caliber[0];
+      homeController.weaponCaliber.value = AppConstants.caliber[0];
 
-    AppConstants.make = List<String>.from(doc['makes']);
-    AppConstants.make.sort((a, b) => a.compareTo(b));
-    AppConstants.ammoBrand = List<String>.from(doc['ammobrand']);
-    AppConstants.ammoBrand.sort((a, b) => a.compareTo(b));
-    ammoBrand.value=AppConstants.ammoBrand.first;
+      AppConstants.make = List<String>.from(doc['makes']);
+      AppConstants.make.sort((a, b) => a.compareTo(b));
+      AppConstants.ammoBrand = List<String>.from(doc['ammobrand']);
+      AppConstants.ammoBrand.sort((a, b) => a.compareTo(b));
+      ammoBrand.value = AppConstants.ammoBrand.first;
 
-    AppConstants.typeofRounds = List<String>.from(doc['typeOfRounds']);
-    AppConstants.typeofRounds.sort((a, b) => a.compareTo(b));
-    typeOfRound.value=AppConstants.typeofRounds.first;
+      AppConstants.typeofRounds = List<String>.from(doc['typeOfRounds']);
+      AppConstants.typeofRounds.sort((a, b) => a.compareTo(b));
+      typeOfRound.value = AppConstants.typeofRounds.first;
 
-
-    homeController.weaponMake.value = AppConstants.make[0];
-    List<dynamic> modelsData = doc['models'];
+      homeController.weaponMake.value = AppConstants.make[0];
+      List<dynamic> modelsData = doc['models'];
       AppConstants.model = modelsData.map((item) {
         if (item is Map<String, dynamic>) {
           return Model.fromJson(item);
@@ -250,19 +260,17 @@ class HomeExtensionController extends GetxController {
           return Model(model: '', make: ''); // Fallback for unexpected data
         }
       }).toList();
-    AppConstants.model.sort((a, b) => a.model.compareTo(b.model)); // Sorting alphabetically
-    homeController.weaponModel.value = AppConstants.model[0].model;
-  } catch (e) {
-    print("errororoororo${e.toString()}");
-  } finally {}
-}
-
+      AppConstants.model
+          .sort((a, b) => a.model.compareTo(b.model)); // Sorting alphabetically
+      homeController.weaponModel.value = AppConstants.model[0].model;
+    } catch (e) {
+      print("errororoororo${e.toString()}");
+    } finally {}
+  }
 
   @override
   void onReady() {
     super.onReady();
     loadUtils();
   }
-
-  
 }

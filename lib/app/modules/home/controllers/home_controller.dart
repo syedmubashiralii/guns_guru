@@ -85,7 +85,7 @@ class HomeController extends GetxController {
   RxBool fromFiringRecordDetail = false.obs;
   RxBool fromServiceDetail = false.obs;
 
-  RxInt selectedConsultancyIndex=0.obs;
+
 
   @override
   void onReady() {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:guns_guru/app/modules/home/views/consultancy/subscription_charges_table.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/dialogs/signout_dialog.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
@@ -22,7 +23,7 @@ class AppDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: ColorHelper.primaryColor,
               ),
               child: Column(
@@ -35,7 +36,7 @@ class AppDrawer extends StatelessWidget {
                             image: AssetImage("assets/images/app-icon.png"))),
                   ),
                   10.height,
-                  Text(
+                  const Text(
                     "GUNS GURU",
                     style: TextStyle(color: Colors.white),
                   ),
@@ -46,7 +47,7 @@ class AppDrawer extends StatelessWidget {
                           AsyncSnapshot<String> snapshot) {
                         return Text(
                           'App Version: ${snapshot.data}',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,
                           ),
@@ -80,8 +81,8 @@ class AppDrawer extends StatelessWidget {
             onTap: () async {
               const url =
                   'https://your-website-link'; // Replace with your website link
-                 if (await canLaunchUrl(Uri.parse(url))) {
-                  await launchUrl(Uri.parse(url));
+              if (await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
               }
@@ -93,7 +94,7 @@ class AppDrawer extends StatelessWidget {
             onTap: () async {
               const url =
                   'https://your-privacy-policy-link'; // Replace with your privacy policy link
-                if (await canLaunchUrl(Uri.parse(url))) {
+              if (await canLaunchUrl(Uri.parse(url))) {
                 await launchUrl(Uri.parse(url));
               } else {
                 throw 'Could not launch $url';
@@ -114,14 +115,25 @@ class AppDrawer extends StatelessWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.money),
+            title: const Text('Subscritpion Charges'),
+            onTap: () async {
+              Get.to(SubscriptionChargesTable());
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () {
-             showSignOutDialog();
+              showSignOutDialog();
             },
           ),
         ],
       ),
+
+      // shape: const RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.all(0),
+      //     ),
     );
   }
 }
