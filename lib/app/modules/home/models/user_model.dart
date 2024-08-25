@@ -40,47 +40,47 @@ class UserModel {
     if (json['license'] != null) {
       license = <License>[];
       json['license'].forEach((v) {
-        license!.add(new License.fromJson(v));
+        license!.add(License.fromJson(v));
       });
     }
     uid = json['uid'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['address'] = this.address;
-    data['city'] = this.city;
-    data['cnic'] = this.cnic;
-    data['gender'] = this.gender;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['address'] = address;
+    data['city'] = city;
+    data['cnic'] = cnic;
+    data['gender'] = gender;
     // data['cnic_back_side'] = this.cnicBackSide;
     // data['cnic_front_side'] = this.cnicFrontSide;
-    data['dob'] = this.dob;
-    data['phoneno'] = this.phoneno;
-    data['firstname'] = this.firstname;
-    data['lastname'] = this.lastname;
-    if (this.license != null) {
-      data['license'] = this.license!.map((v) => v.toJson()).toList();
+    data['dob'] = dob;
+    data['phoneno'] = phoneno;
+    data['firstname'] = firstname;
+    data['lastname'] = lastname;
+    if (license != null) {
+      data['license'] = license!.map((v) => v.toJson()).toList();
     }
-    data['uid'] = this.uid;
+    data['uid'] = uid;
     return data;
   }
 
   Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['address'] = this.address;
-    data['city'] = this.city;
-    data['cnic'] = this.cnic;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['address'] = address;
+    data['city'] = city;
+    data['cnic'] = cnic;
     // data['cnic_back_side'] = this.cnicBackSide;
     // data['cnic_front_side'] = this.cnicFrontSide;
-    data['dob'] = this.dob;
-    data['gender']=this.gender;
-    data['phoneno'] = this.phoneno;
-    data['firstname'] = this.firstname;
-    data['lastname'] = this.lastname;
-    if (this.license != null) {
-      data['license'] = this.license!.map((v) => v.toMap()).toList();
+    data['dob'] = dob;
+    data['gender']=gender;
+    data['phoneno'] = phoneno;
+    data['firstname'] = firstname;
+    data['lastname'] = lastname;
+    if (license != null) {
+      data['license'] = license!.map((v) => v.toMap()).toList();
     }
-    data['uid'] = this.uid;
+    data['uid'] = uid;
     return data;
   }
 }
@@ -125,7 +125,7 @@ class License {
     if (json['ammunitionDetail'] != null) {
       ammunitionDetail = <AmmunitionDetail>[];
       json['ammunitionDetail'].forEach((v) {
-        ammunitionDetail!.add(new AmmunitionDetail.fromJson(v));
+        ammunitionDetail!.add(AmmunitionDetail.fromJson(v));
       });
     }
     licenseAmmunitionLimit = json['licenseAmmunitionLimit'];
@@ -146,77 +146,77 @@ class License {
     if (json['weaponFiringRecord'] != null) {
       weaponFiringRecord = <WeaponFiringRecord>[];
       json['weaponFiringRecord'].forEach((v) {
-        weaponFiringRecord!.add(new WeaponFiringRecord.fromJson(v));
+        weaponFiringRecord!.add(WeaponFiringRecord.fromJson(v));
       });
     }
     if (json['weaponServiceRecord'] != null) {
       weaponServiceRecord = <WeaponServiceRecord>[];
       json['weaponServiceRecord'].forEach((v) {
-        weaponServiceRecord!.add(new WeaponServiceRecord.fromJson(v));
+        weaponServiceRecord!.add(WeaponServiceRecord.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.ammunitionDetail != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (ammunitionDetail != null) {
       data['ammunitionDetail'] =
-          this.ammunitionDetail!.map((v) => v.toJson()).toList();
+          ammunitionDetail!.map((v) => v.toJson()).toList();
     }
-    data['licenseAmmunitionLimit'] = this.licenseAmmunitionLimit;
-    data['weaponType'] =this.licenseweaponType;
-    data['licenseCalibre'] = this.licenseCalibre;
-    data['licenseDateOfIssuance'] = this.licenseDateOfIssuance;
-    data['licenseIssuaingQuota'] = this.licenseIssuaingQuota;
-    data['licenseIssuingAuthority'] = this.licenseIssuingAuthority;
-    data['licenseJurisdiction'] = this.licenseJurisdiction;
-    data['licenseNumber'] = this.licenseNumber;
-    data['licensePicture'] = this.licensePicture;
-    data['licenseTrackingNumber'] = this.licenseTrackingNumber;
-    data['licenseValidTill'] = this.licenseValidTill;
-    data['licenseValidated'] = this.licenseValidated;
-    if (this.weaponDetails != null) {
-      data['weaponDetails'] = this.weaponDetails!.toJson();
+    data['licenseAmmunitionLimit'] = licenseAmmunitionLimit;
+    data['weaponType'] =licenseweaponType;
+    data['licenseCalibre'] = licenseCalibre;
+    data['licenseDateOfIssuance'] = licenseDateOfIssuance;
+    data['licenseIssuaingQuota'] = licenseIssuaingQuota;
+    data['licenseIssuingAuthority'] = licenseIssuingAuthority;
+    data['licenseJurisdiction'] = licenseJurisdiction;
+    data['licenseNumber'] = licenseNumber;
+    data['licensePicture'] = licensePicture;
+    data['licenseTrackingNumber'] = licenseTrackingNumber;
+    data['licenseValidTill'] = licenseValidTill;
+    data['licenseValidated'] = licenseValidated;
+    if (weaponDetails != null) {
+      data['weaponDetails'] = weaponDetails!.toJson();
     }
-    if (this.weaponFiringRecord != null) {
+    if (weaponFiringRecord != null) {
       data['weaponFiringRecord'] =
-          this.weaponFiringRecord!.map((v) => v.toJson()).toList();
+          weaponFiringRecord!.map((v) => v.toJson()).toList();
     }
-    if (this.weaponServiceRecord != null) {
+    if (weaponServiceRecord != null) {
       data['weaponServiceRecord'] =
-          this.weaponServiceRecord!.map((v) => v.toJson()).toList();
+          weaponServiceRecord!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 
   Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.ammunitionDetail != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (ammunitionDetail != null) {
       data['ammunitionDetail'] =
-          this.ammunitionDetail!.map((v) => v.toMap()).toList();
+          ammunitionDetail!.map((v) => v.toMap()).toList();
     }
-    data['licenseAmmunitionLimit'] = this.licenseAmmunitionLimit;
-    data['licenseCalibre'] = this.licenseCalibre;
-    data['weaponType']=this.licenseweaponType;
-    data['licenseDateOfIssuance'] = this.licenseDateOfIssuance;
-    data['licenseIssuaingQuota'] = this.licenseIssuaingQuota;
-    data['licenseIssuingAuthority'] = this.licenseIssuingAuthority;
-    data['licenseJurisdiction'] = this.licenseJurisdiction;
-    data['licenseNumber'] = this.licenseNumber;
-    data['licensePicture'] = this.licensePicture;
-    data['licenseTrackingNumber'] = this.licenseTrackingNumber;
-    data['licenseValidTill'] = this.licenseValidTill;
-    data['licenseValidated'] = this.licenseValidated;
-    if (this.weaponDetails != null) {
-      data['weaponDetails'] = this.weaponDetails!.toMap();
+    data['licenseAmmunitionLimit'] = licenseAmmunitionLimit;
+    data['licenseCalibre'] = licenseCalibre;
+    data['weaponType']=licenseweaponType;
+    data['licenseDateOfIssuance'] = licenseDateOfIssuance;
+    data['licenseIssuaingQuota'] = licenseIssuaingQuota;
+    data['licenseIssuingAuthority'] = licenseIssuingAuthority;
+    data['licenseJurisdiction'] = licenseJurisdiction;
+    data['licenseNumber'] = licenseNumber;
+    data['licensePicture'] = licensePicture;
+    data['licenseTrackingNumber'] = licenseTrackingNumber;
+    data['licenseValidTill'] = licenseValidTill;
+    data['licenseValidated'] = licenseValidated;
+    if (weaponDetails != null) {
+      data['weaponDetails'] = weaponDetails!.toMap();
     }
-    if (this.weaponFiringRecord != null) {
+    if (weaponFiringRecord != null) {
       data['weaponFiringRecord'] =
-          this.weaponFiringRecord!.map((v) => v.toMap()).toList();
+          weaponFiringRecord!.map((v) => v.toMap()).toList();
     }
-    if (this.weaponServiceRecord != null) {
+    if (weaponServiceRecord != null) {
       data['weaponServiceRecord'] =
-          this.weaponServiceRecord!.map((v) => v.toMap()).toList();
+          weaponServiceRecord!.map((v) => v.toMap()).toList();
     }
     return data;
   }
@@ -228,16 +228,19 @@ class AmmunitionDetail {
   String? ammunitionPurchaseDate;
   String? ammunitionPurchasedFrom;
   String? ammunitionQuantityPurchased;
+  String? typeOfRound;
 
   AmmunitionDetail(
       {this.ammunitionBrand,
       this.ammunitionCaliber,
       this.ammunitionPurchaseDate,
       this.ammunitionPurchasedFrom,
+      this.typeOfRound,
       this.ammunitionQuantityPurchased});
 
   AmmunitionDetail.fromJson(Map<String, dynamic> json) {
     ammunitionBrand = json['ammunitionBrand'];
+    typeOfRound= json['typeOfRound'];
     ammunitionCaliber = json['ammunitionCaliber'];
     ammunitionPurchaseDate = json['ammunitionPurchaseDate'];
     ammunitionPurchasedFrom = json['ammunitionPurchasedFrom'];
@@ -245,22 +248,24 @@ class AmmunitionDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ammunitionBrand'] = this.ammunitionBrand;
-    data['ammunitionCaliber'] = this.ammunitionCaliber;
-    data['ammunitionPurchaseDate'] = this.ammunitionPurchaseDate;
-    data['ammunitionPurchasedFrom'] = this.ammunitionPurchasedFrom;
-    data['ammunitionQuantityPurchased'] = this.ammunitionQuantityPurchased;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ammunitionBrand'] = ammunitionBrand;
+    data['typeOfRound'] = typeOfRound;
+    data['ammunitionCaliber'] = ammunitionCaliber;
+    data['ammunitionPurchaseDate'] = ammunitionPurchaseDate;
+    data['ammunitionPurchasedFrom'] = ammunitionPurchasedFrom;
+    data['ammunitionQuantityPurchased'] = ammunitionQuantityPurchased;
     return data;
   }
 
   Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ammunitionBrand'] = this.ammunitionBrand;
-    data['ammunitionCaliber'] = this.ammunitionCaliber;
-    data['ammunitionPurchaseDate'] = this.ammunitionPurchaseDate;
-    data['ammunitionPurchasedFrom'] = this.ammunitionPurchasedFrom;
-    data['ammunitionQuantityPurchased'] = this.ammunitionQuantityPurchased;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ammunitionBrand'] = ammunitionBrand;
+    data['ammunitionCaliber'] = ammunitionCaliber;
+    data['typeOfRound'] = typeOfRound;
+    data['ammunitionPurchaseDate'] = ammunitionPurchaseDate;
+    data['ammunitionPurchasedFrom'] = ammunitionPurchasedFrom;
+    data['ammunitionQuantityPurchased'] = ammunitionQuantityPurchased;
     return data;
   }
 }
@@ -354,20 +359,20 @@ class WeaponFiringRecord {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['weaponFiringLocation'] = this.weaponFiringLocation;
-    data['weaponFiringNotes'] = this.weaponFiringNotes;
-    data['weaponFiringShotsFired'] = this.weaponFiringShotsFired;
-    data['weaponfiringDate'] = this.weaponfiringDate;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['weaponFiringLocation'] = weaponFiringLocation;
+    data['weaponFiringNotes'] = weaponFiringNotes;
+    data['weaponFiringShotsFired'] = weaponFiringShotsFired;
+    data['weaponfiringDate'] = weaponfiringDate;
     return data;
   }
 
   Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['weaponFiringLocation'] = this.weaponFiringLocation;
-    data['weaponFiringNotes'] = this.weaponFiringNotes;
-    data['weaponFiringShotsFired'] = this.weaponFiringShotsFired;
-    data['weaponfiringDate'] = this.weaponfiringDate;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['weaponFiringLocation'] = weaponFiringLocation;
+    data['weaponFiringNotes'] = weaponFiringNotes;
+    data['weaponFiringShotsFired'] = weaponFiringShotsFired;
+    data['weaponfiringDate'] = weaponfiringDate;
     return data;
   }
 }
@@ -393,20 +398,20 @@ class WeaponServiceRecord {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['weaponServiceDate'] = this.weaponServiceDate;
-    data['weaponServiceDoneBy'] = this.weaponServiceDoneBy;
-    data['weaponServiceNotes'] = this.weaponServiceNotes;
-    data['weaponServicePartsChanged'] = this.weaponServicePartsChanged;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['weaponServiceDate'] = weaponServiceDate;
+    data['weaponServiceDoneBy'] = weaponServiceDoneBy;
+    data['weaponServiceNotes'] = weaponServiceNotes;
+    data['weaponServicePartsChanged'] = weaponServicePartsChanged;
     return data;
   }
 
   Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['weaponServiceDate'] = this.weaponServiceDate;
-    data['weaponServiceDoneBy'] = this.weaponServiceDoneBy;
-    data['weaponServiceNotes'] = this.weaponServiceNotes;
-    data['weaponServicePartsChanged'] = this.weaponServicePartsChanged;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['weaponServiceDate'] = weaponServiceDate;
+    data['weaponServiceDoneBy'] = weaponServiceDoneBy;
+    data['weaponServiceNotes'] = weaponServiceNotes;
+    data['weaponServicePartsChanged'] = weaponServicePartsChanged;
     return data;
   }
 }

@@ -41,6 +41,7 @@ class AppConstants {
   static const String ammunitionPurchaseDate = 'ammunitionPurchaseDate';
   static const String ammunitionPurchasedFrom = 'ammunitionPurchasedFrom';
   static const String ammunitionBrand = 'ammunitionBrand';
+  static const String typeOfRound = 'typeOfRound';
   static const String ammunitionCaliber = 'ammunitionCaliber';
   static const String ammunitionQuantityPurchased =
       'ammunitionQuantityPurchased';
@@ -87,6 +88,9 @@ class AppConstants {
     'SHOTGUN',
     'REVOLVER'
   ];
+
+  static List<String> ammoBrand=[];
+  static List<String> typeofRounds=[];
 
   static List<String> caliber = [
     // "9mm",

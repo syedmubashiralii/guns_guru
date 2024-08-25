@@ -24,7 +24,7 @@ class AddWeaponDetail extends GetView<HomeController> {
   Widget build(BuildContext context) {
     if (AppConstants.caliber.isEmpty ||
         AppConstants.make.isEmpty ||
-        AppConstants.model.isEmpty) {
+        AppConstants.model.isEmpty || AppConstants.ammoBrand.isEmpty || AppConstants.typeofRounds.isEmpty) {
       Get.find<HomeExtensionController>().loadUtils();
     }
     return Scaffold(

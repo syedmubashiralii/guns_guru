@@ -21,7 +21,7 @@ class HomeExtensionController extends GetxController {
   final ammunitionStockFormKey = GlobalKey<FormState>();
   TextEditingController purchaseDateController = TextEditingController();
   TextEditingController purchasedFromController = TextEditingController();
-  TextEditingController brandController = TextEditingController();
+  // TextEditingController brandController = TextEditingController();
   TextEditingController caliberController = TextEditingController();
   TextEditingController quantityPurchasedController = TextEditingController();
 
@@ -39,6 +39,9 @@ class HomeExtensionController extends GetxController {
   final serviceNotesController = TextEditingController();
 
   RxList servicePartsChangedList = [].obs;
+
+  RxString ammoBrand="Federal Premium".obs;
+  RxString typeOfRound="Full Metal Jacket (FMJ)".obs;
 
   Future<void> addAmmunitionStock() async {
     if (ammunitionStockFormKey.currentState?.validate() ?? false) {
@@ -66,7 +69,8 @@ class HomeExtensionController extends GetxController {
       Map<String, dynamic> ammoDetailValue = {
         AppConstants.ammunitionPurchaseDate: purchaseDateController.text,
         AppConstants.ammunitionPurchasedFrom: purchasedFromController.text,
-        AppConstants.ammunitionBrand: brandController.text,
+        AppConstants.ammunitionBrand: ammoBrand.value,
+        AppConstants.typeOfRound: typeOfRound.value,
         AppConstants.ammunitionCaliber: caliberController.text,
         AppConstants.ammunitionQuantityPurchased:
             quantityPurchasedController.text,
@@ -227,7 +231,16 @@ class HomeExtensionController extends GetxController {
     homeController.weaponCaliber.value = AppConstants.caliber[0];
 
     AppConstants.make = List<String>.from(doc['makes']);
-    AppConstants.make.sort((a, b) => a.compareTo(b)); // Sorting alphabetically
+    AppConstants.make.sort((a, b) => a.compareTo(b));
+    AppConstants.ammoBrand = List<String>.from(doc['ammobrand']);
+    AppConstants.ammoBrand.sort((a, b) => a.compareTo(b));
+    ammoBrand.value=AppConstants.ammoBrand.first;
+
+    AppConstants.typeofRounds = List<String>.from(doc['typeOfRounds']);
+    AppConstants.typeofRounds.sort((a, b) => a.compareTo(b));
+    typeOfRound.value=AppConstants.typeofRounds.first;
+
+
     homeController.weaponMake.value = AppConstants.make[0];
     List<dynamic> modelsData = doc['models'];
       AppConstants.model = modelsData.map((item) {

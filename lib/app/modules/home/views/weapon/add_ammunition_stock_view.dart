@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,7 +10,7 @@ import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 
-import '../controllers/home_controller.dart';
+import '../../controllers/home_controller.dart';
 
 class AddAmmunitionStockView extends GetView<HomeExtensionController> {
   const AddAmmunitionStockView({super.key});
@@ -17,7 +18,12 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
   @override
   Widget build(BuildContext context) {
     controller.caliberController.text=controller.homeController.userModel.value
-                .license![controller.homeController.selectedLicenseIndex.value].licenseCalibre??"";
+                .license![controller.homeController.selectedLicenseIndex.value].weaponDetails?.weaponCaliber??"";
+     if (AppConstants.caliber.isEmpty ||
+        AppConstants.make.isEmpty ||
+        AppConstants.model.isEmpty || AppConstants.ammoBrand.isEmpty || AppConstants.typeofRounds.isEmpty) {
+      controller.loadUtils();
+    }            
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -86,6 +92,9 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                         border: OutlineInputBorder(),
                         hintText: 'Purchased From'),
                     keyboardType: TextInputType.name,
+                    inputFormatters: [
+                  UpperCaseTextFormatter(),
+                ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Purchased From is required';
@@ -95,15 +104,63 @@ class AddAmmunitionStockView extends GetView<HomeExtensionController> {
                     },
                   ),
                   20.height,
-                  TextFormField(
-                    controller: controller.brandController,
-                    decoration: const InputDecoration(
-                      labelText: 'Brand',
-                      border: OutlineInputBorder(),
+                  
+                  DropdownSearch<String>(
+                    popupProps: const PopupProps.menu(
+                      showSearchBox:
+                          true, // Enables the search box in the dropdown
+                      searchFieldProps: const TextFieldProps(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Search Caliber',
+                        ),
+                      ),
                     ),
+                    items: AppConstants.ammoBrand, // The list of caliber values
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: 'Caliber',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    selectedItem: controller.ammoBrand.value,
+                    onChanged: (newValue) {
+                      controller.ammoBrand.value = newValue!;
+                    },
                     validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Brand is required';
+                      if (value == null) {
+                        return 'Ammo Brand is required';
+                      }
+                      return null;
+                    },
+                  ),
+                   20.height,
+                  
+                  DropdownSearch<String>(
+                    popupProps: const PopupProps.menu(
+                      showSearchBox:
+                          true, // Enables the search box in the dropdown
+                      searchFieldProps: const TextFieldProps(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Type of Round',
+                        ),
+                      ),
+                    ),
+                    items: AppConstants.typeofRounds, // The list of caliber values
+                    dropdownDecoratorProps: const DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        labelText: 'Type of Round',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    selectedItem: controller.typeOfRound.value,
+                    onChanged: (newValue) {
+                      controller.typeOfRound.value = newValue!;
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Type of Round is required';
                       }
                       return null;
                     },

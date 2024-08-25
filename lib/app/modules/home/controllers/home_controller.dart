@@ -15,6 +15,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:guns_guru/app/modules/home/controllers/cnic_scanner.dart';
 import 'package:guns_guru/app/modules/home/models/cnic_model.dart';
+import 'package:guns_guru/app/modules/home/models/consultancy_model.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/views/auth/auth_view.dart';
 import 'package:guns_guru/app/modules/home/views/license/add_license_view.dart';
@@ -83,6 +84,8 @@ class HomeController extends GetxController {
 
   RxBool fromFiringRecordDetail = false.obs;
   RxBool fromServiceDetail = false.obs;
+
+  RxInt selectedConsultancyIndex=0.obs;
 
   @override
   void onReady() {

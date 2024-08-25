@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
-import 'package:guns_guru/app/modules/home/views/add_ammunition_stock_view.dart';
+import 'package:guns_guru/app/modules/home/views/weapon/add_ammunition_stock_view.dart';
 import 'package:guns_guru/app/modules/home/widgets/license_detail_widget.dart';
 import 'package:guns_guru/app/modules/home/widgets/weapon_detail_widget.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
