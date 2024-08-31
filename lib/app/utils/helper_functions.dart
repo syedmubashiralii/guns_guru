@@ -161,7 +161,7 @@ int calculateRemainingQuota(List<AmmunitionDetail> ammunition, int totalQuota) {
 int calculateShotsFired(List<WeaponFiringRecord> firingRecord) {
   var shots = 0;
   for (var detail in firingRecord) {
-    shots += int.parse(detail.weaponFiringShotsFired ?? "0");
+    shots += int.parse(detail.roundsFired ?? "0");
   }
   return shots;
 }

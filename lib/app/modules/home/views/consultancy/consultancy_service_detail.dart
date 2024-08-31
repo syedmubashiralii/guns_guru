@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
-import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/consultancy_controller.dart';
 import 'package:guns_guru/app/modules/home/models/consultancy_model.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 
-class ConsultancyService extends GetView<HomeExtensionController> {
-  const ConsultancyService({Key? key}) : super(key: key);
+class ConsultancyServiceDetail extends GetView<ConsultancyController> {
+  const ConsultancyServiceDetail({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

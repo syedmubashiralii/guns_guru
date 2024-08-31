@@ -70,7 +70,7 @@ class LicenseDetailView extends GetView<HomeController> {
                       LicenseDetailWidget(license: license),
                       20.height,
                       Image.network(
-                        license.licensePicture ?? "",
+                        license.licensePicture![0] ?? "",
                         width: Get.width,
                         fit: BoxFit.contain,
                       ),
@@ -154,7 +154,7 @@ class LicenseDetailView extends GetView<HomeController> {
                                                     license.ammunitionDetail ??
                                                         [],
                                                     int.parse(license
-                                                            .licenseAmmunitionLimit ??
+                                                            .licenseAmmunitionLimit==""?"0":license.licenseAmmunitionLimit ??
                                                         '0'))
                                                 .toString(),
                                             overflow: TextOverflow.ellipsis,

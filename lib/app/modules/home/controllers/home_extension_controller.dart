@@ -26,11 +26,11 @@ class HomeExtensionController extends GetxController {
   TextEditingController quantityPurchasedController = TextEditingController();
 
   ///
-  final firingRecordKey = GlobalKey<FormState>();
-  final firingDateController = TextEditingController();
-  final firingLocationController = TextEditingController();
-  final firingShotsFiredController = TextEditingController();
-  final firingNotesController = TextEditingController();
+  // final firingRecordKey = GlobalKey<FormState>();
+  // final firingDateController = TextEditingController();
+  // final firingLocationController = TextEditingController();
+  // final firingShotsFiredController = TextEditingController();
+  // final firingNotesController = TextEditingController();
 
   ////
   final serviceRecordKey = GlobalKey<FormState>();
@@ -42,8 +42,8 @@ class HomeExtensionController extends GetxController {
 
   RxString ammoBrand = "Federal Premium".obs;
   RxString typeOfRound = "Full Metal Jacket (FMJ)".obs;
-  RxList<Consultancy> consultancyList = <Consultancy>[].obs;
-  RxInt selectedConsultancyIndex = 0.obs;
+ 
+ 
 
   Future<void> addAmmunitionStock() async {
     if (ammunitionStockFormKey.currentState?.validate() ?? false) {
@@ -108,66 +108,66 @@ class HomeExtensionController extends GetxController {
     }
   }
 
-  Future<void> addWeaponFiringRecord() async {
-    if (firingRecordKey.currentState?.validate() ?? false) {
-      Get.dialog(const LoadingDialog());
-      Map<String, dynamic> firingRecord = {
-        AppConstants.weaponFiringDate: firingDateController.text,
-        AppConstants.weaponFiringLocation: firingLocationController.text,
-        AppConstants.weaponFiringNotes: firingNotesController.text,
-        AppConstants.weaponFiringShotsFired: firingShotsFiredController.text,
-      };
-      try {
-        if (calculateAmmunitionStock(homeController
-                        .userModel
-                        .value
-                        .license?[homeController.selectedLicenseIndex.value]
-                        .ammunitionDetail ??
-                    []) -
-                calculateShotsFired(homeController
-                        .userModel
-                        .value
-                        .license?[homeController.selectedLicenseIndex.value]
-                        .weaponFiringRecord ??
-                    []) <
-            int.parse(firingShotsFiredController.text)) {
-          DefaultSnackbar.show("Error",
-              "The number of shots fired should not exceed the remaining stock. Please check your stock levels.");
-          closeDialog();
-          return;
-        }
-        var licenses = homeController.userModel.value.license;
-        if (licenses != null &&
-            homeController.selectedLicenseIndex.value >= 0 &&
-            homeController.selectedLicenseIndex.value < licenses.length) {
-          if (licenses[homeController.selectedLicenseIndex.value]
-                  .weaponFiringRecord ==
-              null) {
-            licenses[homeController.selectedLicenseIndex.value]
-                .weaponFiringRecord = [];
-          }
-          licenses[homeController.selectedLicenseIndex.value]
-              .weaponFiringRecord!
-              .add(WeaponFiringRecord.fromJson(firingRecord));
-          await homeController.updateUserSpecificData(
-              homeController.firebaseAuth.currentUser!.uid, {
-            AppConstants.license:
-                licenses.map((license) => license.toMap()).toList(),
-          });
-          await homeController
-              .loadUserData(homeController.firebaseAuth.currentUser!.uid);
-          homeController.userModel.refresh();
-        } else {
-          log("Invalid license index or licenses are null");
-        }
-        closeDialog();
-        Get.back();
-      } catch (e) {
-        closeDialog();
-        print(e.toString());
-      }
-    }
-  }
+  // Future<void> addWeaponFiringRecord() async {
+  //   if (firingRecordKey.currentState?.validate() ?? false) {
+  //     Get.dialog(const LoadingDialog());
+  //     Map<String, dynamic> firingRecord = {
+  //       AppConstants.weaponFiringDate: firingDateController.text,
+  //       AppConstants.weaponFiringLocation: firingLocationController.text,
+  //       AppConstants.weaponFiringNotes: firingNotesController.text,
+  //       AppConstants.weaponFiringShotsFired: firingShotsFiredController.text,
+  //     };
+  //     try {
+  //       if (calculateAmmunitionStock(homeController
+  //                       .userModel
+  //                       .value
+  //                       .license?[homeController.selectedLicenseIndex.value]
+  //                       .ammunitionDetail ??
+  //                   []) -
+  //               calculateShotsFired(homeController
+  //                       .userModel
+  //                       .value
+  //                       .license?[homeController.selectedLicenseIndex.value]
+  //                       .weaponFiringRecord ??
+  //                   []) <
+  //           int.parse(firingShotsFiredController.text)) {
+  //         DefaultSnackbar.show("Error",
+  //             "The number of shots fired should not exceed the remaining stock. Please check your stock levels.");
+  //         closeDialog();
+  //         return;
+  //       }
+  //       var licenses = homeController.userModel.value.license;
+  //       if (licenses != null &&
+  //           homeController.selectedLicenseIndex.value >= 0 &&
+  //           homeController.selectedLicenseIndex.value < licenses.length) {
+  //         if (licenses[homeController.selectedLicenseIndex.value]
+  //                 .weaponFiringRecord ==
+  //             null) {
+  //           licenses[homeController.selectedLicenseIndex.value]
+  //               .weaponFiringRecord = [];
+  //         }
+  //         licenses[homeController.selectedLicenseIndex.value]
+  //             .weaponFiringRecord!
+  //             .add(WeaponFiringRecord.fromJson(firingRecord));
+  //         await homeController.updateUserSpecificData(
+  //             homeController.firebaseAuth.currentUser!.uid, {
+  //           AppConstants.license:
+  //               licenses.map((license) => license.toMap()).toList(),
+  //         });
+  //         await homeController
+  //             .loadUserData(homeController.firebaseAuth.currentUser!.uid);
+  //         homeController.userModel.refresh();
+  //       } else {
+  //         log("Invalid license index or licenses are null");
+  //       }
+  //       closeDialog();
+  //       Get.back();
+  //     } catch (e) {
+  //       closeDialog();
+  //       print(e.toString());
+  //     }
+  //   }
+  // }
 
   Future<void> addWeaponServiceRecord() async {
     if (serviceRecordKey.currentState?.validate() ?? false) {
@@ -212,31 +212,15 @@ class HomeExtensionController extends GetxController {
     }
   }
 
-  Future<void> fetchConsultancyData() async {
-    try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('admin')
-          .doc('consultancy')
-          .get();
-
-      final List<dynamic> consultancyData =
-          snapshot.data()?['consultancy'] ?? [];
-      final consultancyListData =
-          consultancyData.map((e) => Consultancy.fromMap(e)).toList();
-
-      consultancyList.value = consultancyListData;
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+ 
 
   Future<void> loadUtils() async {
     try {
       DocumentSnapshot doc =
           await _firestore.collection('admin').doc('utils').get();
 
-      AppConstants.caliber = List<String>.from(doc['callibers']);
-      AppConstants.caliber
+      AppConstants.caliberList = List<String>.from(doc['callibers']);
+      AppConstants.caliberList
           .sort((a, b) => a.compareTo(b)); // Sorting alphabetically
       homeController.caliber.value = AppConstants.caliber[0];
       homeController.weaponCaliber.value = AppConstants.caliber[0];

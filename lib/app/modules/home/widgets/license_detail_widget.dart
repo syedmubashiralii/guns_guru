@@ -34,16 +34,21 @@ class LicenseDetailWidget extends StatelessWidget {
         controller.ammunitionLimitController.text =
             license.licenseAmmunitionLimit ?? "";
         controller.caliber.value = license.licenseCalibre ?? "";
-        controller.licenseWeaponType.value=license.licenseweaponType??"";
+        controller.licenseWeaponType.value = license.licenseweaponType ?? "";
         controller.dateOfIssuanceController.text =
             license.licenseDateOfIssuance ?? "";
         controller.validTillController.text = license.licenseValidTill ?? "";
         controller.jurisdiction.value = license.licenseJurisdiction ?? "";
         controller.issuaingQuota.value = license.licenseIssuaingQuota ?? "";
         Get.dialog(LoadingDialog());
-        controller.licensePicture.value =
-            await urlToFile(license.licensePicture ?? "");
-        closeDialog();    
+        controller.licensePictures.clear();
+        int length = license.licensePicture?.length ?? 0;
+        for (int i = 0; i < length; i++) {
+          var path = license.licensePicture?[i];
+          controller.licensePictures.add(await urlToFile(path ?? ""));
+        }
+
+        closeDialog();
         Get.to(AddLicenseView(
           fromEditing: true,
         ));
@@ -60,7 +65,7 @@ class LicenseDetailWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${license.licenseNumber}',
+                      license.licenseNumber==''?"N/A":license.licenseNumber??"N/A",
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
@@ -76,7 +81,7 @@ class LicenseDetailWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${license.licenseTrackingNumber}',
+                     license.licenseTrackingNumber==''?"N/A":license.licenseTrackingNumber??"N/A",
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
@@ -89,7 +94,8 @@ class LicenseDetailWidget extends StatelessWidget {
               ),
               Expanded(
                 child: CircleAvatar(
-                  backgroundImage: NetworkImage(license.licensePicture ?? ""),
+                  backgroundImage:
+                      NetworkImage(license.licensePicture?[0] ?? ""),
                 ),
               ),
             ],
@@ -177,7 +183,7 @@ class LicenseDetailWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${license.licenseAmmunitionLimit}',
+                      license.licenseAmmunitionLimit==''?"N/A":license.licenseAmmunitionLimit??"N/A",
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),

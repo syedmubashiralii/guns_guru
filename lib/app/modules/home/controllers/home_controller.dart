@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/views/auth/auth_view.dart';
+import 'package:guns_guru/app/modules/home/views/home/home_view.dart';
 import 'package:guns_guru/app/modules/home/views/license/license_list_view.dart';
 import 'package:guns_guru/app/modules/home/views/auth/splash_view.dart';
 import 'package:guns_guru/app/modules/home/views/auth/add_user_profile_view.dart';
@@ -40,6 +41,7 @@ class HomeController extends GetxController {
   TextEditingController dobController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
+  RxString selectedCountryCode = "PK".obs;
   RxString selectedGender = "MALE".obs;
   TextEditingController phoneNoTextEditingController = TextEditingController();
   RxBool isPhoneNumberValid = false.obs;
@@ -47,6 +49,7 @@ class HomeController extends GetxController {
   ///license Fields
   TextEditingController trackingNumberController = TextEditingController();
   TextEditingController licenseNumberController = TextEditingController();
+  TextEditingController documentTypeController = TextEditingController();
   TextEditingController ammunitionLimitController = TextEditingController();
   TextEditingController dateOfIssuanceController = TextEditingController();
   TextEditingController validTillController = TextEditingController();
@@ -62,9 +65,10 @@ class HomeController extends GetxController {
   RxString caliber = '9mm'.obs;
   RxString licenseWeaponType = 'PISTOL'.obs;
   RxString issuingAuthority = "Sindh".obs;
+  RxString selectedCountry = "".obs;
   RxString jurisdiction = "All Pakistan".obs;
   RxString issuaingQuota = "Federal Interior Minister".obs;
-  Rx<File?> licensePicture = Rx<File?>(null);
+  RxList<File> licensePictures = <File>[].obs;
   RxString weaponCaliber = "9mm".obs;
   RxString weaponMake = "Glock".obs;
   RxString weaponModel = "AK-47".obs;
@@ -75,8 +79,6 @@ class HomeController extends GetxController {
 
   RxBool fromFiringRecordDetail = false.obs;
   RxBool fromServiceDetail = false.obs;
-
-
 
   @override
   void onReady() {
@@ -101,17 +103,17 @@ class HomeController extends GetxController {
   onLoginSuccesfull() {
     // if (userModel.value.cnicFrontSide != null &&
     //     userModel.value.cnicFrontSide!.isNotEmpty) {
-      if (userModel.value.firstname != null &&
-          userModel.value.firstname!.isNotEmpty) {
-        // if (userModel.value.license != null &&
-        //     userModel.value.license!.isNotEmpty) {
-        Get.off(const LicenseListView());
-        // } else {
-        // Get.off(AddLicenseView());
-        // }
-      } else {
-        Get.off(AddUserProfileView());
-      }
+    if (userModel.value.firstname != null &&
+        userModel.value.firstname!.isNotEmpty) {
+      // if (userModel.value.license != null &&
+      //     userModel.value.license!.isNotEmpty) {
+      Get.off(const HomeView());
+      // } else {
+      // Get.off(AddLicenseView());
+      // }
+    } else {
+      Get.off(AddUserProfileView());
+    }
     // } else {
     //   Get.off(IDCardScreen());
     // }
@@ -195,6 +197,28 @@ class HomeController extends GetxController {
       }
       if (kDebugMode) {
         print("error in signing with google : $e");
+      }
+    }
+  }
+
+  Future<void> addLicensePicture() async {
+    if (licensePictures.length >= 3) {
+      Get.snackbar('Error', 'You can only add up to 3 pictures.');
+      return;
+    }
+
+    String source = '';
+    await showChoiceDialog(onCameraTap: () {
+      source = "Camera";
+      Get.back();
+    }, onGalleryTap: () {
+      source = "Gallery";
+      Get.back();
+    });
+    if (source != '') {
+      String? path = await pickImage(picker, source);
+      if (path != null && path.isNotEmpty) {
+        licensePictures.add(File(path)); // Add picture to the list
       }
     }
   }
@@ -308,6 +332,7 @@ class HomeController extends GetxController {
         AppConstants.PhoneNo: phoneNoTextEditingController.text,
         AppConstants.Address: addressController.text,
         AppConstants.City: cityController.text,
+        AppConstants.CountryCode: selectedCountryCode.value,
         AppConstants.Gender: selectedGender.value,
         AppConstants.UID: FirebaseAuth.instance.currentUser?.uid ?? ""
       });
@@ -322,18 +347,24 @@ class HomeController extends GetxController {
   Future<void> saveLicenseForm(bool fromEdit) async {
     if (licenseFormKey.currentState?.validate() ?? false) {
       licenseFormKey.currentState?.save();
-      if (licensePicture.value == null) {
-        DefaultSnackbar.show('Error', "Please Select license picture");
+      if (licensePictures.isEmpty) {
+        DefaultSnackbar.show(
+            'Error', "Please Select at least one license picture");
         return;
       }
 
       Get.dialog(const LoadingDialog());
 
-      String? licensePic = await uploadImage(File(licensePicture.value!.path));
+      // Upload each picture and get their URLs
+      List<String> licensePicUrls = [];
+      for (File picture in licensePictures) {
+        String? picUrl = await uploadImage(picture);
+        if (picUrl != null) {
+          licensePicUrls.add(picUrl);
+        }
+      }
 
-      List<License> licenses = [];
-
-      licenses = userModel.value.license ?? [];
+      List<License> licenses = userModel.value.license ?? [];
       License license = License.fromJson({
         AppConstants.licenseTrackingNumber: trackingNumberController.text,
         AppConstants.licenseNumber: licenseNumberController.text,
@@ -344,9 +375,13 @@ class HomeController extends GetxController {
         AppConstants.licenseIssuaingQuota: issuaingQuota.value,
         AppConstants.licenseDateOfIssuance: dateOfIssuanceController.text,
         AppConstants.licenseJurisdiction: jurisdiction.value,
-        AppConstants.licensePicture: licensePic,
-        AppConstants.licenseValidated: false
+        AppConstants.licensePicture:
+            licensePicUrls, // Store list of picture URLs
+        AppConstants.licenseValidated: false,
+        AppConstants.DocumentType: documentTypeController.text,
+        AppConstants.Country: selectedCountry.value
       });
+
       if (fromEdit == true) {
         licenses[selectedLicenseIndex.value] = license;
       } else {

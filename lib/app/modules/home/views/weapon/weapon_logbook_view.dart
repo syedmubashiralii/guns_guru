@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/views/weapon/add_weapon_firing_record.dart';
 import 'package:guns_guru/app/modules/home/views/weapon/add_weapon_service_record.dart';
@@ -47,13 +48,13 @@ class WeaponLogBookView extends GetView<HomeController> {
                 isAddRecord: true,
                 onTap: () {
                   controller.fromFiringRecordDetail.value = false;
-                  homeExtensionController.firingLocationController
-                      .text = "";
-                  homeExtensionController.firingDateController.text =
-                      "";
-                  homeExtensionController.firingNotesController.text = "";
-                  homeExtensionController.firingShotsFiredController
-                      .text = "";
+                  // homeExtensionController.firingLocationController
+                  //     .text = "";
+                  // homeExtensionController.firingDateController.text =
+                  //     "";
+                  // homeExtensionController.firingNotesController.text = "";
+                  // homeExtensionController.firingShotsFiredController
+                      // .text = "";
                   Get.to(AddWeaponFiringRecord());
                 },
                 content: Obx(() {
@@ -81,24 +82,13 @@ class WeaponLogBookView extends GetView<HomeController> {
                           InkWell(
                             onTap: () {
                               controller.fromFiringRecordDetail.value = true;
-                              homeExtensionController
-                                  .firingLocationController
-                                  .text = record.weaponFiringLocation ?? "";
-                              homeExtensionController
-                                  .firingDateController
-                                  .text = record.weaponfiringDate ?? "";
-                              homeExtensionController
-                                  .firingNotesController
-                                  .text = record.weaponFiringNotes ?? "";
-                              homeExtensionController
-                                  .firingShotsFiredController
-                                  .text = record.weaponFiringShotsFired ?? "";
+                              Get.find<ShootingLogController>().populateFieldsForEditing(record);
                               Get.to(AddWeaponFiringRecord());
                             },
-                            child: _buildFiringRecord(
-                              record.weaponfiringDate ?? "",
-                              record.weaponFiringLocation ?? "",
-                              record.weaponFiringShotsFired ?? "",
+                            child: BuildFiringRecord(date: 
+                              record.date ?? "",location: 
+                              record.rangeNameLocation ?? "",shotsFired: 
+                              record.roundsFired ?? "",
                             ),
                           ),
                       // const SizedBox(height: 10),
@@ -186,78 +176,7 @@ class WeaponLogBookView extends GetView<HomeController> {
     );
   }
 
-  Widget _buildFiringRecord(String date, String location, String shotsFired) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    date ?? "",
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                  const CustomLabelText(
-                    text: 'Date',
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    location,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                  const CustomLabelText(
-                    text: 'Location',
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    shotsFired,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                  const CustomLabelText(
-                    text: 'Shots Fired',
-                  ),
-                ],
-              ),
-            ),
-            5.width,
-            CircleAvatar(
-                radius: 10,
-                backgroundColor: Colors.black.withOpacity(.7),
-                child: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 12,
-                )),
-            5.width,
-          ],
-        ),
-        5.height,
-        const Divider(),
-        5.height,
-      ],
-    );
-  }
+
 
   Widget _buildServiceRecord(
       String date, String serviceType, String partsChanged) {
@@ -310,6 +229,89 @@ class WeaponLogBookView extends GetView<HomeController> {
                   ),
                   const CustomLabelText(
                     text: 'Parts Changed',
+                  ),
+                ],
+              ),
+            ),
+            5.width,
+            CircleAvatar(
+                radius: 10,
+                backgroundColor: Colors.black.withOpacity(.7),
+                child: const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 12,
+                )),
+            5.width,
+          ],
+        ),
+        5.height,
+        const Divider(),
+        5.height,
+      ],
+    );
+  }
+}
+
+
+
+
+
+  class BuildFiringRecord extends StatelessWidget {
+   BuildFiringRecord({super.key,required this.date,required this.location,required this.shotsFired});
+  String date; String location; String shotsFired;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    date ?? "",
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  const CustomLabelText(
+                    text: 'Date',
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    location,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  const CustomLabelText(
+                    text: 'Location',
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    shotsFired,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                  const CustomLabelText(
+                    text: 'Shots Fired',
                   ),
                 ],
               ),

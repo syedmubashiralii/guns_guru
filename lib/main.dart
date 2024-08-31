@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.dart';
 import 'package:guns_guru/app/routes/app_pages.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/firebase_options.dart';
@@ -29,6 +30,7 @@ void main() async {
 
   Get.put(HomeController(), permanent: true);
   Get.put(HomeExtensionController());
+  Get.put(ShootingLogController());
   runApp(
     GetMaterialApp(
         theme: ThemeData(

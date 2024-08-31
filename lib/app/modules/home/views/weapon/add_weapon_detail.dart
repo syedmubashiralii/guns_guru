@@ -88,7 +88,7 @@ class AddWeaponDetail extends GetView<HomeController> {
                         ),
                       ),
                     ),
-                    items: AppConstants.caliber, // The list of caliber values
+                    items: AppConstants.caliberList, // The list of caliber values
                     dropdownDecoratorProps: const DropDownDecoratorProps(
                       dropdownSearchDecoration: InputDecoration(
                         labelText: 'Caliber',

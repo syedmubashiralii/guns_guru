@@ -1,7 +1,11 @@
+import 'dart:developer';
+
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
+import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
@@ -12,6 +16,7 @@ import '../../controllers/home_controller.dart';
 class AddUserProfileView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
+    controller.phoneNoTextEditingController.text = "+92";
     return Scaffold(
       appBar: AppBar(
           backgroundColor: ColorHelper.primaryColor,
@@ -57,7 +62,7 @@ class AddUserProfileView extends GetView<HomeController> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 10.0), // Space between fields
+                          const SizedBox(width: 10.0), // Space between fields
                           Expanded(
                             child: TextFormField(
                               controller: controller.lastNameController,
@@ -82,30 +87,46 @@ class AddUserProfileView extends GetView<HomeController> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        controller: controller.cnicController,
-                        decoration: const InputDecoration(
-                            labelText: 'CNIC NO',
-                            border: OutlineInputBorder(),
-                            hintText: '1111-1111111-1'),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          MaskTextInputFormatter(
-                            mask: '#####-#######-#',
-                            filter: {"#": RegExp(r'[0-9]')},
-                          )
-                        ],
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'CNIC is required';
-                          }
-                          if (!RegExp(r'^\d{5}-\d{7}-\d{1}$').hasMatch(value)) {
-                            return 'CNIC must be in the format 11111-1111111-1';
-                          }
+                      Obx(() {
+                        return TextFormField(
+                          controller: controller.cnicController,
+                          decoration: InputDecoration(
+                              labelText:
+                                  controller.selectedCountryCode.value != "PK"
+                                      ? 'ID NO'
+                                      : 'CNIC NO',
+                              border: const OutlineInputBorder(),
+                              hintText:
+                                  controller.selectedCountryCode.value != "PK"
+                                      ? 'Enter ID NO'
+                                      : '1111-1111111-1'),
+                          keyboardType: TextInputType.number,
+                          inputFormatters:
+                              controller.selectedCountryCode.value != "PK"
+                                  ? []
+                                  : [
+                                      MaskTextInputFormatter(
+                                        mask: '#####-#######-#',
+                                        filter: {"#": RegExp(r'[0-9]')},
+                                      )
+                                    ],
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return controller.selectedCountryCode.value ==
+                                      "PK"
+                                  ? 'CNIC NO is required'
+                                  : 'ID NO is required';
+                            }
+                            if (!RegExp(r'^\d{5}-\d{7}-\d{1}$')
+                                    .hasMatch(value) &&
+                                controller.selectedCountryCode.value == "PK") {
+                              return 'CNIC must be in the format 11111-1111111-1';
+                            }
 
-                          return null;
-                        },
-                      ),
+                            return null;
+                          },
+                        );
+                      }),
                       const SizedBox(height: 20),
                       TextFormField(
                           controller: controller.dobController,
@@ -143,31 +164,79 @@ class AddUserProfileView extends GetView<HomeController> {
                             return null;
                           }),
                       const SizedBox(height: 20),
-                      IntlPhoneField(
-                        invalidNumberMessage: "Phone number is not valid".tr,
-                        decoration: InputDecoration(
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 14.0),
-                          border: OutlineInputBorder(),
-                          hintText: "Phone Number".tr,
-                          counterText: "",
-                        ),
-                        onChanged: (phone) {
-                          controller.phoneNoTextEditingController.text =
-                              phone.completeNumber;
-                          try {
-                            controller.isPhoneNumberValid.value =
-                                phone.isValidNumber();
-                          } catch (e) {
-                            controller.isPhoneNumberValid.value = false;
-                          }
-                        },
-                        onCountryChanged: (country) {
-                          if (kDebugMode) {
-                            print('Country changed to: ${country.name}');
-                          }
-                        },
-                      ),
+                      Obx(() {
+                        return IntlPhoneField(
+                          initialCountryCode:
+                              controller.selectedCountryCode.value,
+                          invalidNumberMessage: "Phone number is not valid".tr,
+                          decoration: InputDecoration(
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 14.0),
+                            border: const OutlineInputBorder(),
+                            hintText: "Phone Number".tr,
+                            counterText: "",
+                          ),
+                          onChanged: (phone) {
+                            controller.phoneNoTextEditingController.text =
+                                phone.completeNumber;
+                            log(controller.selectedCountryCode.value);
+                            try {
+                              controller.isPhoneNumberValid.value =
+                                  phone.isValidNumber();
+                            } catch (e) {
+                              controller.isPhoneNumberValid.value = false;
+                            }
+                          },
+                          onCountryChanged: (country) {
+                            if (kDebugMode) {
+                              print('Country changed to: ${country.code}');
+                            }
+                            controller.selectedCountryCode.value = country.code;
+                          },
+                        );
+                      }),
+                      // const SizedBox(height: 20),
+                      // Obx(() {
+                      //   return DropdownSearch<String>(
+                      //     popupProps: const PopupProps.menu(
+                      //       showSearchBox:
+                      //           true, // Enables the search box in the dropdown
+                      //       searchFieldProps: TextFieldProps(
+                      //         decoration: InputDecoration(
+                      //           border: OutlineInputBorder(),
+                      //           labelText: 'Search Country',
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     items: AppConstants.ALL_COUNTRIES_ALPHA_2.keys
+                      //         .toList(), // The list of issuing authorities
+                      //     dropdownDecoratorProps: const DropDownDecoratorProps(
+                      //       dropdownSearchDecoration: InputDecoration(
+                      //         labelText: 'Country',
+                      //         border: OutlineInputBorder(),
+                      //       ),
+                      //     ),
+                      //     selectedItem: controller.selectedCountryCode.value,
+                      //     onChanged: (newValue) {
+                      //       controller.selectedCountryCode.value = newValue!;
+                      //       print("Country changed to: ${controller.selectedCountryCode.value}");
+                      //     },
+                      //     dropdownBuilder: (context, selectedItem) => SizedBox(
+                      //       width: Get.width * .6,
+                      //       child: Text(
+                      //         selectedItem ?? '',
+                      //         overflow: TextOverflow.ellipsis,
+                      //       ),
+                      //     ),
+                      //     validator: (value) {
+                      //       if (value == null) {
+                      //         return 'Selected Country is required';
+                      //       }
+                      //       return null;
+                      //     },
+                      //   );
+                      // }),
+
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: controller.addressController,

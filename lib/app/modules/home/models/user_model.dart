@@ -1,3 +1,5 @@
+import 'package:guns_guru/app/utils/app_constants.dart';
+
 class UserModel {
   String? address;
   String? city;
@@ -9,6 +11,7 @@ class UserModel {
   String? firstname;
   String? phoneno;
   String? lastname;
+  String? countrycode;
   List<License>? license;
   String? uid;
 
@@ -16,6 +19,7 @@ class UserModel {
       {this.address,
       this.city,
       this.cnic,
+      this.countrycode,
       // this.cnicBackSide,
       // this.cnicFrontSide,
       this.dob,
@@ -30,13 +34,14 @@ class UserModel {
     address = json['address'];
     city = json['city'];
     cnic = json['cnic'];
+    countrycode = json['countrycode'];
     // cnicBackSide = json['cnic_back_side'];
     // cnicFrontSide = json['cnic_front_side'];
     dob = json['dob'];
-    phoneno= json['phoneno'];
-    gender=json['gender'];
+    phoneno = json['phoneno'];
+    gender = json['gender'];
     firstname = json['firstname'];
-    lastname= json['lastname'];
+    lastname = json['lastname'];
     if (json['license'] != null) {
       license = <License>[];
       json['license'].forEach((v) {
@@ -52,6 +57,7 @@ class UserModel {
     data['city'] = city;
     data['cnic'] = cnic;
     data['gender'] = gender;
+    data['countrycode'] = countrycode;
     // data['cnic_back_side'] = this.cnicBackSide;
     // data['cnic_front_side'] = this.cnicFrontSide;
     data['dob'] = dob;
@@ -70,10 +76,11 @@ class UserModel {
     data['address'] = address;
     data['city'] = city;
     data['cnic'] = cnic;
+    data['countrycode'] = countrycode;
     // data['cnic_back_side'] = this.cnicBackSide;
     // data['cnic_front_side'] = this.cnicFrontSide;
     data['dob'] = dob;
-    data['gender']=gender;
+    data['gender'] = gender;
     data['phoneno'] = phoneno;
     data['firstname'] = firstname;
     data['lastname'] = lastname;
@@ -95,10 +102,12 @@ class License {
   String? licenseJurisdiction;
   String? licenseNumber;
   String? licenseweaponType;
-  String? licensePicture;
+  List<String>? licensePicture;
   String? licenseTrackingNumber;
   String? licenseValidTill;
   bool? licenseValidated;
+  String? documenttype;
+  String? country;
   WeaponDetails? weaponDetails;
   List<WeaponFiringRecord>? weaponFiringRecord;
   List<WeaponServiceRecord>? weaponServiceRecord;
@@ -111,9 +120,11 @@ class License {
       this.licenseIssuaingQuota,
       this.licenseIssuingAuthority,
       this.licenseJurisdiction,
+      this.documenttype,
       this.licenseNumber,
       this.licenseweaponType,
       this.licensePicture,
+      this.country,
       this.licenseTrackingNumber,
       this.licenseValidated,
       this.licenseValidTill,
@@ -129,26 +140,30 @@ class License {
       });
     }
     licenseAmmunitionLimit = json['licenseAmmunitionLimit'];
+    documenttype = json['documenttype'];
     licenseCalibre = json['licenseCalibre'];
     licenseDateOfIssuance = json['licenseDateOfIssuance'];
     licenseIssuaingQuota = json['licenseIssuaingQuota'];
+    country = json['country'];
     licenseIssuingAuthority = json['licenseIssuingAuthority'];
     licenseJurisdiction = json['licenseJurisdiction'];
     licenseNumber = json['licenseNumber'];
-    licenseweaponType=json['weaponType'];
-    licensePicture = json['licensePicture'];
+    licenseweaponType = json['weaponType'];
+    licensePicture = (json['licensePicture'] as List<dynamic>)
+        .map((e) => e.toString())
+        .toList();
     licenseTrackingNumber = json['licenseTrackingNumber'];
     licenseValidTill = json['licenseValidTill'];
     licenseValidated = json['licenseValidated'];
     weaponDetails = json['weaponDetails'] != null
         ? WeaponDetails.fromJson(json['weaponDetails'])
         : null;
-    if (json['weaponFiringRecord'] != null) {
-      weaponFiringRecord = <WeaponFiringRecord>[];
-      json['weaponFiringRecord'].forEach((v) {
-        weaponFiringRecord!.add(WeaponFiringRecord.fromJson(v));
-      });
-    }
+    // if (json['weaponFiringRecord'] != null) {
+    //   weaponFiringRecord = <WeaponFiringRecord>[];
+    //   json['weaponFiringRecord'].forEach((v) {
+    //     weaponFiringRecord!.add(WeaponFiringRecord.fromJson(v));
+    //   });
+    // }
     if (json['weaponServiceRecord'] != null) {
       weaponServiceRecord = <WeaponServiceRecord>[];
       json['weaponServiceRecord'].forEach((v) {
@@ -164,7 +179,9 @@ class License {
           ammunitionDetail!.map((v) => v.toJson()).toList();
     }
     data['licenseAmmunitionLimit'] = licenseAmmunitionLimit;
-    data['weaponType'] =licenseweaponType;
+    data['documenttype'] = documenttype;
+    data['country'] = country;
+    data['weaponType'] = licenseweaponType;
     data['licenseCalibre'] = licenseCalibre;
     data['licenseDateOfIssuance'] = licenseDateOfIssuance;
     data['licenseIssuaingQuota'] = licenseIssuaingQuota;
@@ -178,10 +195,10 @@ class License {
     if (weaponDetails != null) {
       data['weaponDetails'] = weaponDetails!.toJson();
     }
-    if (weaponFiringRecord != null) {
-      data['weaponFiringRecord'] =
-          weaponFiringRecord!.map((v) => v.toJson()).toList();
-    }
+    // if (weaponFiringRecord != null) {
+    //   data['weaponFiringRecord'] =
+    //       weaponFiringRecord!.map((v) => v.toJson()).toList();
+    // }
     if (weaponServiceRecord != null) {
       data['weaponServiceRecord'] =
           weaponServiceRecord!.map((v) => v.toJson()).toList();
@@ -196,8 +213,10 @@ class License {
           ammunitionDetail!.map((v) => v.toMap()).toList();
     }
     data['licenseAmmunitionLimit'] = licenseAmmunitionLimit;
+    data['documenttype'] = documenttype;
     data['licenseCalibre'] = licenseCalibre;
-    data['weaponType']=licenseweaponType;
+    data['country'] = country;
+    data['weaponType'] = licenseweaponType;
     data['licenseDateOfIssuance'] = licenseDateOfIssuance;
     data['licenseIssuaingQuota'] = licenseIssuaingQuota;
     data['licenseIssuingAuthority'] = licenseIssuingAuthority;
@@ -210,10 +229,10 @@ class License {
     if (weaponDetails != null) {
       data['weaponDetails'] = weaponDetails!.toMap();
     }
-    if (weaponFiringRecord != null) {
-      data['weaponFiringRecord'] =
-          weaponFiringRecord!.map((v) => v.toMap()).toList();
-    }
+    // if (weaponFiringRecord != null) {
+    //   data['weaponFiringRecord'] =
+    //       weaponFiringRecord!.map((v) => v.toMap()).toList();
+    // }
     if (weaponServiceRecord != null) {
       data['weaponServiceRecord'] =
           weaponServiceRecord!.map((v) => v.toMap()).toList();
@@ -240,7 +259,7 @@ class AmmunitionDetail {
 
   AmmunitionDetail.fromJson(Map<String, dynamic> json) {
     ammunitionBrand = json['ammunitionBrand'];
-    typeOfRound= json['typeOfRound'];
+    typeOfRound = json['typeOfRound'];
     ammunitionCaliber = json['ammunitionCaliber'];
     ammunitionPurchaseDate = json['ammunitionPurchaseDate'];
     ammunitionPurchasedFrom = json['ammunitionPurchasedFrom'];
@@ -340,39 +359,210 @@ class WeaponDetails {
 }
 
 class WeaponFiringRecord {
-  String? weaponFiringLocation;
-  String? weaponFiringNotes;
-  String? weaponFiringShotsFired;
-  String? weaponfiringDate;
+  String? fireArmMake;
+  String? fireArmModel;
+  String? caliber;
+  String? serialNumber;
+  String? opticsSights;
+  String? accessories;
+  String? ammunitionBrand;
+  String? bulletWeight;
+  String? bulletType;
+  String? muzzleVelocity;
+  String? lotBoxNumber;
+  String? notes;
+  String? rangeNameLocation;
+  String? date;
+  String? time;
+  String? weatherConditions;
+  String? windDirection;
+  double? windSpeed;
+  String? temperature;
+  String? selectedTemperatureUnit;
+  String? humidity;
+  String? altitude;
+  String? terrain;
+  String? selectedWindSpeedUnit;
+  String? brightness;
+  double? shootingDistance;
+  String? selectedShootingDistanceUnit;
+  String? targetType;
+  String? shootingPosition;
+  String? roundsFired;
+  String? malfunctions;
+  String? shootingDrills;
+  String? accuracyGrouping;
+  String? sightAdjustment;
+  String? performanceObservations;
+  String? lessonsLearned;
+  String? additionalNotes;
+  String? uid;
 
-  WeaponFiringRecord(
-      {this.weaponFiringLocation,
-      this.weaponFiringNotes,
-      this.weaponFiringShotsFired,
-      this.weaponfiringDate});
+  WeaponFiringRecord({
+    this.uid,
+    this.fireArmMake,
+    this.fireArmModel,
+    this.caliber,
+    this.serialNumber,
+    this.opticsSights,
+    this.accessories,
+    this.ammunitionBrand,
+    this.bulletWeight,
+    this.bulletType,
+    this.selectedWindSpeedUnit,
+    this.muzzleVelocity,
+    this.lotBoxNumber,
+    this.notes,
+    this.rangeNameLocation,
+    this.date,
+    this.time,
+    this.weatherConditions,
+    this.windDirection,
+    this.windSpeed,
+    this.temperature,
+    this.selectedTemperatureUnit,
+    this.humidity,
+    this.altitude,
+    this.terrain,
+    this.brightness,
+    this.shootingDistance,
+    this.selectedShootingDistanceUnit,
+    this.targetType,
+    this.shootingPosition,
+    this.roundsFired,
+    this.malfunctions,
+    this.shootingDrills,
+    this.accuracyGrouping,
+    this.sightAdjustment,
+    this.performanceObservations,
+    this.lessonsLearned,
+    this.additionalNotes,
+  });
 
   WeaponFiringRecord.fromJson(Map<String, dynamic> json) {
-    weaponFiringLocation = json['weaponFiringLocation'];
-    weaponFiringNotes = json['weaponFiringNotes'];
-    weaponFiringShotsFired = json['weaponFiringShotsFired'];
-    weaponfiringDate = json['weaponfiringDate'];
+    uid = json['uid'];
+    fireArmMake = json['fireArmMake'];
+    fireArmModel = json['fireArmModel'];
+    selectedWindSpeedUnit = json['selectedWindSpeedUnit'];
+    caliber = json['caliber'];
+    serialNumber = json['serialNumber'];
+    opticsSights = json['opticsSights'];
+    accessories = json['accessories'];
+    ammunitionBrand = json['ammunitionBrand'];
+    bulletWeight = json['bulletWeight'];
+    bulletType = json['bulletType'];
+    muzzleVelocity = json['muzzleVelocity'];
+    lotBoxNumber = json['lotBoxNumber'];
+    notes = json['notes'];
+    rangeNameLocation = json['rangeNameLocation'];
+    date = json['date'];
+    time = json['time'];
+    weatherConditions = json['weatherConditions'];
+    windDirection = json['windDirection'];
+    windSpeed = json['windSpeed'];
+    temperature = json['temperature'];
+    selectedTemperatureUnit = json['selectedTemperatureUnit'];
+    humidity = json['humidity'];
+    altitude = json['altitude'];
+    terrain = json['terrain'];
+    brightness = json['brightness'];
+    shootingDistance = json['shootingDistance'];
+    selectedShootingDistanceUnit = json['selectedShootingDistanceUnit'];
+    targetType = json['targetType'];
+    shootingPosition = json['shootingPosition'];
+    roundsFired = json['roundsFired'];
+    malfunctions = json['malfunctions'];
+    shootingDrills = json['shootingDrills'];
+    accuracyGrouping = json['accuracyGrouping'];
+    sightAdjustment = json['sightAdjustment'];
+    performanceObservations = json['performanceObservations'];
+    lessonsLearned = json['lessonsLearned'];
+    additionalNotes = json['additionalNotes'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['weaponFiringLocation'] = weaponFiringLocation;
-    data['weaponFiringNotes'] = weaponFiringNotes;
-    data['weaponFiringShotsFired'] = weaponFiringShotsFired;
-    data['weaponfiringDate'] = weaponfiringDate;
+    data['uid'] = uid;
+    data['fireArmMake'] = fireArmMake;
+    data['fireArmModel'] = fireArmModel;
+    data['caliber'] = caliber;
+    data['serialNumber'] = serialNumber;
+    data['opticsSights'] = opticsSights;
+    data['accessories'] = accessories;
+    data['selectedWindSpeedUnit'] = selectedWindSpeedUnit;
+    data['ammunitionBrand'] = ammunitionBrand;
+    data['bulletWeight'] = bulletWeight;
+    data['bulletType'] = bulletType;
+    data['muzzleVelocity'] = muzzleVelocity;
+    data['lotBoxNumber'] = lotBoxNumber;
+    data['notes'] = notes;
+    data['rangeNameLocation'] = rangeNameLocation;
+    data['date'] = date;
+    data['time'] = time;
+    data['weatherConditions'] = weatherConditions;
+    data['windDirection'] = windDirection;
+    data['windSpeed'] = windSpeed;
+    data['temperature'] = temperature;
+    data['selectedTemperatureUnit'] = selectedTemperatureUnit;
+    data['humidity'] = humidity;
+    data['altitude'] = altitude;
+    data['terrain'] = terrain;
+    data['brightness'] = brightness;
+    data['shootingDistance'] = shootingDistance;
+    data['selectedShootingDistanceUnit'] = selectedShootingDistanceUnit;
+    data['targetType'] = targetType;
+    data['shootingPosition'] = shootingPosition;
+    data['roundsFired'] = roundsFired;
+    data['malfunctions'] = malfunctions;
+    data['shootingDrills'] = shootingDrills;
+    data['accuracyGrouping'] = accuracyGrouping;
+    data['sightAdjustment'] = sightAdjustment;
+    data['performanceObservations'] = performanceObservations;
+    data['lessonsLearned'] = lessonsLearned;
+    data['additionalNotes'] = additionalNotes;
     return data;
   }
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['weaponFiringLocation'] = weaponFiringLocation;
-    data['weaponFiringNotes'] = weaponFiringNotes;
-    data['weaponFiringShotsFired'] = weaponFiringShotsFired;
-    data['weaponfiringDate'] = weaponfiringDate;
+    data['uid'] = uid;
+    data['fireArmMake'] = fireArmMake;
+    data['fireArmModel'] = fireArmModel;
+    data['selectedWindSpeedUnit'] = selectedWindSpeedUnit;
+    data['caliber'] = caliber;
+    data['serialNumber'] = serialNumber;
+    data['opticsSights'] = opticsSights;
+    data['accessories'] = accessories;
+    data['ammunitionBrand'] = ammunitionBrand;
+    data['bulletWeight'] = bulletWeight;
+    data['bulletType'] = bulletType;
+    data['muzzleVelocity'] = muzzleVelocity;
+    data['lotBoxNumber'] = lotBoxNumber;
+    data['notes'] = notes;
+    data['rangeNameLocation'] = rangeNameLocation;
+    data['date'] = date;
+    data['time'] = time;
+    data['weatherConditions'] = weatherConditions;
+    data['windDirection'] = windDirection;
+    data['windSpeed'] = windSpeed;
+    data['temperature'] = temperature;
+    data['selectedTemperatureUnit'] = selectedTemperatureUnit;
+    data['humidity'] = humidity;
+    data['altitude'] = altitude;
+    data['terrain'] = terrain;
+    data['brightness'] = brightness;
+    data['shootingDistance'] = shootingDistance;
+    data['selectedShootingDistanceUnit'] = selectedShootingDistanceUnit;
+    data['targetType'] = targetType;
+    data['shootingPosition'] = shootingPosition;
+    data['roundsFired'] = roundsFired;
+    data['malfunctions'] = malfunctions;
+    data['shootingDrills'] = shootingDrills;
+    data['accuracyGrouping'] = accuracyGrouping;
+    data['sightAdjustment'] = sightAdjustment;
+    data['performanceObservations'] = performanceObservations;
+    data['lessonsLearned'] = lessonsLearned;
+    data['additionalNotes'] = additionalNotes;
     return data;
   }
 }
