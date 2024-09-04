@@ -33,7 +33,9 @@ class WeaponDetailWidget extends StatelessWidget {
     // Fetch weapon details when this widget is built
     if (license.weaponUid != null) {
       log("enter");
-      weaponController.fetchWeaponDetailsById(license.weaponUid??"");
+      weaponController.fetchWeaponDetailsById(license.weaponUid ?? "");
+    } else {
+      weaponController.weaponDetails = Rx<WeaponDetails?>(null);
     }
 
     return BannerCard(
@@ -73,8 +75,7 @@ class WeaponDetailWidget extends StatelessWidget {
                           weapon.weaponMake ?? "",
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
+                              color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                         const CustomLabelText(text: 'Make'),
                       ],
@@ -88,8 +89,7 @@ class WeaponDetailWidget extends StatelessWidget {
                           weapon.weaponModel ?? "",
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
+                              color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                         const CustomLabelText(text: 'Model'),
                       ],
@@ -99,8 +99,7 @@ class WeaponDetailWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                            weapon.weaponCaliber ?? "",
+                        Text(weapon.weaponCaliber ?? "",
                             style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold)),
                         const CustomLabelText(text: 'Caliber'),
@@ -123,8 +122,7 @@ class WeaponDetailWidget extends StatelessWidget {
                           weapon.weaponNo ?? "",
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
+                              color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                         const CustomLabelText(text: 'Weapon No'),
                       ],
@@ -138,8 +136,7 @@ class WeaponDetailWidget extends StatelessWidget {
                           weapon.weaponType ?? "",
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
+                              color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                         const CustomLabelText(text: 'Weapon Type'),
                       ],
@@ -149,15 +146,15 @@ class WeaponDetailWidget extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                         Text(
-                                weapon.weaponauthorizedealername ?? "N/A",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const CustomLabelText(text: 'Authorized Dealer'),
+                        Text(
+                          weapon.weaponauthorizedealername ?? "N/A",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const CustomLabelText(text: 'Authorized Dealer'),
                       ],
                     ),
                   ),
@@ -173,10 +170,13 @@ class WeaponDetailWidget extends StatelessWidget {
                     DarkButton(
                         buttonColor: Colors.black.withOpacity(.7),
                         fontSize: 10,
-                        onTap:onTapWeaponDetail?? () {
-                          // Get.to(WeaponLogBookView());
-                          Get.to(WeaponDetailScreen(weapon: weapon,));
-                        },
+                        onTap: onTapWeaponDetail ??
+                            () {
+                              // Get.to(WeaponLogBookView());
+                              Get.to(WeaponDetailScreen(
+                                weapon: weapon,
+                              ));
+                            },
                         text: 'Weapon Detail / Add Ammo')
                   ],
                 ),

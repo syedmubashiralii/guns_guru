@@ -37,11 +37,15 @@ class HomeController extends GetxController {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController cnicController = TextEditingController();
+  TextEditingController documentExpiryDate = TextEditingController();
+  TextEditingController documentIssuanceDate = TextEditingController();
   TextEditingController dobController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
   RxString selectedCountryCode = "PK".obs;
   RxString selectedGender = "MALE".obs;
+  RxString selectedState = "".obs;
   TextEditingController phoneNoTextEditingController = TextEditingController();
 
   //weapon fields
@@ -287,7 +291,16 @@ class HomeController extends GetxController {
         AppConstants.City: cityController.text,
         AppConstants.CountryCode: selectedCountryCode.value,
         AppConstants.Gender: selectedGender.value,
-        AppConstants.UID: FirebaseAuth.instance.currentUser?.uid ?? ""
+        AppConstants.UID: FirebaseAuth.instance.currentUser?.uid ?? "",
+        AppConstants.Email: FirebaseAuth.instance.currentUser?.email ?? "",
+        AppConstants.documentIssuanceDate: documentIssuanceDate.text,
+        AppConstants.documentExpiryDate: documentExpiryDate.text,
+        AppConstants.Country: selectedCountryCode.value == "CA"
+            ? "Canada"
+            : selectedCountryCode.value == "US"
+                ? "United States"
+                : "",
+        AppConstants.state: selectedState.value
       });
       await loadUserData(firebaseAuth.currentUser!.uid);
       closeDialog();

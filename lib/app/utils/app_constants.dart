@@ -1,16 +1,20 @@
 import 'package:guns_guru/app/modules/home/models/model_make_model.dart';
 
 class AppConstants {
-  static bool isPakistani=false;
+  static bool isPakistani = false;
   static String FirstName = 'firstname';
   static String LastName = 'lastname';
   static String CNIC = 'cnic';
   static String DOB = 'dob';
   static String PhoneNo = 'phoneno';
   static String Address = 'address';
+  static String Email = 'email';
+  static String documentIssuanceDate="documentIssuanceDate";
+  static String documentExpiryDate='documentExpiryDate';
   static String City = 'city';
   static String CountryCode = 'countrycode';
   static String Country = 'country';
+  static String state = 'state';
   static String Gender = 'gender';
   static String CNICFrontSide = 'cnic_front_side';
   static String CNICBackSide = 'cnic_back_side';
@@ -62,7 +66,7 @@ class AppConstants {
   static const String weaponServiceDoneBy = 'weaponServiceDoneBy';
   static const String weaponServiceNotes = 'weaponServiceNotes';
 
-   // Static shooterlogbook  identifiers
+  // Static shooterlogbook  identifiers
   static const String fireArmMake = 'fireArmMake';
   static const String fireArmModel = 'fireArmModel';
   static const String caliber = 'caliber';
@@ -87,7 +91,8 @@ class AppConstants {
   static const String terrain = 'terrain';
   static const String brightness = 'brightness';
   static const String shootingDistance = 'shootingDistance';
-  static const String selectedShootingDistanceUnit = 'selectedShootingDistanceUnit';
+  static const String selectedShootingDistanceUnit =
+      'selectedShootingDistanceUnit';
   static const String targetType = 'targetType';
   static const String shootingPosition = 'shootingPosition';
   static const String roundsFired = 'roundsFired';
@@ -98,7 +103,7 @@ class AppConstants {
   static const String performanceObservations = 'performanceObservations';
   static const String lessonsLearned = 'lessonsLearned';
   static const String additionalNotes = 'additionalNotes';
-  static const String selectedWindSpeedUnit='selectedWindSpeedUnit';
+  static const String selectedWindSpeedUnit = 'selectedWindSpeedUnit';
 
   static List<String> issuingAuthorities = [
     "Federal",
@@ -211,7 +216,7 @@ class AppConstants {
     "Unsupported Standing"
   ];
 
-    static const Map<String, String> ALL_COUNTRIES_ALPHA_2 = {
+  static const Map<String, String> ALL_COUNTRIES_ALPHA_2 = {
     "Afghanistan": "AF",
     "Albania": "AL",
     "Algeria": "DZ",
@@ -425,7 +430,6 @@ class AppConstants {
     "Zimbabwe": "ZW"
   };
 
-
   final List<String> weatherConditionsList = [
     'Cloudy',
     'Partly Cloudy',
@@ -434,4 +438,71 @@ class AppConstants {
     'Rainy'
   ];
 
+  static List<String> canadianProvincesAndTerritories = [
+    'Alberta',
+    'British Columbia',
+    'Manitoba',
+    'New Brunswick',
+    'Newfoundland and Labrador',
+    'Nova Scotia',
+    'Ontario',
+    'Prince Edward Island',
+    'Quebec',
+    'Saskatchewan',
+    'Northwest Territories',
+    'Nunavut',
+    'Yukon',
+  ];
+  static List<String> usStates = [
+    'Alabama',
+    'Alaska',
+    'Arizona',
+    'Arkansas',
+    'California',
+    'Colorado',
+    'Connecticut',
+    'Delaware',
+    'Florida',
+    'Georgia',
+    'Hawaii',
+    'Idaho',
+    'Illinois',
+    'Indiana',
+    'Iowa',
+    'Kansas',
+    'Kentucky',
+    'Louisiana',
+    'Maine',
+    'Maryland',
+    'Massachusetts',
+    'Michigan',
+    'Minnesota',
+    'Mississippi',
+    'Missouri',
+    'Montana',
+    'Nebraska',
+    'Nevada',
+    'New Hampshire',
+    'New Jersey',
+    'New Mexico',
+    'New York',
+    'North Carolina',
+    'North Dakota',
+    'Ohio',
+    'Oklahoma',
+    'Oregon',
+    'Pennsylvania',
+    'Rhode Island',
+    'South Carolina',
+    'South Dakota',
+    'Tennessee',
+    'Texas',
+    'Utah',
+    'Vermont',
+    'Virginia',
+    'Washington',
+    'West Virginia',
+    'Wisconsin',
+    'Wyoming',
+  ];
 }

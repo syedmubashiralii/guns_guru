@@ -4,8 +4,11 @@ class UserModel {
   String? address;
   String? city;
   String? cnic;
-  // String? cnicBackSide;
-  // String? cnicFrontSide;
+  String? email;
+  String? country;
+  String? state;
+  String? documentIssuanceDate;
+  String? documentExpiryDate;
   String? dob;
   String? gender;
   String? firstname;
@@ -19,14 +22,17 @@ class UserModel {
       {this.address,
       this.city,
       this.cnic,
-      this.countrycode,
-      // this.cnicBackSide,
-      // this.cnicFrontSide,
+      this.country,
+      this.state,
+      this.email,
+      this.documentIssuanceDate,
+      this.documentExpiryDate,
       this.dob,
       this.gender,
       this.firstname,
       this.phoneno,
       this.lastname,
+      this.countrycode,
       this.license,
       this.uid});
 
@@ -34,14 +40,17 @@ class UserModel {
     address = json['address'];
     city = json['city'];
     cnic = json['cnic'];
-    countrycode = json['countrycode'];
-    // cnicBackSide = json['cnic_back_side'];
-    // cnicFrontSide = json['cnic_front_side'];
+    documentIssuanceDate = json['documentIssuanceDate'];
+    documentExpiryDate = json['documentExpiryDate'];
     dob = json['dob'];
-    phoneno = json['phoneno'];
+    country = json['country'];
+    state = json['state'];
+    email = json['email'];
     gender = json['gender'];
     firstname = json['firstname'];
+    phoneno = json['phoneno'];
     lastname = json['lastname'];
+    countrycode = json['countrycode'];
     if (json['license'] != null) {
       license = <License>[];
       json['license'].forEach((v) {
@@ -56,41 +65,25 @@ class UserModel {
     data['address'] = address;
     data['city'] = city;
     data['cnic'] = cnic;
-    data['gender'] = gender;
-    data['countrycode'] = countrycode;
-    // data['cnic_back_side'] = this.cnicBackSide;
-    // data['cnic_front_side'] = this.cnicFrontSide;
+    data['country'] = country;
+    data['state'] = state;
+    data['documentIssuanceDate'] = documentIssuanceDate;
+    data['documentExpiryDate'] = documentExpiryDate;
+    data['email']= email;
     data['dob'] = dob;
-    data['phoneno'] = phoneno;
+    data['gender'] = gender;
     data['firstname'] = firstname;
+    data['phoneno'] = phoneno;
     data['lastname'] = lastname;
+    data['countrycode'] = countrycode;
     if (license != null) {
       data['license'] = license!.map((v) => v.toJson()).toList();
     }
     data['uid'] = uid;
     return data;
   }
-
-  Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['address'] = address;
-    data['city'] = city;
-    data['cnic'] = cnic;
-    data['countrycode'] = countrycode;
-    // data['cnic_back_side'] = this.cnicBackSide;
-    // data['cnic_front_side'] = this.cnicFrontSide;
-    data['dob'] = dob;
-    data['gender'] = gender;
-    data['phoneno'] = phoneno;
-    data['firstname'] = firstname;
-    data['lastname'] = lastname;
-    if (license != null) {
-      data['license'] = license!.map((v) => v.toMap()).toList();
-    }
-    data['uid'] = uid;
-    return data;
-  }
 }
+
 
 class License {
   String? uid;

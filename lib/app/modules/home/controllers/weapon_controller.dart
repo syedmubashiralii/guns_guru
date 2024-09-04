@@ -12,6 +12,7 @@ import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
 import 'package:guns_guru/app/modules/home/models/model_make_model.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
+import 'package:guns_guru/app/modules/home/views/weapon/weapon_detail_screen.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/default_snackbar.dart';
 import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
@@ -53,8 +54,8 @@ class WeaponController extends GetxController {
   TextEditingController retailerPhoneNo = TextEditingController();
   RxList servicePartsChangedList = [].obs;
   RxString ammoBrand = "Federal Premium".obs;
+    RxString ammoCaliber = "9mm".obs;
   RxString typeOfRound = "Full Metal Jacket (FMJ)".obs;
-  RxString AmmoBrand = "".obs;
   final ammunitionStockFormKey = GlobalKey<FormState>();
   TextEditingController purchaseDateController = TextEditingController();
   TextEditingController retailerNameController = TextEditingController();
@@ -180,6 +181,8 @@ class WeaponController extends GetxController {
         );
         clearAllControllers();
         weaponList.value = await getAllWeapons(_auth.currentUser?.uid ?? "");
+        weaponDetails.value=weaponList.value.last;
+        Get.to(WeaponDetailScreen(weapon: weaponList.value.last));
       }
     } catch (e) {
       closeDialog();

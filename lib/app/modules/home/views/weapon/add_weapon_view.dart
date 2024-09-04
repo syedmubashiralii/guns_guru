@@ -19,9 +19,9 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 class AddWeaponView extends GetView<WeaponController> {
   final bool isEditMode; // Add a flag for edit mode
 
-   AddWeaponView({super.key, this.isEditMode = false});
+  AddWeaponView({super.key, this.isEditMode = false});
 
-  HomeController homeController=Get.find();
+  HomeController homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class AddWeaponView extends GetView<WeaponController> {
     bool pakistani =
         homeController.userModel.value.countrycode == "PK" ? true : false;
 
-    controller.filteredModels.value=controller.filterModelsList;    
+    controller.filteredModels.value = controller.filterModelsList;
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -168,7 +168,8 @@ class AddWeaponView extends GetView<WeaponController> {
                     selectedItem: controller.weaponMake.value,
                     onChanged: (newValue) {
                       controller.weaponMake.value = newValue!;
-                       controller.filteredModels.value=controller.filterModelsList;  
+                      controller.filteredModels.value =
+                          controller.filterModelsList;
                     },
                     validator: (value) {
                       if (value == null) {
@@ -178,122 +179,48 @@ class AddWeaponView extends GetView<WeaponController> {
                     },
                   ),
                   20.height,
-                  Obx(
-                   () {
-                      return DropdownSearch<String>(
-                        popupProps: PopupProps.menu(
-                          showSearchBox:
-                              true, // Enables the search box in the dropdown
-                          searchFieldProps: const TextFieldProps(
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Search Model',
-                            ),
-                          ),
-                          itemBuilder: (context, item, isSelected) {
-                            return ListTile(
-                              title: SizedBox(
-                                width: Get.width * .6,
-                                child: Text(
-                                  item,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        items: controller.filteredModels.value,
-                        dropdownDecoratorProps: const DropDownDecoratorProps(
-                          dropdownSearchDecoration: InputDecoration(
-                            labelText: 'Model',
+                  Obx(() {
+                    return DropdownSearch<String>(
+                      popupProps: PopupProps.menu(
+                        showSearchBox:
+                            true, // Enables the search box in the dropdown
+                        searchFieldProps: const TextFieldProps(
+                          decoration: InputDecoration(
                             border: OutlineInputBorder(),
+                            labelText: 'Search Model',
                           ),
                         ),
-                        selectedItem: controller.weaponModel.value,
-                        onChanged: (newValue) {
-                          controller.weaponModel.value = newValue!;
+                        itemBuilder: (context, item, isSelected) {
+                          return ListTile(
+                            title: SizedBox(
+                              width: Get.width * .6,
+                              child: Text(
+                                item,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          );
                         },
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Weapon model is required';
-                          }
-                          return null;
-                        },
-                      );
-                    }
-                  ),
-                  if(!pakistani)
-                  20.height,
-                  if(!pakistani)
-                  TextFormField(
-                    controller: controller.issuingDocumentNoController,
-                    decoration: const InputDecoration(
-                      labelText: 'Weapon Issuing Document No',
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Weapon Issuing Document is required';
-                      }
-                      return null;
-                    },
-                  ),
-                  if(!pakistani)
-                  20.height,
-                  if(!pakistani)
-                  TextFormField(
-                    readOnly: true,
-                    controller: controller.weaponDocumentIssuingDate,
-                    decoration: const InputDecoration(
-                      labelText: 'Document Issuing Date',
-                      border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.date_range),
-                      hintText: 'DD/MM/YYYY',
-                    ),
-                    onTap: () async {
-                      controller.weaponDocumentIssuingDate.text =
-                          await datePicker(lastDate: DateTime.now());
-                    },
-                    keyboardType: TextInputType.datetime,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Weapon document issuing date is required';
-                      }
-                      RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                      if (!dateRegex.hasMatch(value)) {
-                        return 'Please enter a valid date format: DD/MM/YYYY';
-                      }
-                      return null;
-                    },
-                  ),
-                  if(!pakistani)
-                  20.height,
-                  if(!pakistani)
-                  TextFormField(
-                    readOnly: true,
-                    controller: controller.weaponDocumentExpiryDate,
-                    decoration: const InputDecoration(
-                      labelText: 'Document Expiry Date',
-                      border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.date_range),
-                      hintText: 'DD/MM/YYYY',
-                    ),
-                    onTap: () async {
-                      controller.weaponDocumentExpiryDate.text =
-                          await datePicker();
-                    },
-                    keyboardType: TextInputType.datetime,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Weapon document expiry date is required';
-                      }
-                      RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                      if (!dateRegex.hasMatch(value)) {
-                        return 'Please enter a valid date format: DD/MM/YYYY';
-                      }
-                      return null;
-                    },
-                  ),
+                      ),
+                      items: controller.filteredModels.value,
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: 'Model',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      selectedItem: controller.weaponModel.value,
+                      onChanged: (newValue) {
+                        controller.weaponModel.value = newValue!;
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Weapon model is required';
+                        }
+                        return null;
+                      },
+                    );
+                  }),
                   20.height,
                   TextFormField(
                     controller: controller.authorizeDealerName,
@@ -324,29 +251,6 @@ class AddWeaponView extends GetView<WeaponController> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Authorize dealer address is required';
-                      }
-                      return null;
-                    },
-                  ),
-                  20.height,
-                  TextFormField(
-                    controller: controller.emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email Address',
-                      border: OutlineInputBorder(),
-                    ),
-                    inputFormatters: [
-                      UpperCaseTextFormatter(),
-                    ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Email address is required';
-                      }
-                      final RegExp emailRegex = RegExp(
-                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                      );
-                      if (!emailRegex.hasMatch(value)) {
-                        return 'Please enter a valid email address';
                       }
                       return null;
                     },
@@ -449,8 +353,10 @@ class AddWeaponView extends GetView<WeaponController> {
                   }),
                   40.height,
                   DarkButton(
-                     onTap: isEditMode ? controller.editWeapon : controller.addWeapon,
-                     text:isEditMode?"Edit": "Add")
+                      onTap: isEditMode
+                          ? controller.editWeapon
+                          : controller.addWeapon,
+                      text: isEditMode ? "Edit" : "Add")
                 ]))));
   }
 }

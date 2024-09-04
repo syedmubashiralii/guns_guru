@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.dart';
+import 'package:guns_guru/app/modules/home/views/auth/add_user_profile_view.dart';
 import 'package:guns_guru/app/modules/home/views/consultancy/consultancy_view.dart';
 import 'package:guns_guru/app/modules/home/views/license/license_list_view.dart';
 import 'package:guns_guru/app/modules/home/views/shooter_logbook/shooter_logbook_view.dart';
 import 'package:guns_guru/app/modules/home/views/weapon/weapon_list_view.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
+import 'package:guns_guru/app/utils/default_snackbar.dart';
 import 'package:guns_guru/app/utils/dialogs/app_exit_dialog.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/widgets/app_drawer.dart';
@@ -65,7 +67,9 @@ class HomeView extends GetView<HomeController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildCard(AppConstants.isPakistani ? 'Add License' : 'Add Weapon', () {
+                    _buildCard(
+                        AppConstants.isPakistani ? 'Add License' : 'Add Weapon',
+                        () {
                       if (AppConstants.isPakistani) {
                         Get.to(() => LicenseListView());
                       } else {
@@ -92,6 +96,56 @@ class HomeView extends GetView<HomeController> {
                     })
                   ],
                 ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: InkWell(
+          onTap: () {
+            DefaultSnackbar.show("email", controller.userModel.value.phoneno??"");
+            controller.firstNameController.text =
+                controller.userModel.value.firstname ?? "";
+            controller.lastNameController.text =
+                controller.userModel.value.lastname ?? "";
+            controller.cnicController.text =
+                controller.userModel.value.cnic ?? "";
+            controller.dobController.text =
+                controller.userModel.value.dob ?? "";
+            controller.phoneNoTextEditingController.text =
+                controller.userModel.value.phoneno ?? "";
+            controller.addressController.text =
+                controller.userModel.value.address ?? "";
+            controller.cityController.text =
+                controller.userModel.value.city ?? "";
+            controller.selectedCountryCode.value =
+                controller.userModel.value.countrycode ?? "";
+            controller.selectedGender.value =
+                controller.userModel.value.gender ?? "";
+                 controller.emailController.text =
+                controller.userModel.value.email ?? "";
+            controller.documentExpiryDate.text =
+                controller.userModel.value.documentExpiryDate ?? "";
+            controller.documentIssuanceDate.text =
+                controller.userModel.value.documentIssuanceDate ?? "";
+            controller.selectedState.value =
+                controller.userModel.value.state ?? "";
+                Get.to(AddUserProfileView());
+          },
+          child: Container(
+            color: ColorHelper.primaryColor,
+            height: 60,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Click here to Edit Profile",
+                  style: TextStyle(color: Colors.white),
+                ),
+                10.width,
+                Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                )
               ],
             ),
           ),

@@ -77,10 +77,10 @@ class AddAmmunitionStockView extends GetView<WeaponController> {
               ),
               _buildDropdown(
                 label: 'Caliber',
-                items: AppConstants.ammoBrand,
-                selectedItem: controller.ammoBrand.value,
-                onChanged: (value) => controller.ammoBrand.value = value!,
-                validatorMessage: 'Ammo Brand is required',
+                items: AppConstants.caliberList,
+                selectedItem: controller.ammoCaliber.value,
+                onChanged: (value) => controller.ammoCaliber.value = value!,
+                validatorMessage: 'Ammo Caliber is required',
               ),
               _buildDropdown(
                 label: 'Type of Round',
