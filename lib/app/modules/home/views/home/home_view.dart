@@ -4,7 +4,9 @@ import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.d
 import 'package:guns_guru/app/modules/home/views/consultancy/consultancy_view.dart';
 import 'package:guns_guru/app/modules/home/views/license/license_list_view.dart';
 import 'package:guns_guru/app/modules/home/views/shooter_logbook/shooter_logbook_view.dart';
+import 'package:guns_guru/app/modules/home/views/weapon/weapon_list_view.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
+import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/dialogs/app_exit_dialog.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/widgets/app_drawer.dart';
@@ -16,6 +18,8 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    AppConstants.isPakistani =
+        controller.userModel.value.countrycode == "PK" ? true : false;
     return WillPopScope(
       onWillPop: () {
         showExitDialog();
@@ -46,13 +50,13 @@ class HomeView extends GetView<HomeController> {
                       color: Colors.black.withOpacity(.7)),
                 ),
                 10.height,
-                const Text(
+                Text(
                   "This application is only for the license holders issued by the competent authority. Please select one of the options to proceed further:\n"
-                  "A. Add your arms license\n"
+                  "A. Add your ${AppConstants.isPakistani ? "arms license" : "Weapon"}\n"
                   "B. Shooter Log Book (License Is need to use this feature)\n"
                   "C. Service Record (License Is need to use this feature)\n"
                   "D. Consultancy (Issuance of new license, renewal etc.).",
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 14,
                       color: Colors.black),
@@ -61,14 +65,17 @@ class HomeView extends GetView<HomeController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildCard('Add License', () {
-                      Get.to(() => LicenseListView());
+                    _buildCard(AppConstants.isPakistani ? 'Add License' : 'Add Weapon', () {
+                      if (AppConstants.isPakistani) {
+                        Get.to(() => LicenseListView());
+                      } else {
+                        Get.to(() => WeaponListView());
+                      }
                     }),
                     controller.userModel.value.license == null ||
                             controller.userModel.value.license!.isEmpty
                         ? const SizedBox()
                         : _buildCard('Shooter Log Book', () async {
-                           
                             Get.to(ShooterLogbookView());
                           })
                   ],

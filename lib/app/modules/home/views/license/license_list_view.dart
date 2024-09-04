@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.dart';
 import 'package:guns_guru/app/modules/home/views/license/add_license_view.dart';
 import 'package:guns_guru/app/modules/home/views/license/license_detail_view.dart';
@@ -10,13 +11,21 @@ import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 
-class LicenseListView extends GetView<HomeController> {
-   LicenseListView({super.key});
+class LicenseListView extends GetView<LicenseController> {
+  LicenseListView({super.key});
 
-  final ShootingLogController shootingLogController = Get.put(ShootingLogController());
+  final ShootingLogController shootingLogController =
+      Get.put(ShootingLogController());
 
   @override
   Widget build(BuildContext context) {
+    if (controller.licenseList.isEmpty) {
+      controller
+          .getAllLicenses(Get.find<HomeController>().userModel.value.uid ?? "")
+          .then((value) {
+        controller.licenseList.value = value;
+      });
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -30,20 +39,24 @@ class LicenseListView extends GetView<HomeController> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: [
-            if (isAnyLicenseValidionExpire(controller.userModel.value.license ?? []))
-              const RenewalButtonWidget(),
-            15.height,
-            _buildLicenseDetails(controller, shootingLogController),
-          ],
+        child: Obx(
+           () {
+            return ListView(
+              children: [
+                if (isAnyLicenseValidionExpire(controller.licenseList.value ?? []))
+                  const RenewalButtonWidget(),
+                15.height,
+                _buildLicenseDetails(controller, shootingLogController),
+              ],
+            );
+          }
         ),
       ),
     );
   }
 
-  Widget _buildLicenseDetails(
-      HomeController controller, ShootingLogController shootingLogController) {
+  Widget _buildLicenseDetails(LicenseController controller,
+      ShootingLogController shootingLogController) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -53,13 +66,13 @@ class LicenseListView extends GetView<HomeController> {
               fontWeight: FontWeight.w600, color: Colors.black, fontSize: 17),
         ),
         10.height,
-        if (controller.userModel.value.license == null ||
-            controller.userModel.value.license!.isEmpty)
+        if (controller.licenseList.value == null ||
+            controller.licenseList.isEmpty)
           const Center(child: Text("No License Found"))
         else
-          ...controller.userModel.value.license!.map((license) {
-            int index = controller.userModel.value.license!.indexOf(license);
-            String weaponNo = license.weaponDetails?.weaponNo ?? "N/A";
+          ...controller.licenseList.value.map((license) {
+            int index = controller.licenseList.value.indexOf(license);
+            String weaponNo = license.weaponNo ?? "N/A";
 
             return Row(
               children: [
@@ -82,9 +95,8 @@ class LicenseListView extends GetView<HomeController> {
                       onTap: () {
                         controller.selectedLicenseIndex.value = index;
                         var selectedLicenseNumber = controller
-                            .userModel
-                            .value
-                            .license![controller.selectedLicenseIndex.value]
+                            .licenseList
+                            .value[controller.selectedLicenseIndex.value]
                             .licenseNumber;
 
                         var filteredLogs = shootingLogController.shooterLogList
@@ -92,9 +104,8 @@ class LicenseListView extends GetView<HomeController> {
                                 log.serialNumber == selectedLicenseNumber)
                             .toList();
                         controller
-                            .userModel
-                            .value
-                            .license![controller.selectedLicenseIndex.value]
+                            .licenseList
+                            .value[controller.selectedLicenseIndex.value]
                             .weaponFiringRecord = filteredLogs;
 
                         Get.to(const LicenseDetailView());
@@ -113,7 +124,9 @@ class LicenseListView extends GetView<HomeController> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  license.licenseNumber==""?"N/A":license.licenseNumber??"N/A",
+                                  license.licenseNumber == ""
+                                      ? "N/A"
+                                      : license.licenseNumber ?? "N/A",
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                       color: Colors.black,
@@ -213,12 +226,7 @@ class LicenseListView extends GetView<HomeController> {
           width: Get.width,
           child: DarkButton(
             onTap: () {
-              controller.licenseNumberController.clear();
-              controller.licensePictures.value = [];
-              controller.ammunitionLimitController.clear();
-              controller.trackingNumberController.clear();
-              controller.dateOfIssuanceController.clear();
-              controller.validTillController.clear();
+              controller.clearAllControllers();
               Get.to(AddLicenseView());
             },
             text: "Add License",

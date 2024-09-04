@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.dart';
 import 'package:guns_guru/app/modules/home/widgets/shooter_record_widgets.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
@@ -470,18 +471,13 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
 
   // Helper widgets
   Widget _buildAmmunitionStockNote() {
-    final remainingStock = calculateAmmunitionStock(controller
-                .homeController
-                .userModel
-                .value
-                .license![controller.homeController.selectedLicenseIndex.value]
+    LicenseController licenseController=Get.find();
+    final remainingStock = calculateAmmunitionStock(licenseController
+                .licenseList![licenseController.selectedLicenseIndex.value]
                 .ammunitionDetail ??
             []) -
-        calculateShotsFired(controller
-                .homeController
-                .userModel
-                .value
-                .license![controller.homeController.selectedLicenseIndex.value]
+        calculateShotsFired(licenseController
+                .licenseList[licenseController.selectedLicenseIndex.value]
                 .weaponFiringRecord ??
             []);
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
@@ -136,7 +137,7 @@ Future<String> datePicker({DateTime? lastDate}) async {
 }
 
 void closeDialog() {
-  if (Get.isDialogOpen!) {
+  if (Get.isDialogOpen==true) {
     Get.back();
   }
 }
@@ -237,3 +238,17 @@ Future<File> urlToFile(String imageUrl) async {
   return file;
 }
 
+
+
+Future<String> uploadImage(File image) async {
+    try {
+      final path = 'user_images/${DateTime.now().millisecondsSinceEpoch}.png';
+      final uploadTask = FirebaseStorage.instance.ref().child(path).putFile(image);
+      final snapshot = await uploadTask;
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+      return downloadUrl;
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to upload image: $e');
+      return '';
+    }
+  }

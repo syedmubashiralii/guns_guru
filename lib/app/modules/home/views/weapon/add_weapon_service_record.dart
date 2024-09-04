@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
 import 'package:guns_guru/app/modules/home/widgets/weapon_detail_widget.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
@@ -10,8 +11,11 @@ import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 
 class AddWeaponServiceRecord extends GetView<HomeExtensionController> {
+
+  LicenseController licenseController=Get.find();
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -32,9 +36,10 @@ class AddWeaponServiceRecord extends GetView<HomeExtensionController> {
                 style: TextStyle(fontWeight: FontWeight.w500)),
             10.height,
             WeaponDetailWidget(
-              license: controller.homeController.userModel.value.license![
-                  controller.homeController.selectedLicenseIndex.value],
+              license: licenseController.licenseList![
+                  licenseController.selectedLicenseIndex.value],
               isButtonShown: false,
+              onTap: (){},
             ),
             20.height,
             BannerCard(
@@ -108,8 +113,9 @@ class AddWeaponServiceRecord extends GetView<HomeExtensionController> {
                       visible:
                           controller.homeController.fromServiceDetail.isFalse,
                       child: DarkButton(
-                          onTap: controller.addWeaponServiceRecord,
-                          text: 'Add Record'),
+                          // onTap: controller.addWeaponServiceRecord,
+
+onTap: (){},                          text: 'Add Record'),
                     )
                   ],
                 ),

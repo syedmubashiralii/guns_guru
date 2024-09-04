@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/default_snackbar.dart';
@@ -151,16 +152,16 @@ class ShootingLogController extends GetxController {
   }
 
   addLogWithLicense() {
-    var controller = Get.find<HomeController>();
-    var selectedLicenseNumber = controller.userModel.value
-        .license![controller.selectedLicenseIndex.value].licenseNumber;
+    var controller = Get.find<LicenseController>();
+    var selectedLicenseNumber = controller
+        .licenseList[controller.selectedLicenseIndex.value].licenseNumber;
 
     var filteredLogs = shooterLogList
         .where((log) => log.serialNumber == selectedLicenseNumber)
         .toList();
-    controller.userModel.value.license![controller.selectedLicenseIndex.value]
+    controller.licenseList[controller.selectedLicenseIndex.value]
         .weaponFiringRecord = filteredLogs;
-    controller.userModel.refresh();
+    controller.licenseList.refresh();
   }
 
   RxList<WeaponFiringRecord> shooterLogList = <WeaponFiringRecord>[].obs;

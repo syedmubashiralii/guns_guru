@@ -1,4 +1,5 @@
-import 'dart:developer';
+
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,23 +8,27 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
-import 'package:guns_guru/app/modules/home/models/consultancy_model.dart';
+import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/weapon_controller.dart';
 import 'package:guns_guru/app/modules/home/models/model_make_model.dart';
-import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/default_snackbar.dart';
 import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HomeExtensionController extends GetxController {
+  final ImagePicker picker = ImagePicker();
   HomeController homeController = Get.find();
-  var _firestore = FirebaseFirestore.instance;
+  WeaponController weaponController = Get.find();
+  final _firestore = FirebaseFirestore.instance;
   final ammunitionStockFormKey = GlobalKey<FormState>();
   TextEditingController purchaseDateController = TextEditingController();
-  TextEditingController purchasedFromController = TextEditingController();
+  TextEditingController retailerNameController = TextEditingController();
   // TextEditingController brandController = TextEditingController();
   TextEditingController caliberController = TextEditingController();
   TextEditingController quantityPurchasedController = TextEditingController();
+  Rx<File?> weaponPurchaseReceipt = Rx<File?>(null);
 
   ///
   // final firingRecordKey = GlobalKey<FormState>();
@@ -37,76 +42,75 @@ class HomeExtensionController extends GetxController {
   final serviceDateController = TextEditingController();
   final serviceDoneByController = TextEditingController();
   final serviceNotesController = TextEditingController();
-
+  TextEditingController retailerPhoneNo= TextEditingController();
   RxList servicePartsChangedList = [].obs;
 
   RxString ammoBrand = "Federal Premium".obs;
   RxString typeOfRound = "Full Metal Jacket (FMJ)".obs;
+  RxString AmmoBrand = "".obs;
  
  
 
-  Future<void> addAmmunitionStock() async {
-    if (ammunitionStockFormKey.currentState?.validate() ?? false) {
-      if (calculateRemainingQuota(
-              homeController
-                      .userModel
-                      .value
-                      .license![homeController.selectedLicenseIndex.value]
-                      .ammunitionDetail ??
-                  [],
-              int.parse(homeController
-                      .userModel
-                      .value
-                      .license![homeController.selectedLicenseIndex.value]
-                      .licenseAmmunitionLimit ??
-                  '0')) <
-          int.parse(quantityPurchasedController.text)) {
-        DefaultSnackbar.show('Error',
-            "Please verify your remaining quota before entering the record.");
-
-        return;
-      }
-      Get.back();
-      Get.dialog(const LoadingDialog());
-      Map<String, dynamic> ammoDetailValue = {
-        AppConstants.ammunitionPurchaseDate: purchaseDateController.text,
-        AppConstants.ammunitionPurchasedFrom: purchasedFromController.text,
-        AppConstants.ammunitionBrand: ammoBrand.value,
-        AppConstants.typeOfRound: typeOfRound.value,
-        AppConstants.ammunitionCaliber: caliberController.text,
-        AppConstants.ammunitionQuantityPurchased:
-            quantityPurchasedController.text,
-      };
-      var licenses = homeController.userModel.value.license ?? [];
-      if (homeController.selectedLicenseIndex.value >= 0 &&
-          homeController.selectedLicenseIndex.value < licenses.length) {
-        if (licenses[homeController.selectedLicenseIndex.value]
-                .ammunitionDetail ==
-            null) {
-          licenses[homeController.selectedLicenseIndex.value].ammunitionDetail =
-              [];
-        }
-        licenses[homeController.selectedLicenseIndex.value]
-            .ammunitionDetail!
-            .add(AmmunitionDetail.fromJson(ammoDetailValue));
-
-        await homeController.updateUserSpecificData(
-            homeController.firebaseAuth.currentUser!.uid, {
-          AppConstants.license:
-              licenses.map((license) => license.toMap()).toList()
-        });
-        await homeController
-            .loadUserData(homeController.firebaseAuth.currentUser!.uid);
-        homeController.userModel.refresh();
-        closeDialog();
-      } else {
-        log("Invalid license index or licenses are null");
-      }
-    } else {
-      closeDialog();
-      log("Form validation failed");
-    }
-  }
+  // Future<void> addAmmunitionStock() async {
+  //   if (ammunitionStockFormKey.currentState?.validate() ?? false) {
+  //     LicenseController licenseController=Get.find();
+  //     //TODO: handle remaining ammo here
+  //     // if (calculateRemainingQuota(
+  //     //         licenseController
+  //     //                 .licenseList![licenseController.selectedLicenseIndex.value]
+  //     //                 .ammunitionDetail ??
+  //     //             [],
+  //     //         int.parse(homeController
+  //     //                 .userModel
+  //     //                 .value
+  //     //                 .license![homeController.selectedLicenseIndex.value]
+  //     //                 .licenseAmmunitionLimit ??
+  //     //             '0')) <
+  //     //     int.parse(quantityPurchasedController.text)) {
+  //     //   DefaultSnackbar.show('Error',
+  //     //       "Please verify your remaining quota before entering the record.");
+  //     //   return;
+  //     // }
+  //     Get.back();
+  //     Get.dialog(const LoadingDialog());
+  //     Map<String, dynamic> ammoDetailValue = {
+  //       AppConstants.ammunitionPurchaseDate: purchaseDateController.text,
+  //       AppConstants.ammunitionPurchasedFrom: retailerNameController.text,
+  //       AppConstants.ammunitionBrand: ammoBrand.value,
+  //       AppConstants.typeOfRound: typeOfRound.value,
+  //       AppConstants.ammunitionCaliber: caliberController.text,
+  //       AppConstants.ammunitionQuantityPurchased:
+  //           quantityPurchasedController.text,
+  //     };
+  //     var licenses = homeController.userModel.value.license ?? [];
+  //     if (homeController.selectedLicenseIndex.value >= 0 &&
+  //         homeController.selectedLicenseIndex.value < licenses.length) {
+  //       if (licenses[homeController.selectedLicenseIndex.value]
+  //               .ammunitionDetail ==
+  //           null) {
+  //         licenses[homeController.selectedLicenseIndex.value].ammunitionDetail =
+  //             [];
+  //       }
+  //       licenses[homeController.selectedLicenseIndex.value]
+  //           .ammunitionDetail!
+  //           .add(AmmunitionDetail.fromJson(ammoDetailValue));
+  //       await homeController.updateUserSpecificData(
+  //           homeController.firebaseAuth.currentUser!.uid, {
+  //         AppConstants.license:
+  //             licenses.map((license) => license.toMap()).toList()
+  //       });
+  //       await homeController
+  //           .loadUserData(homeController.firebaseAuth.currentUser!.uid);
+  //       homeController.userModel.refresh();
+  //       closeDialog();
+  //     } else {
+  //       log("Invalid license index or licenses are null");
+  //     }
+  //   } else {
+  //     closeDialog();
+  //     log("Form validation failed");
+  //   }
+  // }
 
   // Future<void> addWeaponFiringRecord() async {
   //   if (firingRecordKey.currentState?.validate() ?? false) {
@@ -169,48 +173,48 @@ class HomeExtensionController extends GetxController {
   //   }
   // }
 
-  Future<void> addWeaponServiceRecord() async {
-    if (serviceRecordKey.currentState?.validate() ?? false) {
-      Get.dialog(const LoadingDialog());
-      Map<String, dynamic> serviceRecord = {
-        AppConstants.weaponServiceDate: serviceDateController.text,
-        AppConstants.weaponServiceDoneBy: serviceDoneByController.text,
-        AppConstants.weaponServicePartsChanged: servicePartsChangedList.value,
-        AppConstants.weaponServiceNotes: serviceNotesController.text,
-      };
-      try {
-        var licenses = homeController.userModel!.value.license;
-        if (licenses != null &&
-            homeController.selectedLicenseIndex.value >= 0 &&
-            homeController.selectedLicenseIndex.value < licenses.length) {
-          if (licenses[homeController.selectedLicenseIndex.value]
-                  .weaponServiceRecord ==
-              null) {
-            licenses[homeController.selectedLicenseIndex.value]
-                .weaponServiceRecord = [];
-          }
-          licenses[homeController.selectedLicenseIndex.value]
-              .weaponServiceRecord!
-              .add(WeaponServiceRecord.fromJson(serviceRecord));
-          await homeController.updateUserSpecificData(
-              homeController.firebaseAuth.currentUser!.uid, {
-            AppConstants.license:
-                licenses.map((license) => license.toMap()).toList(),
-          });
-          await homeController
-              .loadUserData(homeController.firebaseAuth.currentUser!.uid);
-          homeController.userModel!.refresh();
-        } else {
-          log("Invalid license index or licenses are null");
-        }
-        closeDialog();
-        Get.back();
-      } catch (e) {
-        closeDialog();
-        print(e.toString());
-      }
-    }
-  }
+  // Future<void> addWeaponServiceRecord() async {
+  //   if (serviceRecordKey.currentState?.validate() ?? false) {
+  //     Get.dialog(const LoadingDialog());
+  //     Map<String, dynamic> serviceRecord = {
+  //       AppConstants.weaponServiceDate: serviceDateController.text,
+  //       AppConstants.weaponServiceDoneBy: serviceDoneByController.text,
+  //       AppConstants.weaponServicePartsChanged: servicePartsChangedList.value,
+  //       AppConstants.weaponServiceNotes: serviceNotesController.text,
+  //     };
+  //     try {
+  //       var licenses = homeController.userModel!.value.license;
+  //       if (licenses != null &&
+  //           homeController.selectedLicenseIndex.value >= 0 &&
+  //           homeController.selectedLicenseIndex.value < licenses.length) {
+  //         if (licenses[homeController.selectedLicenseIndex.value]
+  //                 .weaponServiceRecord ==
+  //             null) {
+  //           licenses[homeController.selectedLicenseIndex.value]
+  //               .weaponServiceRecord = [];
+  //         }
+  //         licenses[homeController.selectedLicenseIndex.value]
+  //             .weaponServiceRecord!
+  //             .add(WeaponServiceRecord.fromJson(serviceRecord));
+  //         await homeController.updateUserSpecificData(
+  //             homeController.firebaseAuth.currentUser!.uid, {
+  //           AppConstants.license:
+  //               licenses.map((license) => license.toMap()).toList(),
+  //         });
+  //         await homeController
+  //             .loadUserData(homeController.firebaseAuth.currentUser!.uid);
+  //         homeController.userModel!.refresh();
+  //       } else {
+  //         log("Invalid license index or licenses are null");
+  //       }
+  //       closeDialog();
+  //       Get.back();
+  //     } catch (e) {
+  //       closeDialog();
+  //       print(e.toString());
+  //     }
+  //   }
+  // }
 
  
 
@@ -222,8 +226,8 @@ class HomeExtensionController extends GetxController {
       AppConstants.caliberList = List<String>.from(doc['callibers']);
       AppConstants.caliberList
           .sort((a, b) => a.compareTo(b)); // Sorting alphabetically
-      homeController.caliber.value = AppConstants.caliber[0];
-      homeController.weaponCaliber.value = AppConstants.caliber[0];
+      Get.find<LicenseController>().caliber.value = AppConstants.caliber[0];
+      weaponController.weaponCaliber.value = AppConstants.caliber[0];
 
       AppConstants.make = List<String>.from(doc['makes']);
       AppConstants.make.sort((a, b) => a.compareTo(b));
@@ -235,7 +239,7 @@ class HomeExtensionController extends GetxController {
       AppConstants.typeofRounds.sort((a, b) => a.compareTo(b));
       typeOfRound.value = AppConstants.typeofRounds.first;
 
-      homeController.weaponMake.value = AppConstants.make[0];
+      weaponController.weaponMake.value = AppConstants.make[0];
       List<dynamic> modelsData = doc['models'];
       AppConstants.model = modelsData.map((item) {
         if (item is Map<String, dynamic>) {
@@ -246,10 +250,12 @@ class HomeExtensionController extends GetxController {
       }).toList();
       AppConstants.model
           .sort((a, b) => a.model.compareTo(b.model)); // Sorting alphabetically
-      homeController.weaponModel.value = AppConstants.model[0].model;
+      weaponController.weaponModel.value = AppConstants.model[0].model;
     } catch (e) {
       print("errororoororo${e.toString()}");
-    } finally {}
+    } finally {
+      
+    }
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:guns_guru/app/modules/home/models/model_make_model.dart';
 
 class AppConstants {
+  static bool isPakistani=false;
   static String FirstName = 'firstname';
   static String LastName = 'lastname';
   static String CNIC = 'cnic';

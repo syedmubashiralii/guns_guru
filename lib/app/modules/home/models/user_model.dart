@@ -93,6 +93,7 @@ class UserModel {
 }
 
 class License {
+  String? uid;
   List<AmmunitionDetail>? ammunitionDetail;
   String? licenseAmmunitionLimit;
   String? licenseCalibre;
@@ -108,12 +109,15 @@ class License {
   bool? licenseValidated;
   String? documenttype;
   String? country;
+  String? weaponNo;
+  String? weaponUid;
   WeaponDetails? weaponDetails;
   List<WeaponFiringRecord>? weaponFiringRecord;
   List<WeaponServiceRecord>? weaponServiceRecord;
 
   License(
       {this.ammunitionDetail,
+      this.uid,
       this.licenseAmmunitionLimit,
       this.licenseCalibre,
       this.licenseDateOfIssuance,
@@ -122,9 +126,11 @@ class License {
       this.licenseJurisdiction,
       this.documenttype,
       this.licenseNumber,
+      this.weaponNo,
       this.licenseweaponType,
       this.licensePicture,
       this.country,
+      this.weaponUid,
       this.licenseTrackingNumber,
       this.licenseValidated,
       this.licenseValidTill,
@@ -140,6 +146,8 @@ class License {
       });
     }
     licenseAmmunitionLimit = json['licenseAmmunitionLimit'];
+    uid = json['uid'];
+    weaponUid = json['weaponUid'];
     documenttype = json['documenttype'];
     licenseCalibre = json['licenseCalibre'];
     licenseDateOfIssuance = json['licenseDateOfIssuance'];
@@ -149,6 +157,7 @@ class License {
     licenseJurisdiction = json['licenseJurisdiction'];
     licenseNumber = json['licenseNumber'];
     licenseweaponType = json['weaponType'];
+    weaponNo = json['weaponNo'];
     licensePicture = (json['licensePicture'] as List<dynamic>)
         .map((e) => e.toString())
         .toList();
@@ -179,8 +188,11 @@ class License {
           ammunitionDetail!.map((v) => v.toJson()).toList();
     }
     data['licenseAmmunitionLimit'] = licenseAmmunitionLimit;
+    data['uid'] = uid;
+    data['weaponUid'] = weaponUid;
     data['documenttype'] = documenttype;
     data['country'] = country;
+    data['weaponNo'] = weaponNo;
     data['weaponType'] = licenseweaponType;
     data['licenseCalibre'] = licenseCalibre;
     data['licenseDateOfIssuance'] = licenseDateOfIssuance;
@@ -213,6 +225,8 @@ class License {
           ammunitionDetail!.map((v) => v.toMap()).toList();
     }
     data['licenseAmmunitionLimit'] = licenseAmmunitionLimit;
+    data['uid'] = uid;
+    data['weaponUid'] = weaponUid;
     data['documenttype'] = documenttype;
     data['licenseCalibre'] = licenseCalibre;
     data['country'] = country;
@@ -222,6 +236,7 @@ class License {
     data['licenseIssuingAuthority'] = licenseIssuingAuthority;
     data['licenseJurisdiction'] = licenseJurisdiction;
     data['licenseNumber'] = licenseNumber;
+    data['weaponNo'] = weaponNo;
     data['licensePicture'] = licensePicture;
     data['licenseTrackingNumber'] = licenseTrackingNumber;
     data['licenseValidTill'] = licenseValidTill;
@@ -242,54 +257,91 @@ class License {
 }
 
 class AmmunitionDetail {
+  String? uid;
   String? ammunitionBrand;
   String? ammunitionCaliber;
   String? ammunitionPurchaseDate;
   String? ammunitionPurchasedFrom;
   String? ammunitionQuantityPurchased;
   String? typeOfRound;
+  String? retailerName;
+  String? retailerPhoneNo;
+  String? licenseNo;
+  String? licenseUid;
+  String? weaponNo;
+  String? weaponUid;
 
   AmmunitionDetail(
-      {this.ammunitionBrand,
+      {
+      this.uid,
+      this.ammunitionBrand,
       this.ammunitionCaliber,
       this.ammunitionPurchaseDate,
       this.ammunitionPurchasedFrom,
       this.typeOfRound,
+      this.retailerPhoneNo,
+      this.licenseNo,
+      this.licenseUid,
+      this.weaponNo,
+      this.weaponUid,
+      this.retailerName,
       this.ammunitionQuantityPurchased});
 
   AmmunitionDetail.fromJson(Map<String, dynamic> json) {
+    uid = json['uid'];
     ammunitionBrand = json['ammunitionBrand'];
     typeOfRound = json['typeOfRound'];
+    retailerPhoneNo = json['retailerPhoneNo'];
+    retailerName = json['retailerName'];
     ammunitionCaliber = json['ammunitionCaliber'];
     ammunitionPurchaseDate = json['ammunitionPurchaseDate'];
     ammunitionPurchasedFrom = json['ammunitionPurchasedFrom'];
     ammunitionQuantityPurchased = json['ammunitionQuantityPurchased'];
+    licenseNo = json['licenseNo'];
+    licenseUid = json['licenseUid'];
+    weaponNo = json['weaponNo'];
+    weaponUid = json['weaponUid'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['uid'] = uid;
     data['ammunitionBrand'] = ammunitionBrand;
+    data['retailerPhoneNo'] = retailerPhoneNo;
     data['typeOfRound'] = typeOfRound;
+    data['retailerName'] = retailerName;
     data['ammunitionCaliber'] = ammunitionCaliber;
     data['ammunitionPurchaseDate'] = ammunitionPurchaseDate;
     data['ammunitionPurchasedFrom'] = ammunitionPurchasedFrom;
     data['ammunitionQuantityPurchased'] = ammunitionQuantityPurchased;
+    data['licenseNo'] = licenseNo;
+    data['licenseUid'] = licenseUid;
+    data['weaponNo'] = weaponNo;
+    data['weaponUid'] = weaponUid ;
     return data;
   }
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['uid'] = uid;
     data['ammunitionBrand'] = ammunitionBrand;
     data['ammunitionCaliber'] = ammunitionCaliber;
+    data['retailerPhoneNo'] = retailerPhoneNo;
     data['typeOfRound'] = typeOfRound;
+    data['retailerName'] = retailerName;
     data['ammunitionPurchaseDate'] = ammunitionPurchaseDate;
     data['ammunitionPurchasedFrom'] = ammunitionPurchasedFrom;
     data['ammunitionQuantityPurchased'] = ammunitionQuantityPurchased;
+    data['licenseNo'] = licenseNo;
+    data['licenseUid'] = licenseUid;
+    data['weaponNo'] = weaponNo;
+    data['weaponUid'] = weaponUid;
     return data;
   }
 }
 
 class WeaponDetails {
+  String? uid;
   String? weaponCaliber;
   String? weaponMake;
   String? weaponModel;
@@ -300,24 +352,39 @@ class WeaponDetails {
   String? weaponauthorizedealerphonenumber;
   String? weaponpurchaserecipt;
   String? weaponpurchasedate;
+  String? licenseNo; // Optional field
+  String? documentIdNo;
+  String? emailId;
+  String? documentIssuingDate;
+  String? documentExpiryDate;
 
   WeaponDetails({
+    this.uid,
     this.weaponCaliber,
     this.weaponMake,
     this.weaponModel,
     this.weaponNo,
     this.weaponType,
+    this.documentIdNo,
+    this.documentExpiryDate,
+    this.emailId,
+    this.documentIssuingDate,
     this.weaponauthorizedealername,
     this.weaponauthorizedealeraddress,
     this.weaponauthorizedealerphonenumber,
     this.weaponpurchaserecipt,
     this.weaponpurchasedate,
+    this.licenseNo, // Optional field
   });
 
   WeaponDetails.fromJson(Map<String, dynamic> json) {
+    uid= json['uid'];
     weaponCaliber = json['weaponCaliber'];
+    documentIdNo = json['documentIdNo'];
     weaponMake = json['weaponMake'];
     weaponModel = json['weaponModel'];
+    emailId = json['emailId'];
+    documentIssuingDate = json['documentIssuingDate'];
     weaponNo = json['weaponNo'];
     weaponType = json['weaponType'];
     weaponauthorizedealername = json['weaponauthorizedealername'];
@@ -325,13 +392,20 @@ class WeaponDetails {
     weaponauthorizedealerphonenumber = json['weaponauthorizedealerphonenumber'];
     weaponpurchaserecipt = json['weaponpurchaserecipt'];
     weaponpurchasedate = json['weaponpurchasedate'];
+    licenseNo = json['licenseNo']; // New field
+    documentExpiryDate = json['documentExpiryDate'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['uid'] = uid;
     data['weaponCaliber'] = weaponCaliber;
+    data['documentIssuingDate'] = documentIssuingDate;
     data['weaponMake'] = weaponMake;
     data['weaponModel'] = weaponModel;
+    data['documentIdNo'] = documentIdNo;
+    data['emailId'] = emailId;
+    data['documentExpiryDate'] = documentExpiryDate;
     data['weaponNo'] = weaponNo;
     data['weaponType'] = weaponType;
     data['weaponauthorizedealername'] = weaponauthorizedealername;
@@ -339,14 +413,20 @@ class WeaponDetails {
     data['weaponauthorizedealerphonenumber'] = weaponauthorizedealerphonenumber;
     data['weaponpurchaserecipt'] = weaponpurchaserecipt;
     data['weaponpurchasedate'] = weaponpurchasedate;
+    data['licenseNo'] = licenseNo; // New field
     return data;
   }
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['uid'] = uid;
     data['weaponCaliber'] = weaponCaliber;
     data['weaponMake'] = weaponMake;
     data['weaponModel'] = weaponModel;
+    data['documentIdNo'] = documentIdNo;
+    data['documentExpiryDate'] = documentExpiryDate;
+    data['emailId'] = emailId;
+    data['documentIssuingDate'] =documentIssuingDate;
     data['weaponNo'] = weaponNo;
     data['weaponType'] = weaponType;
     data['weaponauthorizedealername'] = weaponauthorizedealername;
@@ -354,6 +434,7 @@ class WeaponDetails {
     data['weaponauthorizedealerphonenumber'] = weaponauthorizedealerphonenumber;
     data['weaponpurchaserecipt'] = weaponpurchaserecipt;
     data['weaponpurchasedate'] = weaponpurchasedate;
+    data['licenseNo'] = licenseNo; // New field
     return data;
   }
 }

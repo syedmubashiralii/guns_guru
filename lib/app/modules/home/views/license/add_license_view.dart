@@ -6,6 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/weapon_controller.dart';
+import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
@@ -13,9 +16,11 @@ import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/source_selection_dialog.dart';
 
-class AddLicenseView extends GetView<HomeController> {
+class AddLicenseView extends GetView<LicenseController> {
   AddLicenseView({this.fromEditing});
   bool? fromEditing;
+
+  HomeController homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +29,10 @@ class AddLicenseView extends GetView<HomeController> {
         AppConstants.model.isEmpty ||
         AppConstants.ammoBrand.isEmpty ||
         AppConstants.typeofRounds.isEmpty) {
-      Get.find<HomeExtensionController>().loadUtils();
+      Get.find<WeaponController>().loadUtils();
     }
     bool pakistani =
-        controller.userModel.value.countrycode == "PK" ? true : false;
+        homeController.userModel.value.countrycode == "PK" ? true : false;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -45,7 +50,6 @@ class AddLicenseView extends GetView<HomeController> {
           key: controller.licenseFormKey,
           child: ListView(
             children: [
-              
               10.height,
               Visibility(
                 visible: !pakistani,
@@ -71,9 +75,9 @@ class AddLicenseView extends GetView<HomeController> {
                   selectedItem: controller.selectedCountry.value,
                   onChanged: (newValue) {
                     controller.selectedCountry.value = newValue!;
-                    controller.selectedCountryCode.value =
-                        AppConstants.ALL_COUNTRIES_ALPHA_2[
-                            newValue]!; // Store the alpha-2 code
+                    // controller.selectedCountryCode.value =
+                    //     AppConstants.ALL_COUNTRIES_ALPHA_2[
+                    //         newValue]!; // Store the alpha-2 code
                   },
                   dropdownBuilder: (context, selectedItem) => SizedBox(
                     width: Get.width * .6,
@@ -90,7 +94,6 @@ class AddLicenseView extends GetView<HomeController> {
                   },
                 ),
               ),
-             
               Visibility(
                 visible: pakistani,
                 child: DropdownSearch<String>(
@@ -362,9 +365,9 @@ class AddLicenseView extends GetView<HomeController> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  selectedItem: controller.issuaingQuota.value,
+                  selectedItem: controller.issuingQuota.value,
                   onChanged: (newValue) {
-                    controller.issuaingQuota.value = newValue!;
+                    controller.issuingQuota.value = newValue!;
                   },
                   validator: (value) {
                     if (value == null) {
@@ -440,8 +443,9 @@ class AddLicenseView extends GetView<HomeController> {
               }),
               10.height,
               DarkButton(
-                onTap: () => controller
-                    .saveLicenseForm(fromEditing == true ? true : false),
+                onTap: fromEditing == true
+                    ? () => controller.editLicense
+                    : () => controller.addLicense(),
                 text: fromEditing == true ? "Edit" : "Submit",
               ),
               20.height

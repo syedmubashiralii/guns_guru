@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/views/weapon/add_weapon_firing_record.dart';
@@ -17,7 +18,8 @@ import 'package:guns_guru/app/utils/widgets/custom_label_text.dart';
 class WeaponLogBookView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
-   HomeExtensionController homeExtensionController=Get.find();
+    HomeExtensionController homeExtensionController = Get.find();
+    LicenseController licenseController = Get.find();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -33,15 +35,14 @@ class WeaponLogBookView extends GetView<HomeController> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Obx(
-              () {
-                return WeaponDetailWidget(
-                  license: controller.userModel.value
-                      .license![controller.selectedLicenseIndex.value],
-                  isButtonShown: false,
-                );
-              }
-            ),
+            Obx(() {
+              return WeaponDetailWidget(
+                license: licenseController
+                    .licenseList[licenseController.selectedLicenseIndex.value],
+                isButtonShown: false,
+                onTap: (){},
+              );
+            }),
             20.height,
             BannerCard(
                 title: 'FIRING RECORD',
@@ -54,41 +55,39 @@ class WeaponLogBookView extends GetView<HomeController> {
                   //     "";
                   // homeExtensionController.firingNotesController.text = "";
                   // homeExtensionController.firingShotsFiredController
-                      // .text = "";
+                  // .text = "";
                   Get.to(AddWeaponFiringRecord());
                 },
                 content: Obx(() {
                   return Column(
                     children: [
-                        if (controller
-                              .userModel
-                              .value
-                              .license![controller.selectedLicenseIndex.value]
+                      if (licenseController
+                              .licenseList[
+                                  licenseController.selectedLicenseIndex.value]
                               .weaponFiringRecord ==
                           null)
-                       Text("No record found"),
-                      if (controller
-                              .userModel
-                              .value
-                              .license![controller.selectedLicenseIndex.value]
+                        Text("No record found"),
+                      if (licenseController
+                              .licenseList![
+                                  licenseController.selectedLicenseIndex.value]
                               .weaponFiringRecord !=
                           null)
-                        for (WeaponFiringRecord record in controller
-                                .userModel
-                                .value
-                                .license![controller.selectedLicenseIndex.value]
+                        for (WeaponFiringRecord record in licenseController
+                                .licenseList![licenseController
+                                    .selectedLicenseIndex.value]
                                 .weaponFiringRecord ??
                             [])
                           InkWell(
                             onTap: () {
                               controller.fromFiringRecordDetail.value = true;
-                              Get.find<ShootingLogController>().populateFieldsForEditing(record);
+                              Get.find<ShootingLogController>()
+                                  .populateFieldsForEditing(record);
                               Get.to(AddWeaponFiringRecord());
                             },
-                            child: BuildFiringRecord(date: 
-                              record.date ?? "",location: 
-                              record.rangeNameLocation ?? "",shotsFired: 
-                              record.roundsFired ?? "",
+                            child: BuildFiringRecord(
+                              date: record.date ?? "",
+                              location: record.rangeNameLocation ?? "",
+                              shotsFired: record.roundsFired ?? "",
                             ),
                           ),
                       // const SizedBox(height: 10),
@@ -107,46 +106,38 @@ class WeaponLogBookView extends GetView<HomeController> {
                 onTap: () {
                   controller.fromServiceDetail.value = false;
                   homeExtensionController.serviceDateController.text = "";
-                  homeExtensionController.serviceDoneByController
-                      .text = "";
+                  homeExtensionController.serviceDoneByController.text = "";
                   homeExtensionController.serviceNotesController.text = "";
-                  homeExtensionController.servicePartsChangedList
-                      .value = [];
+                  homeExtensionController.servicePartsChangedList.value = [];
                   Get.to(AddWeaponServiceRecord());
                 },
                 content: Obx(() {
                   return Column(
                     children: [
-                      if (controller
-                              .userModel
-                              .value
-                              .license![controller.selectedLicenseIndex.value]
+                      if (licenseController
+                              .licenseList![
+                                  licenseController.selectedLicenseIndex.value]
                               .weaponServiceRecord ==
                           null)
-                          Text("No record found"),
-                      if (controller
-                              .userModel
-                              .value
-                              .license![controller.selectedLicenseIndex.value]
+                        Text("No record found"),
+                      if (licenseController
+                              .licenseList![
+                                  licenseController.selectedLicenseIndex.value]
                               .weaponServiceRecord !=
                           null)
-                        for (WeaponServiceRecord record in controller
-                                .userModel
-                                .value
-                                .license![controller.selectedLicenseIndex.value]
+                        for (WeaponServiceRecord record in licenseController
+                                .licenseList![licenseController
+                                    .selectedLicenseIndex.value]
                                 .weaponServiceRecord ??
                             [])
                           InkWell(
                             onTap: () {
                               controller.fromServiceDetail.value = true;
-                              homeExtensionController
-                                  .serviceDateController
+                              homeExtensionController.serviceDateController
                                   .text = record.weaponServiceDate ?? "";
-                              homeExtensionController
-                                  .serviceDoneByController
+                              homeExtensionController.serviceDoneByController
                                   .text = record.weaponServiceDoneBy ?? "";
-                              homeExtensionController
-                                  .serviceNotesController
+                              homeExtensionController.serviceNotesController
                                   .text = record.weaponServiceNotes ?? "";
                               homeExtensionController
                                       .servicePartsChangedList.value =
@@ -175,8 +166,6 @@ class WeaponLogBookView extends GetView<HomeController> {
       ),
     );
   }
-
-
 
   Widget _buildServiceRecord(
       String date, String serviceType, String partsChanged) {
@@ -253,13 +242,15 @@ class WeaponLogBookView extends GetView<HomeController> {
   }
 }
 
-
-
-
-
-  class BuildFiringRecord extends StatelessWidget {
-   BuildFiringRecord({super.key,required this.date,required this.location,required this.shotsFired});
-  String date; String location; String shotsFired;
+class BuildFiringRecord extends StatelessWidget {
+  BuildFiringRecord(
+      {super.key,
+      required this.date,
+      required this.location,
+      required this.shotsFired});
+  String date;
+  String location;
+  String shotsFired;
 
   @override
   Widget build(BuildContext context) {

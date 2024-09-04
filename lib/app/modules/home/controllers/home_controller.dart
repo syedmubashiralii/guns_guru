@@ -26,14 +26,13 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 class HomeController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final licenseFormKey = GlobalKey<FormState>();
-  final weaponFormKey = GlobalKey<FormState>();
+  // final weaponFormKey = GlobalKey<FormState>();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final ImagePicker picker = ImagePicker();
   final firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   Rx<File?> frontImage = Rx<File?>(null);
   Rx<File?> backImage = Rx<File?>(null);
-  RxInt selectedLicenseIndex = 0.obs;
 
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -44,34 +43,10 @@ class HomeController extends GetxController {
   RxString selectedCountryCode = "PK".obs;
   RxString selectedGender = "MALE".obs;
   TextEditingController phoneNoTextEditingController = TextEditingController();
-  RxBool isPhoneNumberValid = false.obs;
 
-  ///license Fields
-  TextEditingController trackingNumberController = TextEditingController();
-  TextEditingController licenseNumberController = TextEditingController();
-  TextEditingController documentTypeController = TextEditingController();
-  TextEditingController ammunitionLimitController = TextEditingController();
-  TextEditingController dateOfIssuanceController = TextEditingController();
-  TextEditingController validTillController = TextEditingController();
   //weapon fields
-  TextEditingController authorizeDealerName = TextEditingController();
-  TextEditingController authorizeDealerAddress = TextEditingController();
-  TextEditingController authorizeDealerPhoneNo = TextEditingController();
-  TextEditingController weaponPurchaseDate = TextEditingController();
-  RxString weaponType = "PISTOL".obs;
-  TextEditingController weaponNumberController = TextEditingController();
-  Rx<File?> weaponPurchaseReceipt = Rx<File?>(null);
 
-  RxString caliber = '9mm'.obs;
-  RxString licenseWeaponType = 'PISTOL'.obs;
-  RxString issuingAuthority = "Sindh".obs;
-  RxString selectedCountry = "".obs;
-  RxString jurisdiction = "All Pakistan".obs;
-  RxString issuaingQuota = "Federal Interior Minister".obs;
-  RxList<File> licensePictures = <File>[].obs;
-  RxString weaponCaliber = "9mm".obs;
-  RxString weaponMake = "Glock".obs;
-  RxString weaponModel = "AK-47".obs;
+  RxBool isPhoneNumberValid = false.obs;
 
   //
   // RxMap<String, dynamic>? userModel;
@@ -201,28 +176,6 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> addLicensePicture() async {
-    if (licensePictures.length >= 3) {
-      Get.snackbar('Error', 'You can only add up to 3 pictures.');
-      return;
-    }
-
-    String source = '';
-    await showChoiceDialog(onCameraTap: () {
-      source = "Camera";
-      Get.back();
-    }, onGalleryTap: () {
-      source = "Gallery";
-      Get.back();
-    });
-    if (source != '') {
-      String? path = await pickImage(picker, source);
-      if (path != null && path.isNotEmpty) {
-        licensePictures.add(File(path)); // Add picture to the list
-      }
-    }
-  }
-
   Future loadUserData(String documentId) async {
     try {
       DocumentSnapshot documentSnapshot =
@@ -344,116 +297,116 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> saveLicenseForm(bool fromEdit) async {
-    if (licenseFormKey.currentState?.validate() ?? false) {
-      licenseFormKey.currentState?.save();
-      if (licensePictures.isEmpty) {
-        DefaultSnackbar.show(
-            'Error', "Please Select at least one license picture");
-        return;
-      }
+  // Future<void> saveLicenseForm(bool fromEdit) async {
+  //   if (licenseFormKey.currentState?.validate() ?? false) {
+  //     licenseFormKey.currentState?.save();
+  //     if (licensePictures.isEmpty) {
+  //       DefaultSnackbar.show(
+  //           'Error', "Please Select at least one license picture");
+  //       return;
+  //     }
 
-      Get.dialog(const LoadingDialog());
+  //     Get.dialog(const LoadingDialog());
 
-      // Upload each picture and get their URLs
-      List<String> licensePicUrls = [];
-      for (File picture in licensePictures) {
-        String? picUrl = await uploadImage(picture);
-        if (picUrl != null) {
-          licensePicUrls.add(picUrl);
-        }
-      }
+  //     // Upload each picture and get their URLs
+  //     List<String> licensePicUrls = [];
+  //     for (File picture in licensePictures) {
+  //       String? picUrl = await uploadImage(picture);
+  //       if (picUrl != null) {
+  //         licensePicUrls.add(picUrl);
+  //       }
+  //     }
 
-      List<License> licenses = userModel.value.license ?? [];
-      License license = License.fromJson({
-        AppConstants.licenseTrackingNumber: trackingNumberController.text,
-        AppConstants.licenseNumber: licenseNumberController.text,
-        AppConstants.licenseAmmunitionLimit: ammunitionLimitController.text,
-        AppConstants.weaponType: licenseWeaponType.value,
-        AppConstants.licenseIssuingAuthority: issuingAuthority.value,
-        AppConstants.licenseValidTill: validTillController.text,
-        AppConstants.licenseIssuaingQuota: issuaingQuota.value,
-        AppConstants.licenseDateOfIssuance: dateOfIssuanceController.text,
-        AppConstants.licenseJurisdiction: jurisdiction.value,
-        AppConstants.licensePicture:
-            licensePicUrls, // Store list of picture URLs
-        AppConstants.licenseValidated: false,
-        AppConstants.DocumentType: documentTypeController.text,
-        AppConstants.Country: selectedCountry.value
-      });
+  //     List<License> licenses = userModel.value.license ?? [];
+  //     License license = License.fromJson({
+  //       AppConstants.licenseTrackingNumber: trackingNumberController.text,
+  //       AppConstants.licenseNumber: licenseNumberController.text,
+  //       AppConstants.licenseAmmunitionLimit: ammunitionLimitController.text,
+  //       AppConstants.weaponType: licenseWeaponType.value,
+  //       AppConstants.licenseIssuingAuthority: issuingAuthority.value,
+  //       AppConstants.licenseValidTill: validTillController.text,
+  //       AppConstants.licenseIssuaingQuota: issuaingQuota.value,
+  //       AppConstants.licenseDateOfIssuance: dateOfIssuanceController.text,
+  //       AppConstants.licenseJurisdiction: jurisdiction.value,
+  //       AppConstants.licensePicture:
+  //           licensePicUrls, // Store list of picture URLs
+  //       AppConstants.licenseValidated: false,
+  //       AppConstants.DocumentType: documentTypeController.text,
+  //       AppConstants.Country: selectedCountry.value
+  //     });
 
-      if (fromEdit == true) {
-        licenses[selectedLicenseIndex.value] = license;
-      } else {
-        licenses.add(license);
-      }
+  //     if (fromEdit == true) {
+  //       licenses[selectedLicenseIndex.value] = license;
+  //     } else {
+  //       licenses.add(license);
+  //     }
 
-      await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
-        AppConstants.license:
-            licenses.map((license) => license.toMap()).toList(),
-      });
-      await loadUserData(firebaseAuth.currentUser!.uid);
-      if (Get.isDialogOpen!) {
-        Get.back();
-      }
-      onLoginSuccesfull();
-    } else {
-      if (kDebugMode) {
-        print('Validation failed');
-      }
-    }
-  }
+  //     await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
+  //       AppConstants.license:
+  //           licenses.map((license) => license.toMap()).toList(),
+  //     });
+  //     await loadUserData(firebaseAuth.currentUser!.uid);
+  //     if (Get.isDialogOpen!) {
+  //       Get.back();
+  //     }
+  //     onLoginSuccesfull();
+  //   } else {
+  //     if (kDebugMode) {
+  //       print('Validation failed');
+  //     }
+  //   }
+  // }
 
-  Future<void> saveWeaponDetail() async {
-    if (weaponFormKey.currentState?.validate() ?? false) {
-      if (!isValidPhoneNumber(authorizeDealerPhoneNo.text)) {
-        DefaultSnackbar.show("Error",
-            "Please enter a valid phone number containing only digits");
-        return;
-      }
-      Get.back();
-      Get.dialog(const LoadingDialog());
+  // Future<void> saveWeaponDetail() async {
+  //   if (weaponFormKey.currentState?.validate() ?? false) {
+  //     if (!isValidPhoneNumber(authorizeDealerPhoneNo.text)) {
+  //       DefaultSnackbar.show("Error",
+  //           "Please enter a valid phone number containing only digits");
+  //       return;
+  //     }
+  //     Get.back();
+  //     Get.dialog(const LoadingDialog());
 
-      String? weaponReceipt = weaponPurchaseReceipt.value == null
-          ? ''
-          : await uploadImage(File(weaponPurchaseReceipt.value!.path));
-      Map<String, dynamic> weaponDetailValue = {
-        AppConstants.weaponCaliber: weaponCaliber.value,
-        AppConstants.weaponType: weaponType.value,
-        AppConstants.weaponAuthorizeDealerName: authorizeDealerName.text,
-        AppConstants.weaponAuthorizeDealerAddress: authorizeDealerAddress.text,
-        AppConstants.weaponAuthorizeDealerPhoneNumber:
-            authorizeDealerPhoneNo.text,
-        AppConstants.weaponNo: weaponNumberController.text,
-        AppConstants.weaponPurchaseRecipt: weaponReceipt,
-        AppConstants.weaponPurchaseDate: weaponPurchaseDate.text,
-        AppConstants.weaponMake: weaponMake.value,
-        AppConstants.weaponModel: weaponModel.value,
-      };
-      var licenses = userModel.value.license ?? [];
-      if (selectedLicenseIndex.value >= 0 &&
-          selectedLicenseIndex.value < licenses.length) {
-        licenses[selectedLicenseIndex.value].weaponDetails =
-            WeaponDetails.fromJson(weaponDetailValue);
-        await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
-          AppConstants.license:
-              licenses.map((license) => license.toMap()).toList(),
-        });
-        await loadUserData(firebaseAuth.currentUser!.uid);
-        userModel.refresh();
-        if (Get.isDialogOpen!) {
-          Get.back();
-        }
-      } else {
-        log("Invalid license index or licenses are null");
-      }
-    } else {
-      if (Get.isDialogOpen!) {
-        Get.back();
-      }
-      log("Form validation failed");
-    }
-  }
+  //     String? weaponReceipt = weaponPurchaseReceipt.value == null
+  //         ? ''
+  //         : await uploadImage(File(weaponPurchaseReceipt.value!.path));
+  //     Map<String, dynamic> weaponDetailValue = {
+  //       AppConstants.weaponCaliber: weaponCaliber.value,
+  //       AppConstants.weaponType: weaponType.value,
+  //       AppConstants.weaponAuthorizeDealerName: authorizeDealerName.text,
+  //       AppConstants.weaponAuthorizeDealerAddress: authorizeDealerAddress.text,
+  //       AppConstants.weaponAuthorizeDealerPhoneNumber:
+  //           authorizeDealerPhoneNo.text,
+  //       AppConstants.weaponNo: weaponNumberController.text,
+  //       AppConstants.weaponPurchaseRecipt: weaponReceipt,
+  //       AppConstants.weaponPurchaseDate: weaponPurchaseDate.text,
+  //       AppConstants.weaponMake: weaponMake.value,
+  //       AppConstants.weaponModel: weaponModel.value,
+  //     };
+  //     var licenses = userModel.value.license ?? [];
+  //     if (selectedLicenseIndex.value >= 0 &&
+  //         selectedLicenseIndex.value < licenses.length) {
+  //       licenses[selectedLicenseIndex.value].weaponDetails =
+  //           WeaponDetails.fromJson(weaponDetailValue);
+  //       await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
+  //         AppConstants.license:
+  //             licenses.map((license) => license.toMap()).toList(),
+  //       });
+  //       await loadUserData(firebaseAuth.currentUser!.uid);
+  //       userModel.refresh();
+  //       if (Get.isDialogOpen!) {
+  //         Get.back();
+  //       }
+  //     } else {
+  //       log("Invalid license index or licenses are null");
+  //     }
+  //   } else {
+  //     if (Get.isDialogOpen!) {
+  //       Get.back();
+  //     }
+  //     log("Form validation failed");
+  //   }
+  // }
 
   signOut() async {
     await firebaseAuth.signOut();

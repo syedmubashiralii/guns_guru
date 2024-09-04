@@ -22,7 +22,7 @@ class DarkButton extends StatelessWidget {
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
         splashFactory: InkRipple.splashFactory,
-        overlayColor: Colors.white.withOpacity(0.2),
+        // overlayColor: Colors.white.withOpacity(0.2),
         backgroundColor: ColorHelper.primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
@@ -31,7 +31,7 @@ class DarkButton extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(color: Colors.white, fontSize: 13,fontWeight: FontWeight.normal),
+        style: const TextStyle(color: Colors.white, fontSize: 13,fontWeight: FontWeight.normal),
       ),
     );
   }

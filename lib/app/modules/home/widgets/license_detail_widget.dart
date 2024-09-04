@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/views/license/add_license_view.dart';
 import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
@@ -17,7 +18,7 @@ class LicenseDetailWidget extends StatelessWidget {
 
   final License license;
 
-  final HomeController controller = Get.find();
+  final LicenseController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +27,7 @@ class LicenseDetailWidget extends StatelessWidget {
       isAddRecord: true,
       buttonText: "Edit",
       onTap: () async {
-        controller.issuingAuthority.value =
-            license.licenseIssuingAuthority ?? "";
-        controller.trackingNumberController.text =
-            license.licenseTrackingNumber ?? "";
-        controller.licenseNumberController.text = license.licenseNumber ?? "";
-        controller.ammunitionLimitController.text =
-            license.licenseAmmunitionLimit ?? "";
-        controller.caliber.value = license.licenseCalibre ?? "";
-        controller.licenseWeaponType.value = license.licenseweaponType ?? "";
-        controller.dateOfIssuanceController.text =
-            license.licenseDateOfIssuance ?? "";
-        controller.validTillController.text = license.licenseValidTill ?? "";
-        controller.jurisdiction.value = license.licenseJurisdiction ?? "";
-        controller.issuaingQuota.value = license.licenseIssuaingQuota ?? "";
+        controller.fillAllDetailsWithSpecificLicense(license);
         Get.dialog(LoadingDialog());
         controller.licensePictures.clear();
         int length = license.licensePicture?.length ?? 0;
@@ -65,7 +53,9 @@ class LicenseDetailWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      license.licenseNumber==''?"N/A":license.licenseNumber??"N/A",
+                      license.licenseNumber == ''
+                          ? "N/A"
+                          : license.licenseNumber ?? "N/A",
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
@@ -81,7 +71,9 @@ class LicenseDetailWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                     license.licenseTrackingNumber==''?"N/A":license.licenseTrackingNumber??"N/A",
+                      license.licenseTrackingNumber == ''
+                          ? "N/A"
+                          : license.licenseTrackingNumber ?? "N/A",
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
@@ -183,7 +175,9 @@ class LicenseDetailWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      license.licenseAmmunitionLimit==''?"N/A":license.licenseAmmunitionLimit??"N/A",
+                      license.licenseAmmunitionLimit == ''
+                          ? "N/A"
+                          : license.licenseAmmunitionLimit ?? "N/A",
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           color: Colors.black, fontWeight: FontWeight.bold),
