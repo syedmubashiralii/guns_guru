@@ -300,7 +300,28 @@ class AddUserProfileView extends GetView<HomeController> {
                             return null;
                           },
                         ),
-                        if (controller.selectedCountryCode.value == "CA" ||
+                       
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          controller: controller.cityController,
+                          decoration: const InputDecoration(
+                            labelText: 'City',
+                            border: OutlineInputBorder(),
+                          ),
+                          inputFormatters: [
+                            UpperCaseTextFormatter(),
+                          ],
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'City is required';
+                            }
+                            if (value.length > 50) {
+                              return 'City cannot be longer than 50 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                         if (controller.selectedCountryCode.value == "CA" ||
                             controller.selectedCountryCode.value == "US")
                           20.height,
                         if (controller.selectedCountryCode.value == "CA" ||
@@ -336,7 +357,7 @@ class AddUserProfileView extends GetView<HomeController> {
                               dropdownDecoratorProps:
                                   const DropDownDecoratorProps(
                                 dropdownSearchDecoration: InputDecoration(
-                                  labelText: 'State/provience',
+                                  labelText: 'State/Province',
                                   border: OutlineInputBorder(),
                                 ),
                               ),
@@ -346,32 +367,12 @@ class AddUserProfileView extends GetView<HomeController> {
                               },
                               validator: (value) {
                                 if (value == null) {
-                                  return 'State/Provience is required';
+                                  return 'State/Province is required';
                                 }
                                 return null;
                               },
                             );
                           }),
-                        const SizedBox(height: 20),
-                        TextFormField(
-                          controller: controller.cityController,
-                          decoration: const InputDecoration(
-                            labelText: 'City',
-                            border: OutlineInputBorder(),
-                          ),
-                          inputFormatters: [
-                            UpperCaseTextFormatter(),
-                          ],
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'City is required';
-                            }
-                            if (value.length > 50) {
-                              return 'City cannot be longer than 50 characters';
-                            }
-                            return null;
-                          },
-                        ),
                         if (controller.selectedCountryCode.value == "CA" ||
                             controller.selectedCountryCode.value == "US")
                           const SizedBox(height: 20),

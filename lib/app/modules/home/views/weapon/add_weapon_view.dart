@@ -116,8 +116,7 @@ class AddWeaponView extends GetView<WeaponController> {
                         ),
                       ),
                     ),
-                    items: AppConstants
-                        .weaponTypeList, // The list of weapon types to display
+                    items: AppConstants.weaponTypeList,
                     dropdownDecoratorProps: const DropDownDecoratorProps(
                       dropdownSearchDecoration: InputDecoration(
                         labelText: 'Weapon Type',

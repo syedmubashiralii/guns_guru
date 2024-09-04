@@ -22,9 +22,9 @@ class AddAmmunitionStockView extends GetView<WeaponController> {
   @override
   Widget build(BuildContext context) {
     final LicenseController licenseController = Get.find();
-    if(AppConstants.isPakistani){
-    // final license = licenseController
-    //     .licenseList?[licenseController.selectedLicenseIndex.value];
+    if (AppConstants.isPakistani) {
+      // final license = licenseController
+      //     .licenseList?[licenseController.selectedLicenseIndex.value];
     }
 
     // controller.caliberController.text =
@@ -37,6 +37,12 @@ class AddAmmunitionStockView extends GetView<WeaponController> {
         AppConstants.typeofRounds.isEmpty) {
       controller.loadUtils();
     }
+
+    controller.ammoCaliber.value =
+        controller.weaponDetails.value?.weaponCaliber ?? "";
+    controller.retailerNameController.text =
+        controller.weaponDetails.value?.weaponauthorizedealername ?? "";   
+    controller.retailerPhoneNo.text    =controller.weaponDetails.value?.weaponauthorizedealerphonenumber??""; 
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -75,12 +81,14 @@ class AddAmmunitionStockView extends GetView<WeaponController> {
                   }
                 },
               ),
-              _buildDropdown(
-                label: 'Caliber',
-                items: AppConstants.caliberList,
-                selectedItem: controller.ammoCaliber.value,
-                onChanged: (value) => controller.ammoCaliber.value = value!,
-                validatorMessage: 'Ammo Caliber is required',
+              20.height,
+              TextFormField(
+                initialValue: controller.ammoCaliber.value,
+                decoration: const InputDecoration(
+                  labelText: 'Ammo Calliber',
+                  border: OutlineInputBorder(),
+                ),
+                readOnly: true,
               ),
               _buildDropdown(
                 label: 'Type of Round',
