@@ -66,8 +66,7 @@ class LicenseListView extends GetView<LicenseController> {
               fontWeight: FontWeight.w600, color: Colors.black, fontSize: 17),
         ),
         10.height,
-        if (controller.licenseList.value == null ||
-            controller.licenseList.isEmpty)
+        if (controller.licenseList.isEmpty)
           const Center(child: Text("No License Found"))
         else
           ...controller.licenseList.value.map((license) {
@@ -101,7 +100,7 @@ class LicenseListView extends GetView<LicenseController> {
 
                         var filteredLogs = shootingLogController.shooterLogList
                             .where((log) =>
-                                log.serialNumber == selectedLicenseNumber)
+                                log.weaponNumber == selectedLicenseNumber)
                             .toList();
                         controller
                             .licenseList

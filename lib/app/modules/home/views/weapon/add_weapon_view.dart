@@ -17,9 +17,10 @@ import 'package:guns_guru/app/utils/widgets/source_selection_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
 class AddWeaponView extends GetView<WeaponController> {
+  bool? fromLicense;
   final bool isEditMode; // Add a flag for edit mode
 
-  AddWeaponView({super.key, this.isEditMode = false});
+  AddWeaponView({super.key, this.isEditMode = false,this.fromLicense});
 
   HomeController homeController = Get.find();
 
@@ -30,10 +31,11 @@ class AddWeaponView extends GetView<WeaponController> {
         AppConstants.model.isEmpty ||
         AppConstants.ammoBrand.isEmpty ||
         AppConstants.typeofRounds.isEmpty) {
-      Get.find<HomeExtensionController>().loadUtils();
+      Get.find<WeaponController>().loadUtils();
     }
     bool pakistani =
         homeController.userModel.value.countrycode == "PK" ? true : false;
+        
 
     controller.filteredModels.value = controller.filterModelsList;
     return Scaffold(
@@ -77,8 +79,8 @@ class AddWeaponView extends GetView<WeaponController> {
                   DropdownSearch<String>(
                     popupProps: const PopupProps.menu(
                       showSearchBox:
-                          true, // Enables the search box in the dropdown
-                      searchFieldProps: const TextFieldProps(
+                          true, 
+                      searchFieldProps: TextFieldProps(
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Search Caliber',
@@ -94,6 +96,7 @@ class AddWeaponView extends GetView<WeaponController> {
                       ),
                     ),
                     selectedItem: controller.weaponCaliber.value,
+                   
                     onChanged: (newValue) {
                       controller.weaponCaliber.value = newValue!;
                     },
@@ -117,6 +120,7 @@ class AddWeaponView extends GetView<WeaponController> {
                       ),
                     ),
                     items: AppConstants.weaponTypeList,
+                    enabled: fromLicense==true?false:true,
                     dropdownDecoratorProps: const DropDownDecoratorProps(
                       dropdownSearchDecoration: InputDecoration(
                         labelText: 'Weapon Type',
@@ -282,6 +286,7 @@ class AddWeaponView extends GetView<WeaponController> {
                   ),
                   20.height,
                   IntlPhoneField(
+                    initialCountryCode: "+92",
                     invalidNumberMessage: "Dealer Phone number is not valid".tr,
                     initialValue: controller.authorizeDealerPhoneNo.text,
                     decoration: InputDecoration(

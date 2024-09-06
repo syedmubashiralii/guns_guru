@@ -114,13 +114,13 @@ class AppDrawer extends StatelessWidget {
               }
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.money),
-            title: const Text('Subscritpion Charges'),
-            onTap: () async {
-              Get.to(SubscriptionChargesTable());
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.money),
+          //   title: const Text('Subscritpion Charges'),
+          //   onTap: () async {
+          //     Get.to(SubscriptionChargesTable());
+          //   },
+          // ),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),

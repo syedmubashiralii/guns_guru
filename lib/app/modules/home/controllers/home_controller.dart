@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/weapon_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/views/auth/auth_view.dart';
 import 'package:guns_guru/app/modules/home/views/home/home_view.dart';
@@ -72,6 +74,12 @@ class HomeController extends GetxController {
       Get.off(const AuthView());
       return true;
     } else {
+      LicenseController licenseController = Get.find();
+      WeaponController weaponController = Get.find();
+      licenseController.loadLicenses();
+      weaponController.loadWeapons();
+      weaponController.loadAmmos();
+      weaponController.loadUtils();
       await loadUserData(firebaseUser.uid);
       onLoginSuccesfull();
 
@@ -86,7 +94,7 @@ class HomeController extends GetxController {
         userModel.value.firstname!.isNotEmpty) {
       // if (userModel.value.license != null &&
       //     userModel.value.license!.isNotEmpty) {
-      Get.off(const HomeView());
+      Get.off(HomeView());
       // } else {
       // Get.off(AddLicenseView());
       // }
@@ -318,9 +326,7 @@ class HomeController extends GetxController {
   //           'Error', "Please Select at least one license picture");
   //       return;
   //     }
-
   //     Get.dialog(const LoadingDialog());
-
   //     // Upload each picture and get their URLs
   //     List<String> licensePicUrls = [];
   //     for (File picture in licensePictures) {
@@ -329,7 +335,6 @@ class HomeController extends GetxController {
   //         licensePicUrls.add(picUrl);
   //       }
   //     }
-
   //     List<License> licenses = userModel.value.license ?? [];
   //     License license = License.fromJson({
   //       AppConstants.licenseTrackingNumber: trackingNumberController.text,
@@ -347,13 +352,11 @@ class HomeController extends GetxController {
   //       AppConstants.DocumentType: documentTypeController.text,
   //       AppConstants.Country: selectedCountry.value
   //     });
-
   //     if (fromEdit == true) {
   //       licenses[selectedLicenseIndex.value] = license;
   //     } else {
   //       licenses.add(license);
   //     }
-
   //     await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
   //       AppConstants.license:
   //           licenses.map((license) => license.toMap()).toList(),
@@ -369,7 +372,6 @@ class HomeController extends GetxController {
   //     }
   //   }
   // }
-
   // Future<void> saveWeaponDetail() async {
   //   if (weaponFormKey.currentState?.validate() ?? false) {
   //     if (!isValidPhoneNumber(authorizeDealerPhoneNo.text)) {
@@ -379,7 +381,6 @@ class HomeController extends GetxController {
   //     }
   //     Get.back();
   //     Get.dialog(const LoadingDialog());
-
   //     String? weaponReceipt = weaponPurchaseReceipt.value == null
   //         ? ''
   //         : await uploadImage(File(weaponPurchaseReceipt.value!.path));
@@ -422,10 +423,10 @@ class HomeController extends GetxController {
   // }
 
   signOut() async {
-    await firebaseAuth.signOut();
     await GoogleSignIn().signOut();
+    await firebaseAuth.signOut();
     userModel.value = UserModel();
-    Get.offAll(const SplashView());
+    Get.offAll(SplashView());
     isUserLogged();
   }
 }

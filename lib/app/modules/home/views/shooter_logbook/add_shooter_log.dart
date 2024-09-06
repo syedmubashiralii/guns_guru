@@ -1,13 +1,14 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
-import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/weapon_controller.dart';
+import 'package:guns_guru/app/modules/home/models/user_model.dart';
 import 'package:guns_guru/app/modules/home/widgets/shooter_record_widgets.dart';
 import 'package:guns_guru/app/utils/app_constants.dart';
+import 'package:guns_guru/app/utils/dialogs/add_ammo_stock_dialog.dart';
 import 'package:guns_guru/app/utils/widgets/banner_card.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
@@ -15,21 +16,38 @@ import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:intl/intl.dart';
 
-class AddWeaponFiringRecord extends GetView<ShootingLogController> {
-  // final controller controller = Get.find();
-
+class AddShooterLog extends GetView<ShootingLogController> {
+  AddShooterLog({super.key});
   HomeController homeController = Get.find();
+  WeaponController weaponController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    controller.dateController = TextEditingController(
-        text: DateFormat('yyyy-MM-dd').format(DateTime.now()));
-    controller.timeController = TextEditingController(
-        text: DateFormat('HH:mm a').format(DateTime.now()));
-    controller.getCurrentLocation().then((value) {
-      controller.rangeNameLocationController.text = value;
-    });
-    log(controller.rangeNameLocationController.text.toString());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (weaponController.ammunitionList.isEmpty) {
+      showAddAmmoDialog(context);
+    }
+  });
+
+    if (controller.homeController.fromFiringRecordDetail.value == false) {
+      controller.dateController = TextEditingController(
+          text: DateFormat('yyyy-MM-dd').format(DateTime.now()));
+      controller.timeController = TextEditingController(
+          text: DateFormat('HH:mm a').format(DateTime.now()));
+      // controller.getCurrentLocation().then((value) {
+      //   controller.rangeNameLocationController.text = value;
+      // });
+      log(controller.rangeNameLocationController.text.toString());
+      if (weaponController.weaponList.isEmpty) {
+        controller.fireArmMake.value =
+            weaponController.weaponList[0].weaponMake ?? "";
+        controller.fireArmModel.value =
+            weaponController.weaponList[0].weaponModel ?? "";
+        controller.caliber.value =
+            weaponController.weaponList[0].weaponCaliber ?? "";
+        controller.weaponuid.value = weaponController.weaponList[0].uid ?? "";
+      }
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
@@ -55,6 +73,8 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
                     _buildSessionDetailsSection(),
                     10.height,
                     // _buildAmmunitionStockNote(),
+                    10.height,
+                    _addShootingPlace(),
                     20.height,
                     _buildAddRecordButton(),
                   ],
@@ -79,50 +99,136 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
     );
   }
 
+  Widget _addShootingPlace() {
+    return Obx(() {
+      return InkWell(
+        onTap: controller.addShootingRangePicture,
+        child: controller.shootingRangePictures.isEmpty
+            ? Container(
+                height: 80,
+                width: Get.width,
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.black)),
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add),
+                    Text("Add Bullseye Target Pictures (optional)"),
+                  ],
+                ),
+              )
+            : Container(
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.black)),
+                height: 200,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: controller.shootingRangePictures.length,
+                        itemBuilder: (context, index) {
+                          return Stack(
+                            children: [
+                              Image.file(
+                                controller.shootingRangePictures[index],
+                                height: 200,
+                                width: 150,
+                                fit: BoxFit.contain,
+                              ),
+                              Positioned(
+                                top: 5,
+                                right: 5,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    controller.shootingRangePictures
+                                        .removeAt(index); // Remove picture
+                                  },
+                                  child: const Icon(Icons.remove_circle,
+                                      color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    if (controller.shootingRangePictures.length < 3)
+                      DarkButton(
+                          onTap: controller.addShootingRangePicture,
+                          text: "Add")
+                  ],
+                ),
+              ),
+      );
+    });
+  }
+
   // Firearm Details Section
   Widget _buildFirearmDetailsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomDropdownField(
-          label: 'Firearm Make',
-          selectedValue: controller.fireArmMake.value,
-          items: AppConstants.make,
+          label: 'Weapon Number',
+          selectedValue: controller.weaponNo.value,
+          items: weaponController.weaponList.value
+                  .map((weapon) => weapon.weaponNo ?? "")
+                  .toList() ??
+              [],
           onChanged: (String? value) {
-            controller.fireArmMake.value = value ?? "";
+            controller.weaponNo.value = value ?? "";
+            final selectedWeapon = weaponController.weaponList.value.firstWhere(
+                (weapon) => weapon.weaponNo == value,
+                orElse: () => WeaponDetails());
+            controller.fireArmMake.value = selectedWeapon.weaponMake ?? "";
+            controller.fireArmModel.value = selectedWeapon.weaponModel ?? "";
+            controller.caliber.value = selectedWeapon.weaponCaliber ?? "";
+            controller.weaponuid.value = selectedWeapon.uid ?? "";
           },
           isMandatory: true,
           isEnabled: !homeController.fromFiringRecordDetail.value,
         ),
         10.height,
-        CustomDropdownField(
-          label: 'Firearm Model',
-          selectedValue: controller.fireArmModel.value,
-          items: AppConstants.model.map((model) => model.model).toList(),
-          onChanged: (String? value) {
-            controller.fireArmModel.value = value ?? "";
-          },
-          isMandatory: true,
-          isEnabled: !homeController.fromFiringRecordDetail.value,
-        ),
+        Obx(() {
+          return CustomDropdownField(
+            label: 'Firearm Make',
+            selectedValue: controller.fireArmMake.value,
+            items: AppConstants.make,
+            onChanged: (String? value) {
+              controller.fireArmMake.value = value ?? "";
+            },
+            isMandatory: true,
+            isEnabled: false ?? !homeController.fromFiringRecordDetail.value,
+          );
+        }),
         10.height,
-        CustomDropdownField(
-          label: 'Caliber',
-          selectedValue: controller.caliber.value,
-          items: AppConstants.caliberList,
-          onChanged: (String? value) {
-            controller.caliber.value = value ?? "";
-          },
-          isMandatory: true,
-          isEnabled: !homeController.fromFiringRecordDetail.value,
-        ),
+        Obx(() {
+          return CustomDropdownField(
+            label: 'Firearm Model',
+            selectedValue: controller.fireArmModel.value,
+            items: AppConstants.model.map((model) => model.model).toList(),
+            onChanged: (String? value) {
+              controller.fireArmModel.value = value ?? "";
+            },
+            isMandatory: true,
+            isEnabled: false ?? !homeController.fromFiringRecordDetail.value,
+          );
+        }),
         10.height,
-        CustomTextField(
-          label: 'Serial Number',
-          controller: controller.serialNumberController,
-          isMandatory: true,
-          isEnabled: homeController.fromFiringRecordDetail.value,
-        ),
+        Obx(() {
+          return CustomDropdownField(
+            label: 'Firearm Caliber',
+            selectedValue: controller.caliber.value,
+            items: AppConstants.caliberList,
+            onChanged: (String? value) {
+              controller.caliber.value = value ?? "";
+            },
+            isMandatory: true,
+            isEnabled: false ?? !homeController.fromFiringRecordDetail.value,
+          );
+        }),
         10.height,
         CustomDropdownField(
           label: 'Optics/Sights',
@@ -151,25 +257,30 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
         CustomDropdownField(
           label: 'Ammo Brand',
           selectedValue: controller.ammunitionBrand.value,
-          items: AppConstants.ammoBrand,
+          items: weaponController.ammunitionList
+                  .map((ammo) => ammo.ammunitionBrand ?? "")
+                  .toSet()
+                  .toList() ??
+              [],
           onChanged: (String? value) {
             controller.ammunitionBrand.value = value ?? "";
           },
           isEnabled: !homeController.fromFiringRecordDetail.value,
         ),
+
         10.height,
         CustomOptionalField(
           label: 'Bullet Weight',
           controller: controller.bulletWeightController,
           isEnabled: homeController.fromFiringRecordDetail.value,
         ),
-        10.height,
-        CustomTextField(
-          label: 'Bullet Type',
-          controller: controller.bulletTypeController,
-          isMandatory: true,
-          isEnabled: homeController.fromFiringRecordDetail.value,
-        ),
+        // 10.height,
+        // CustomTextField(
+        //   label: 'Bullet Type',
+        //   controller: controller.bulletTypeController,
+        //   isMandatory: true,
+        //   isEnabled: homeController.fromFiringRecordDetail.value,
+        // ),
         10.height,
         CustomOptionalField(
           label: 'Muzzle Velocity',
@@ -198,21 +309,59 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (AppConstants.isPakistani)
+          CustomDropdownField(
+            isEnabled: !homeController.fromFiringRecordDetail.value,
+            label: 'Shooting Range',
+            selectedValue: controller.shootingRange.value,
+            items: AppConstants.shootingRanges,
+            onChanged: (String? value) {
+              controller.shootingRange.value = value ?? "";
+            },
+            isMandatory: false,
+          ),
+        if (AppConstants.isPakistani)
+          const Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Text(
+                "Note: If you don't see your shooting range in the list or if you are shooting at a different location, please add the location by turning on your GPS. Click the button below to fetch your location."),
+          ),
+        if (AppConstants.isPakistani) 10.height,
         CustomTextField(
-            label: 'Range Location (GPS)',
-            controller: controller.rangeNameLocationController,
-            isMandatory: true,
-            isEnabled: homeController.fromFiringRecordDetail.value,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Range Location is required';
-              }
-              final regex = RegExp(r'^\d+\.\d{4},\d+\.\d{4}$');
-              if (!regex.hasMatch(value)) {
-                return 'Enter a valid GPS location in the format XX.XXXX,YY.YYYY';
-              }
+          label: 'Range Location (GPS)',
+          controller: controller.rangeNameLocationController,
+          isMandatory: true,
+          isEnabled: homeController.fromFiringRecordDetail.value,
+          suffix:
+              controller.homeController.fromFiringRecordDetail.value == false
+                  ? DarkButton(
+                      onTap: () async {
+                        controller.rangeNameLocationController.text =
+                            await controller.getCurrentLocation();
+                      },
+                      text: "Fetch Location")
+                  : const SizedBox(),
+          validator: (value) {
+            if (AppConstants.isPakistani) {
               return null;
-            }),
+            }
+            if (value == null || value.isEmpty) {
+              return 'Range Location is required';
+            }
+
+            // // Regular expression for GPS coordinates validation
+            // final regex = RegExp(
+            //   r'^(-?([1-8]?\d(\.\d+)?|90(\.0+)?))\s*,\s*(-?(1[0-7]\d(\.\d+)?|180(\.0+)?))$',
+            //   caseSensitive: false,
+            //   multiLine: false,
+            // );
+
+            // if (!regex.hasMatch(value)) {
+            //   return 'Enter a valid GPS location in the format XX.XXXX,YY.YYYY';
+            // }
+            return null;
+          },
+        ),
         10.height,
         CustomTextField(
           label: 'Date',
@@ -232,11 +381,10 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
               _selectTime(navigator!.context, controller.timeController),
         ),
         10.height,
-
-         CustomDropdownField(
+        CustomDropdownField(
           label: 'Weather Condition',
           selectedValue: controller.weatherConditionsController.value,
-          items: AppConstants.weaponTypeList,
+          items: AppConstants.weatherConditionsList,
           onChanged: (String? value) {
             controller.weatherConditionsController.value = value ?? "";
           },
@@ -262,22 +410,24 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
           children: [
             Expanded(
               child: CustomOptionalField(
-                isEnabled: !homeController.fromFiringRecordDetail.value,
+                isEnabled: homeController.fromFiringRecordDetail.value,
                 label: 'Temperature (C/F)',
                 controller: controller.temperatureController,
               ),
             ),
             5.width,
             Center(
-              child: CustomDropdown(
-                selectedUnit: controller.selectedTempuratureUnit.value,
-                units: const ['celsius', 'fahrenheit'],
-                onChanged: (newValue) {
-                  if (newValue != null) {
-                    controller.selectedTempuratureUnit.value = newValue;
-                  }
-                },
-              ),
+              child: Obx(() {
+                return CustomDropdown(
+                  selectedUnit: controller.selectedTempuratureUnit.value,
+                  units: const ['celsius', 'fahrenheit'],
+                  onChanged: (newValue) {
+                    if (newValue != null) {
+                      controller.selectedTempuratureUnit.value = newValue;
+                    }
+                  },
+                );
+              }),
             ),
           ],
         ),
@@ -286,7 +436,7 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
           isEnabled: homeController.fromFiringRecordDetail.value,
           label: 'Humidity',
           controller: controller.humidityController,
-          suffix: Text("%"),
+          suffix: const Text("%"),
           isMandatory: true,
           inputType: TextInputType.number,
           validator: (value) {
@@ -308,7 +458,7 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
           isEnabled: homeController.fromFiringRecordDetail.value,
           label: 'Altitude (from sea level)',
           controller: controller.altitudeController,
-          suffix: Text('ft'),
+          suffix: const Text('ft'),
           inputType: TextInputType.number,
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -373,15 +523,17 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
               }),
             ),
             5.width,
-            CustomDropdown(
-              selectedUnit: controller.selectedShootingDistanceUnit.value,
-              units: const ['meters', 'yards'],
-              onChanged: (newValue) {
-                if (newValue != null) {
-                  controller.selectedShootingDistanceUnit.value = newValue;
-                }
-              },
-            ),
+            Obx(() {
+              return CustomDropdown(
+                selectedUnit: controller.selectedShootingDistanceUnit.value,
+                units: const ['meters', 'yards'],
+                onChanged: (newValue) {
+                  if (newValue != null) {
+                    controller.selectedShootingDistanceUnit.value = newValue;
+                  }
+                },
+              );
+            }),
           ],
         ),
         10.height,
@@ -415,11 +567,23 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        10.height,
         CustomTextField(
           isEnabled: homeController.fromFiringRecordDetail.value,
           label: 'Rounds Fired',
           controller: controller.roundsFiredController,
+          inputType: TextInputType.number,
           isMandatory: true,
+          validator: (String? value) {
+            if (value == null || value.isEmpty) {
+              return 'Rounds Fired is required';
+            }
+            final intValue = int.tryParse(value);
+            if (intValue == null) {
+              return 'Please enter a valid integer';
+            }
+            return null;
+          },
         ),
         10.height,
         CustomOptionalField(
@@ -471,7 +635,7 @@ class AddWeaponFiringRecord extends GetView<ShootingLogController> {
 
   // Helper widgets
   Widget _buildAmmunitionStockNote() {
-    LicenseController licenseController=Get.find();
+    LicenseController licenseController = Get.find();
     final remainingStock = calculateAmmunitionStock(licenseController
                 .licenseList![licenseController.selectedLicenseIndex.value]
                 .ammunitionDetail ??

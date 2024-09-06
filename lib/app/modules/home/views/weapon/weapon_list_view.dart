@@ -23,13 +23,9 @@ class WeaponListView extends GetView<WeaponController> {
 
   @override
   Widget build(BuildContext context) {
-    if (controller.weaponList.isEmpty) {
-      controller
-          .getAllWeapons(FirebaseAuth.instance.currentUser?.uid ?? "")
-          .then((value) {
-        controller.weaponList.value = value;
-      });
-    }
+    if(controller.weaponList.isEmpty){
+     controller.loadWeapons();
+     }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

@@ -70,7 +70,7 @@ class AppConstants {
   static const String fireArmMake = 'fireArmMake';
   static const String fireArmModel = 'fireArmModel';
   static const String caliber = 'caliber';
-  static const String serialNumber = 'serialNumber';
+  static const String weaponNumber = 'weaponNumber';
   static const String opticsSights = 'opticsSights';
   static const String accessories = 'accessories';
   static const String bulletWeight = 'bulletWeight';
@@ -170,8 +170,12 @@ class AppConstants {
     "Mountains",
     "Shooting Range",
     "Forest",
-    "Urban"
+    "Plain Lands"
   ];
+
+
+
+
 
   static List<String> targetTypes = [
     "Bullseye Target",
@@ -430,10 +434,11 @@ class AppConstants {
     "Zimbabwe": "ZW"
   };
 
-  final List<String> weatherConditionsList = [
+  static final List<String> weatherConditionsList = [
+    'Sunny',
     'Cloudy',
     'Partly Cloudy',
-    'Sunny',
+     'Snow',
     'Thunderstorm',
     'Rainy'
   ];
@@ -505,4 +510,38 @@ class AppConstants {
     'Wisconsin',
     'Wyoming',
   ];
+
+
+ static List<String> shootingRanges = [
+  'Karachi Garrison Skeet & Shooting Range',
+  'Pakistan Navy Shooting Range Karsaz',
+  'Rangers Shooting & Saddle Club',
+  'Airmen Shooting Range',
+  'Arabian Sea Country Club Shooting Range',
+  'Lahore Garrison Shooting Gallery',
+  'Lances and Guns Club',
+  'Gun & Country Club',
+  'Pasban Range',
+  'Peshawar Garrison Shooting Range',
+  'Peshawar Skeet Shooting Club',
+  'Peshawar Garrison Shooting Arena',
+  'Skeet & Shooting Club Multan',
+];
+
+
+static final List<String> weaponParts = [
+  'Trigger',
+  'Firing Pin',
+  'Hammer',
+  'Barrel',
+  'Hand guard',
+  'Flash hider',
+  'Butt stock',
+  'Grip',
+  'Iron sights (rear / front)',
+  'Firing pin spring',
+  'Recoil spring',
+];
+
+
 }

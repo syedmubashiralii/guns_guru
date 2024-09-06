@@ -6,7 +6,7 @@ import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 
 class SplashView extends GetView<HomeController> {
-  const SplashView({super.key});
+  SplashView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +17,10 @@ class SplashView extends GetView<HomeController> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            FadeInRight(
-              child: Image.asset("assets/images/guns-guru.png")
-            ),
+            FadeInRight(child: Image.asset("assets/images/guns-guru.png")),
             FadeInLeft(
               child: const Text(
-                "If you won a licensend firearm,\nthis app is for you",
+                "If you own a licensed firearm,\nthis app is for you",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white,

@@ -33,7 +33,7 @@ class CustomTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '$label${isMandatory ? " *" : ""}',
+          '$label',
           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 5),
@@ -127,8 +127,8 @@ class CustomDropdownField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '$label${isMandatory ? " *" : ""}',
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          '$label',
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 5),
         DropdownSearch<String>(
@@ -251,7 +251,7 @@ class WindDirectionSelector extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Wind Direction *',
+          'Wind Direction',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         5.height,

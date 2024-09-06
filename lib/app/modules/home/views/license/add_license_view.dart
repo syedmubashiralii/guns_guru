@@ -17,8 +17,9 @@ import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/source_selection_dialog.dart';
 
 class AddLicenseView extends GetView<LicenseController> {
-  AddLicenseView({this.fromEditing});
+  AddLicenseView({this.fromEditing,this.uid});
   bool? fromEditing;
+  String? uid;
 
   HomeController homeController = Get.find();
 
@@ -39,8 +40,8 @@ class AddLicenseView extends GetView<LicenseController> {
         backgroundColor: ColorHelper.primaryColor,
         foregroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
-          'Add License Details',
+        title: Text(
+          fromEditing == true ? 'Edit License Details' : 'Add License Details',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
@@ -387,14 +388,13 @@ class AddLicenseView extends GetView<LicenseController> {
                             border: Border.all(color: Colors.black),
                           ),
                           child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.add),
-                              Text("Add license Pictures"),
-                              Text("Can add up to 3 Pictures"),
-                            ],
-                          ),
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.add),
+                                Text("Add license Pictures"),
+                                Text("Can add up to 3 Pictures")
+                              ]),
                         ),
                       )
                     : Container(
@@ -444,7 +444,7 @@ class AddLicenseView extends GetView<LicenseController> {
               10.height,
               DarkButton(
                 onTap: fromEditing == true
-                    ? () => controller.editLicense
+                    ? () => controller.editLicense(uid)
                     : () => controller.addLicense(),
                 text: fromEditing == true ? "Edit" : "Submit",
               ),

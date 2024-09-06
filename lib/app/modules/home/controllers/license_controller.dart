@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,25 +42,29 @@ class LicenseController extends GetxController {
     super.onReady();
     // licenseList.value = await getAllLicenses(
     //     Get.find<HomeController>().userModel.value.uid ?? "");
-   
   }
 
-  Future<void> updateLicenseWeaponNo(weaponNo,weaponUid) async {
-    DocumentReference licenseDoc = _firestore
-          .collection('licenses')
-          .doc(Get.find<HomeController>().userModel.value.uid ?? '')
-          .collection('userLicenses')
-          .doc(licenseList.value[selectedLicenseIndex.value].uid);
+  loadLicenses() async {
+    licenseList.value =
+        await getAllLicenses(FirebaseAuth.instance.currentUser!.uid);
+  }
 
-      await licenseDoc.update({"weaponNo": weaponNo,"weaponUid":weaponUid});
-      licenseList.value = await getAllLicenses(
+  Future<void> updateLicenseWeaponNo(weaponNo, weaponUid) async {
+    DocumentReference licenseDoc = _firestore
+        .collection('licenses')
+        .doc(Get.find<HomeController>().userModel.value.uid ?? '')
+        .collection('userLicenses')
+        .doc(licenseList.value[selectedLicenseIndex.value].uid);
+
+    await licenseDoc.update({"weaponNo": weaponNo, "weaponUid": weaponUid});
+    licenseList.value = await getAllLicenses(
         Get.find<HomeController>().userModel.value.uid ?? "");
-      licenseList.refresh();  
+    licenseList.refresh();
   }
 
   Future<void> addLicense() async {
     try {
-      fillControllersWithDummyData();
+      // fillControllersWithDummyData();
       if (licenseFormKey.currentState!.validate()) {
         if (licensePictures.isEmpty) {
           DefaultSnackbar.show(
@@ -94,7 +99,8 @@ class LicenseController extends GetxController {
             .collection('licenses')
             .doc(Get.find<HomeController>().userModel.value.uid ?? '')
             .collection('userLicenses');
-       DocumentReference licenseDocRef = await userLicensesCollection.add(newLicense.toMap());
+        DocumentReference licenseDocRef =
+            await userLicensesCollection.add(newLicense.toMap());
         await licenseDocRef.update({'uid': licenseDocRef.id});
         closeDialog();
         Get.back();
@@ -134,7 +140,7 @@ class LicenseController extends GetxController {
     }
   }
 
-  Future<void> editLicense() async {
+  Future<void> editLicense(uid) async {
     try {
       if (licenseFormKey.currentState!.validate()) {
         if (licensePictures.isEmpty) {
@@ -153,7 +159,10 @@ class LicenseController extends GetxController {
         }
 
         License updatedLicense = License(
+            uid: uid,
             licenseTrackingNumber: trackingNumberController.text,
+            weaponNo: licenseList.value[selectedLicenseIndex.value].weaponNo??"",
+            weaponUid: licenseList.value[selectedLicenseIndex.value].weaponUid??"",
             licenseNumber: licenseNumberController.text,
             documenttype: documentTypeController.text,
             licenseAmmunitionLimit: ammunitionLimitController.text,
@@ -172,7 +181,7 @@ class LicenseController extends GetxController {
             .collection('licenses')
             .doc(Get.find<HomeController>().userModel.value.uid ?? '')
             .collection('userLicenses')
-            .doc(licenseNumberController.text);
+            .doc(uid);
 
         await licenseDoc.update(updatedLicense.toMap());
         closeDialog();

@@ -6,10 +6,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/service_record_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/weapon_controller.dart';
 import 'package:guns_guru/app/routes/app_pages.dart';
-import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/firebase_options.dart';
 
 void main() async {
@@ -18,14 +18,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   const fatalError = true;
-  // Non-async exceptions
   FlutterError.onError = (errorDetails) {
     if (fatalError) {
-      // If you want to record a "fatal" exception
       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
       // ignore: dead_code
     } else {
-      // If you want to record a "non-fatal" exception
       FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
     }
   };
@@ -33,8 +30,8 @@ void main() async {
   Get.put(HomeController(), permanent: true);
   Get.put(WeaponController(), permanent:  true);
    Get.put(LicenseController(), permanent:  true);
-  Get.put(HomeExtensionController());
   Get.put(ShootingLogController());
+  Get.put(ServiceRecordController());
   
   runApp(
     GetMaterialApp(

@@ -39,6 +39,7 @@ class LicenseDetailWidget extends StatelessWidget {
         closeDialog();
         Get.to(AddLicenseView(
           fromEditing: true,
+          uid: license.uid
         ));
       },
       buttonIcon: Icons.edit,

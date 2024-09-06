@@ -69,7 +69,7 @@ class UserModel {
     data['state'] = state;
     data['documentIssuanceDate'] = documentIssuanceDate;
     data['documentExpiryDate'] = documentExpiryDate;
-    data['email']= email;
+    data['email'] = email;
     data['dob'] = dob;
     data['gender'] = gender;
     data['firstname'] = firstname;
@@ -83,7 +83,6 @@ class UserModel {
     return data;
   }
 }
-
 
 class License {
   String? uid;
@@ -106,30 +105,31 @@ class License {
   String? weaponUid;
   WeaponDetails? weaponDetails;
   List<WeaponFiringRecord>? weaponFiringRecord;
-  List<WeaponServiceRecord>? weaponServiceRecord;
+  // List<WeaponServiceRecord>? weaponServiceRecord;
 
-  License(
-      {this.ammunitionDetail,
-      this.uid,
-      this.licenseAmmunitionLimit,
-      this.licenseCalibre,
-      this.licenseDateOfIssuance,
-      this.licenseIssuaingQuota,
-      this.licenseIssuingAuthority,
-      this.licenseJurisdiction,
-      this.documenttype,
-      this.licenseNumber,
-      this.weaponNo,
-      this.licenseweaponType,
-      this.licensePicture,
-      this.country,
-      this.weaponUid,
-      this.licenseTrackingNumber,
-      this.licenseValidated,
-      this.licenseValidTill,
-      this.weaponDetails,
-      this.weaponFiringRecord,
-      this.weaponServiceRecord});
+  License({
+    this.ammunitionDetail,
+    this.uid,
+    this.licenseAmmunitionLimit,
+    this.licenseCalibre,
+    this.licenseDateOfIssuance,
+    this.licenseIssuaingQuota,
+    this.licenseIssuingAuthority,
+    this.licenseJurisdiction,
+    this.documenttype,
+    this.licenseNumber,
+    this.weaponNo,
+    this.licenseweaponType,
+    this.licensePicture,
+    this.country,
+    this.weaponUid,
+    this.licenseTrackingNumber,
+    this.licenseValidated,
+    this.licenseValidTill,
+    this.weaponDetails,
+    this.weaponFiringRecord,
+    // this.weaponServiceRecord
+  });
 
   License.fromJson(Map<String, dynamic> json) {
     if (json['ammunitionDetail'] != null) {
@@ -166,12 +166,12 @@ class License {
     //     weaponFiringRecord!.add(WeaponFiringRecord.fromJson(v));
     //   });
     // }
-    if (json['weaponServiceRecord'] != null) {
-      weaponServiceRecord = <WeaponServiceRecord>[];
-      json['weaponServiceRecord'].forEach((v) {
-        weaponServiceRecord!.add(WeaponServiceRecord.fromJson(v));
-      });
-    }
+    // if (json['weaponServiceRecord'] != null) {
+    //   weaponServiceRecord = <WeaponServiceRecord>[];
+    //   json['weaponServiceRecord'].forEach((v) {
+    //     weaponServiceRecord!.add(WeaponServiceRecord.fromJson(v));
+    //   });
+    // }
   }
 
   Map<String, dynamic> toJson() {
@@ -204,10 +204,10 @@ class License {
     //   data['weaponFiringRecord'] =
     //       weaponFiringRecord!.map((v) => v.toJson()).toList();
     // }
-    if (weaponServiceRecord != null) {
-      data['weaponServiceRecord'] =
-          weaponServiceRecord!.map((v) => v.toJson()).toList();
-    }
+    // if (weaponServiceRecord != null) {
+    //   data['weaponServiceRecord'] =
+    //       weaponServiceRecord!.map((v) => v.toJson()).toList();
+    // }
     return data;
   }
 
@@ -241,10 +241,10 @@ class License {
     //   data['weaponFiringRecord'] =
     //       weaponFiringRecord!.map((v) => v.toMap()).toList();
     // }
-    if (weaponServiceRecord != null) {
-      data['weaponServiceRecord'] =
-          weaponServiceRecord!.map((v) => v.toMap()).toList();
-    }
+    // if (weaponServiceRecord != null) {
+    //   data['weaponServiceRecord'] =
+    //       weaponServiceRecord!.map((v) => v.toMap()).toList();
+    // }
     return data;
   }
 }
@@ -265,8 +265,7 @@ class AmmunitionDetail {
   String? weaponUid;
 
   AmmunitionDetail(
-      {
-      this.uid,
+      {this.uid,
       this.ammunitionBrand,
       this.ammunitionCaliber,
       this.ammunitionPurchaseDate,
@@ -310,7 +309,7 @@ class AmmunitionDetail {
     data['licenseNo'] = licenseNo;
     data['licenseUid'] = licenseUid;
     data['weaponNo'] = weaponNo;
-    data['weaponUid'] = weaponUid ;
+    data['weaponUid'] = weaponUid;
     return data;
   }
 
@@ -371,7 +370,7 @@ class WeaponDetails {
   });
 
   WeaponDetails.fromJson(Map<String, dynamic> json) {
-    uid= json['uid'];
+    uid = json['uid'];
     weaponCaliber = json['weaponCaliber'];
     documentIdNo = json['documentIdNo'];
     weaponMake = json['weaponMake'];
@@ -419,7 +418,7 @@ class WeaponDetails {
     data['documentIdNo'] = documentIdNo;
     data['documentExpiryDate'] = documentExpiryDate;
     data['emailId'] = emailId;
-    data['documentIssuingDate'] =documentIssuingDate;
+    data['documentIssuingDate'] = documentIssuingDate;
     data['weaponNo'] = weaponNo;
     data['weaponType'] = weaponType;
     data['weaponauthorizedealername'] = weaponauthorizedealername;
@@ -436,7 +435,7 @@ class WeaponFiringRecord {
   String? fireArmMake;
   String? fireArmModel;
   String? caliber;
-  String? serialNumber;
+  String? weaponNumber;
   String? opticsSights;
   String? accessories;
   String? ammunitionBrand;
@@ -456,9 +455,9 @@ class WeaponFiringRecord {
   String? humidity;
   String? altitude;
   String? terrain;
-  String? selectedWindSpeedUnit;
   String? brightness;
-  double? shootingDistance;
+  String? shootingDistance;
+  String? selectedWindSpeedUnit;
   String? selectedShootingDistanceUnit;
   String? targetType;
   String? shootingPosition;
@@ -471,13 +470,20 @@ class WeaponFiringRecord {
   String? lessonsLearned;
   String? additionalNotes;
   String? uid;
+  List<String>? shootingpositionpicture;
+  String? ammobrand;
+  String? weaponno;
+  String? weaponuid;
+  String? licenseno;
+  String? licenseuid;
 
   WeaponFiringRecord({
+    this.shootingpositionpicture,
     this.uid,
     this.fireArmMake,
     this.fireArmModel,
     this.caliber,
-    this.serialNumber,
+    this.weaponNumber,
     this.opticsSights,
     this.accessories,
     this.ammunitionBrand,
@@ -511,15 +517,23 @@ class WeaponFiringRecord {
     this.performanceObservations,
     this.lessonsLearned,
     this.additionalNotes,
+    this.ammobrand,
+    this.weaponno,
+    this.weaponuid,
+    this.licenseno,
+    this.licenseuid,
   });
 
   WeaponFiringRecord.fromJson(Map<String, dynamic> json) {
+    shootingpositionpicture = (json['shootingpositionpicture'] as List<dynamic>)
+        .map((e) => e.toString())
+        .toList();
+    selectedWindSpeedUnit = json['selectedWindSpeedUnit'];
     uid = json['uid'];
     fireArmMake = json['fireArmMake'];
     fireArmModel = json['fireArmModel'];
-    selectedWindSpeedUnit = json['selectedWindSpeedUnit'];
     caliber = json['caliber'];
-    serialNumber = json['serialNumber'];
+    weaponNumber = json['weaponNumber'];
     opticsSights = json['opticsSights'];
     accessories = json['accessories'];
     ammunitionBrand = json['ammunitionBrand'];
@@ -552,18 +566,24 @@ class WeaponFiringRecord {
     performanceObservations = json['performanceObservations'];
     lessonsLearned = json['lessonsLearned'];
     additionalNotes = json['additionalNotes'];
+    ammobrand = json['ammobrand'];
+    weaponno = json['weaponno'];
+    weaponuid = json['weaponuid'];
+    licenseno = json['licenseno'];
+    licenseuid = json['licenseuid'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['shootingpositionpicture'] = shootingpositionpicture;
+    data['selectedWindSpeedUnit'] = selectedWindSpeedUnit;
     data['uid'] = uid;
     data['fireArmMake'] = fireArmMake;
     data['fireArmModel'] = fireArmModel;
     data['caliber'] = caliber;
-    data['serialNumber'] = serialNumber;
+    data['weaponNumber'] = weaponNumber;
     data['opticsSights'] = opticsSights;
     data['accessories'] = accessories;
-    data['selectedWindSpeedUnit'] = selectedWindSpeedUnit;
     data['ammunitionBrand'] = ammunitionBrand;
     data['bulletWeight'] = bulletWeight;
     data['bulletType'] = bulletType;
@@ -594,17 +614,23 @@ class WeaponFiringRecord {
     data['performanceObservations'] = performanceObservations;
     data['lessonsLearned'] = lessonsLearned;
     data['additionalNotes'] = additionalNotes;
+    data['ammobrand'] = ammobrand;
+    data['weaponno'] = weaponno;
+    data['weaponuid'] = weaponuid;
+    data['licenseno'] = licenseno;
+    data['licenseuid'] = licenseuid;
     return data;
   }
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['shootingpositionpicture'] = shootingpositionpicture;
+    data['selectedWindSpeedUnit'] = selectedWindSpeedUnit;
     data['uid'] = uid;
     data['fireArmMake'] = fireArmMake;
     data['fireArmModel'] = fireArmModel;
-    data['selectedWindSpeedUnit'] = selectedWindSpeedUnit;
     data['caliber'] = caliber;
-    data['serialNumber'] = serialNumber;
+    data['weaponNumber'] = weaponNumber;
     data['opticsSights'] = opticsSights;
     data['accessories'] = accessories;
     data['ammunitionBrand'] = ammunitionBrand;
@@ -637,45 +663,72 @@ class WeaponFiringRecord {
     data['performanceObservations'] = performanceObservations;
     data['lessonsLearned'] = lessonsLearned;
     data['additionalNotes'] = additionalNotes;
+    data['ammobrand'] = ammobrand;
+    data['weaponno'] = weaponno;
+    data['weaponuid'] = weaponuid;
+    data['licenseno'] = licenseno;
+    data['licenseuid'] = licenseuid;
     return data;
   }
 }
 
-class WeaponServiceRecord {
-  String? weaponServiceDate;
-  String? weaponServiceDoneBy;
-  String? weaponServiceNotes;
-  List<String>? weaponServicePartsChanged;
+class ServiceRecord {
+  String? serviceDate;
+  List? partsChanged;
+  String? serviceType; // e.g., Basic Service, Detailed Service
+  String? selfOrArmorService; // e.g., Self Service, Armor Service
+  String? armorName;
+  String? armorAddress;
+  String? armorphoneno;
+  String? notes;
+  String? weaponno;
+  String? weaponuid;
+  String? licenseno;
+  String? licenseuid;
 
-  WeaponServiceRecord(
-      {this.weaponServiceDate,
-      this.weaponServiceDoneBy,
-      this.weaponServiceNotes,
-      this.weaponServicePartsChanged});
-
-  WeaponServiceRecord.fromJson(Map<String, dynamic> json) {
-    weaponServiceDate = json['weaponServiceDate'];
-    weaponServiceDoneBy = json['weaponServiceDoneBy'];
-    weaponServiceNotes = json['weaponServiceNotes'];
-    weaponServicePartsChanged =
-        json['weaponServicePartsChanged'].cast<String>();
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['weaponServiceDate'] = weaponServiceDate;
-    data['weaponServiceDoneBy'] = weaponServiceDoneBy;
-    data['weaponServiceNotes'] = weaponServiceNotes;
-    data['weaponServicePartsChanged'] = weaponServicePartsChanged;
-    return data;
-  }
+  ServiceRecord(
+      {this.serviceDate,
+      this.partsChanged,
+      this.armorphoneno,
+      this.serviceType,
+      this.selfOrArmorService,
+      this.armorName,
+      this.armorAddress,
+      this.notes,
+      this.licenseno,
+      this.licenseuid,
+      this.weaponno,
+      this.weaponuid});
 
   Map<String, dynamic> toMap() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['weaponServiceDate'] = weaponServiceDate;
-    data['weaponServiceDoneBy'] = weaponServiceDoneBy;
-    data['weaponServiceNotes'] = weaponServiceNotes;
-    data['weaponServicePartsChanged'] = weaponServicePartsChanged;
-    return data;
+    return {
+      'licenseno': licenseno,
+      'licenseuid': licenseuid,
+      'weaponno': weaponno,
+      'armorphoneno': armorphoneno,
+      'weaponuid': weaponuid,
+      'serviceDate': serviceDate,
+      'partsChanged': partsChanged,
+      'serviceType': serviceType,
+      'selfOrArmorService': selfOrArmorService,
+      'armorName': armorName,
+      'armorAddress': armorAddress,
+      'notes': notes,
+    };
+  }
+
+  ServiceRecord.fromMap(Map<String, dynamic> map) {
+    licenseno = map['licenseno'];
+    licenseuid = map['licenseuid'];
+    weaponno = map['weaponno'];
+    weaponuid = map['weaponuid'];
+    armorphoneno = map['armorphoneno'];
+    serviceDate = map['serviceDate'];
+    partsChanged = List<String>.from(map['partsChanged'] ?? []);
+    serviceType = map['serviceType'];
+    selfOrArmorService = map['selfOrArmorService'];
+    armorName = map['armorName'];
+    armorAddress = map['armorAddress'];
+    notes = map['notes'];
   }
 }

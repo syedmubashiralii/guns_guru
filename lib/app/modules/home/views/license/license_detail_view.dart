@@ -67,20 +67,22 @@ class LicenseDetailView extends GetView<LicenseController> {
                     children: [
                       10.height,
                       LicenseDetailWidget(license: license),
-                      20.height,
+                      10.height,
                       Image.network(
                         license.licensePicture![0] ?? "",
                         width: Get.width,
                         fit: BoxFit.contain,
                       ),
-                      20.height,
+                      10.height,
                       WeaponDetailWidget(
                         license: license,
                         isButtonShown: true,
                         onTap: () {
                           Get.find<WeaponController>().licenseNumber.value =
                               license.licenseNumber ?? "";
-                          Get.to(AddWeaponView());
+                               Get.find<WeaponController>().weaponType.value =
+                              license.licenseweaponType ?? "";
+                          Get.to(AddWeaponView(fromLicense: true,));
                         },
                       ),
                       20.height,

@@ -4,7 +4,6 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/weapon_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
@@ -21,14 +20,12 @@ class AddAmmunitionStockView extends GetView<WeaponController> {
 
   @override
   Widget build(BuildContext context) {
-    final LicenseController licenseController = Get.find();
+    final WeaponController weaponController = Get.find();
     if (AppConstants.isPakistani) {
       // final license = licenseController
       //     .licenseList?[licenseController.selectedLicenseIndex.value];
     }
 
-    // controller.caliberController.text =
-    //     license?.weaponDetails?.weaponCaliber ?? "";
 
     if (AppConstants.caliber.isEmpty ||
         AppConstants.make.isEmpty ||
@@ -37,12 +34,27 @@ class AddAmmunitionStockView extends GetView<WeaponController> {
         AppConstants.typeofRounds.isEmpty) {
       controller.loadUtils();
     }
-
-    controller.ammoCaliber.value =
-        controller.weaponDetails.value?.weaponCaliber ?? "";
-    controller.retailerNameController.text =
-        controller.weaponDetails.value?.weaponauthorizedealername ?? "";   
-    controller.retailerPhoneNo.text    =controller.weaponDetails.value?.weaponauthorizedealerphonenumber??""; 
+    if (weaponController.weaponDetails.value != null) {
+      controller.ammoCaliber.value =
+          controller.weaponDetails.value?.weaponCaliber ?? "";
+      controller.weaponNo.value =
+          controller.weaponDetails.value?.weaponNo ?? "";
+      controller.weaponuid.value = controller.weaponDetails.value?.uid ?? "";
+      controller.retailerNameController.text =
+          controller.weaponDetails.value?.weaponauthorizedealername ?? "";
+      controller.retailerPhoneNo.text =
+          controller.weaponDetails.value?.weaponauthorizedealerphonenumber ??
+              "";
+    } else {
+      controller.ammoCaliber.value =
+          controller.weaponList[0].weaponCaliber ?? "";
+      controller.weaponNo.value = controller.weaponList[0].weaponNo ?? "";
+      controller.weaponuid.value = controller.weaponList[0].uid ?? "";
+      controller.retailerNameController.text =
+          controller.weaponList[0].weaponauthorizedealername ?? "";
+      controller.retailerPhoneNo.text =
+          controller.weaponList[0].weaponauthorizedealerphonenumber ?? "";
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -59,6 +71,28 @@ class AddAmmunitionStockView extends GetView<WeaponController> {
           child: ListView(
             children: [
               _buildHeader(),
+              Obx(
+                 () {
+                  return _buildDropdown(
+                    label: 'Weapon No',
+                    items: weaponController.weaponList.value
+                            .map((weapon) => weapon.weaponNo ?? "")
+                            .toList() ??
+                        [],
+                    selectedItem: controller.weaponNo.value,
+                    onChanged: (value) {
+                      controller.weaponNo.value = value ?? "";
+                      final selectedWeapon = weaponController.weaponList.value
+                          .firstWhere((weapon) => weapon.weaponNo == value,
+                              orElse: () => WeaponDetails());
+                      controller.ammoCaliber.value =
+                          selectedWeapon.weaponCaliber ?? "";
+                      controller.weaponuid.value = selectedWeapon.uid ?? "";
+                    },
+                    validatorMessage: 'Weapon No is required',
+                  );
+                }
+              ),
               _buildDateField(),
               _buildRetailerNameField(),
               20.height,
@@ -82,14 +116,16 @@ class AddAmmunitionStockView extends GetView<WeaponController> {
                 },
               ),
               20.height,
-              TextFormField(
-                initialValue: controller.ammoCaliber.value,
-                decoration: const InputDecoration(
-                  labelText: 'Ammo Calliber',
-                  border: OutlineInputBorder(),
-                ),
-                readOnly: true,
-              ),
+              Obx(() {
+                return TextFormField(
+                  initialValue: controller.ammoCaliber.value,
+                  decoration: const InputDecoration(
+                    labelText: 'Ammo Calliber',
+                    border: OutlineInputBorder(),
+                  ),
+                  readOnly: true,
+                );
+              }),
               _buildDropdown(
                 label: 'Type of Round',
                 items: AppConstants.typeofRounds,
@@ -209,11 +245,13 @@ class AddAmmunitionStockView extends GetView<WeaponController> {
   String? _validateDate(String? value) {
     if (value == null || value.isEmpty) return 'Purchase Date is required';
     RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-    if (!dateRegex.hasMatch(value))
+    if (!dateRegex.hasMatch(value)) {
       return 'Please enter a valid date format: DD/MM/YYYY';
+    }
     List<String> parts = value.split('/');
-    if (parts.length != 3 || parts.any((part) => !isNumeric(part)))
+    if (parts.length != 3 || parts.any((part) => !isNumeric(part))) {
       return 'Date must be in numeric format: DD/MM/YYYY';
+    }
     return null;
   }
 

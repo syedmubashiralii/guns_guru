@@ -54,7 +54,9 @@ class WeaponController extends GetxController {
   TextEditingController retailerPhoneNo = TextEditingController();
   RxList servicePartsChangedList = [].obs;
   RxString ammoBrand = "Federal Premium".obs;
-    RxString ammoCaliber = "9mm".obs;
+  RxString ammoCaliber = "9mm".obs;
+  RxString weaponNo = "".obs;
+  RxString weaponuid = "".obs;
   RxString typeOfRound = "Full Metal Jacket (FMJ)".obs;
   final ammunitionStockFormKey = GlobalKey<FormState>();
   TextEditingController purchaseDateController = TextEditingController();
@@ -69,6 +71,28 @@ class WeaponController extends GetxController {
   onReady() async {
     // weaponList.value = await getAllWeapons(_auth.currentUser?.uid ?? "");
     loadUtils();
+  }
+
+  loadWeapons() async {
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? "";
+    if (weaponList.isEmpty) {
+      getAllWeapons(userId).then((value) {
+        weaponList.value = value;
+      });
+    }
+    if (ammunitionList.isEmpty) {
+      ammunitionList.value = await getAllAmmunition(userId);
+    }
+  }
+
+
+  loadAmmos(){
+     if (ammunitionList.isEmpty) {
+      getAllAmmunition(FirebaseAuth.instance.currentUser?.uid ?? "")
+          .then((value) {
+        ammunitionList.value = value;
+      });
+    }
   }
 
   List<String> get filterModelsList {
@@ -98,8 +122,8 @@ class WeaponController extends GetxController {
           retailerPhoneNo: retailerPhoneNo.text,
           retailerName: retailerNameController.text,
           ammunitionQuantityPurchased: quantityPurchasedController.text,
-          weaponNo: weaponDetails.value!.weaponNo,
-          weaponUid: weaponDetails.value!.uid,
+          weaponNo: weaponNo.value,
+          weaponUid: weaponuid.value,
           licenseNo: AppConstants.isPakistani
               ? licenseController
                   .licenseList
@@ -140,16 +164,20 @@ class WeaponController extends GetxController {
 
   Future<void> addWeapon() async {
     try {
-      fillControllersWithDummyData();
+      // fillControllersWithDummyData();
       if (weaponFormKey.currentState!.validate()) {
         Get.dialog(const LoadingDialog());
+        String receiptUrl = '';
+        if (weaponPurchaseReceipt.value != null) {
+          receiptUrl = await uploadImage(weaponPurchaseReceipt.value!);
+        }
         WeaponDetails newWeapon = WeaponDetails(
             weaponNo: weaponNumberController.text,
             weaponType: weaponType.value,
             weaponauthorizedealername: authorizeDealerName.text,
             weaponauthorizedealeraddress: authorizeDealerAddress.text,
             weaponauthorizedealerphonenumber: authorizeDealerPhoneNo.text,
-            weaponpurchaserecipt: weaponPurchaseReceipt.value?.path ?? '',
+            weaponpurchaserecipt: receiptUrl ?? '',
             weaponpurchasedate: weaponPurchaseDate.text,
             weaponMake: weaponMake.value,
             weaponModel: weaponModel.value,
@@ -181,7 +209,7 @@ class WeaponController extends GetxController {
         );
         clearAllControllers();
         weaponList.value = await getAllWeapons(_auth.currentUser?.uid ?? "");
-        weaponDetails.value=weaponList.value.last;
+        weaponDetails.value = weaponList.value.last;
         Get.to(WeaponDetailScreen(weapon: weaponList.value.last));
       }
     } catch (e) {
@@ -395,6 +423,7 @@ class WeaponController extends GetxController {
       AppConstants.caliberList
           .sort((a, b) => a.compareTo(b)); // Sorting alphabetically
       Get.find<LicenseController>().caliber.value = AppConstants.caliber[0];
+      Get.find<WeaponController>().weaponCaliber.value = AppConstants.caliber[0];
       weaponCaliber.value = AppConstants.caliber[0];
 
       AppConstants.make = List<String>.from(doc['makes']);
@@ -406,6 +435,9 @@ class WeaponController extends GetxController {
       AppConstants.typeofRounds = List<String>.from(doc['typeOfRounds']);
       AppConstants.typeofRounds.sort((a, b) => a.compareTo(b));
       typeOfRound.value = AppConstants.typeofRounds.first;
+
+      AppConstants.shootingRanges = List<String>.from(doc['shootingranges']);
+      AppConstants.shootingRanges.sort((a, b) => a.compareTo(b));
 
       weaponMake.value = AppConstants.make[0];
       List<dynamic> modelsData = doc['models'];
