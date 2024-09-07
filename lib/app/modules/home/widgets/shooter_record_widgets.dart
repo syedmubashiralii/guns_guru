@@ -132,6 +132,7 @@ class CustomDropdownField extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         DropdownSearch<String>(
+          // autoValidateMode: AutovalidateMode.always,
           enabled: isEnabled,
           popupProps: const PopupProps.menu(
             showSearchBox: true, // Enables the search box in the dropdown
@@ -222,16 +223,14 @@ class CustomSlider extends StatelessWidget {
 
 class WindDirectionSelector extends StatelessWidget {
   final RxString selectedDirection;
-  final RxDouble windSpeed;
+  final TextEditingController windSpeed;
   final Function(String?) onDirectionChanged;
-  final Function(double) onSpeedChanged;
   bool isEnabled;
 
   WindDirectionSelector(
       {required this.selectedDirection,
       required this.windSpeed,
       required this.onDirectionChanged,
-      required this.onSpeedChanged,
       this.isEnabled = true});
 
   @override
@@ -270,25 +269,12 @@ class WindDirectionSelector extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Obx(() {
-          return Text(
-            'Wind Speed ${controller.selectedWindSpeedUnit.value} *',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          );
-        }),
+        
         Row(
           children: [
             Expanded(
-              child: Obx(() {
-                return Slider(
-                  value: windSpeed.value,
-                  min: 0,
-                  max: 100, // Adjust the max value based on your needs
-                  onChanged: onSpeedChanged,
-                  divisions: 100,
-                  label: '${windSpeed.value.toStringAsFixed(1)}',
-                );
-              }),
+              child: 
+                 CustomTextField(label: "Wind Speed", controller: windSpeed)
             ),
             const SizedBox(width: 10),
             Obx(() {

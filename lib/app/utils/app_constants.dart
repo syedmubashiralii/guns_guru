@@ -158,12 +158,19 @@ class AppConstants {
     "Fiber Optic Sights"
   ];
 
+  // static List<String> brightnessLevel = [
+  //   "Dawn",
+  //   "Midday",
+  //   "Dusk",
+  //   "Sunset",
+  //   "Night"
+  // ];
   static List<String> brightnessLevel = [
-    "Dawn",
-    "Midday",
-    "Dusk",
-    "Sunset",
-    "Night"
+    "1 - 10 %",
+    "11 - 30 %",
+    "31 - 50 %",
+    "51 - 75 %",
+    "76 - 100 %"
   ];
   static List<String> terrains = [
     "Desert",

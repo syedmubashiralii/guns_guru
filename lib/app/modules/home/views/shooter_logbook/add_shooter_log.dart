@@ -52,6 +52,7 @@ class AddShooterLog extends GetView<ShootingLogController> {
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
+        controller: controller.scrollController,
         padding: const EdgeInsets.all(2.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,9 +263,27 @@ class AddShooterLog extends GetView<ShootingLogController> {
                   .toSet()
                   .toList() ??
               [],
+              isMandatory: true,
           onChanged: (String? value) {
             controller.ammunitionBrand.value = value ?? "";
           },
+          
+          isEnabled: !homeController.fromFiringRecordDetail.value,
+        ),
+        10.height,
+        CustomDropdownField(
+          label: 'Type of Round',
+          selectedValue: controller.typeofRound.value,
+          items: weaponController.ammunitionList
+                  .map((ammo) => ammo.typeOfRound ?? "")
+                  .toSet()
+                  .toList() ??
+              [],
+              isMandatory: true,
+          onChanged: (String? value) {
+            controller.typeofRound.value = value ?? "";
+          },
+          
           isEnabled: !homeController.fromFiringRecordDetail.value,
         ),
 
@@ -399,9 +418,7 @@ class AddShooterLog extends GetView<ShootingLogController> {
               controller.windDirection.value = newDirection;
             }
           },
-          onSpeedChanged: (newSpeed) {
-            controller.windSpeed.value = newSpeed;
-          },
+          
         ),
         10.height,
         Row(

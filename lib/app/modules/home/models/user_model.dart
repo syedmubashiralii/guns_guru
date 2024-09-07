@@ -449,7 +449,7 @@ class WeaponFiringRecord {
   String? time;
   String? weatherConditions;
   String? windDirection;
-  double? windSpeed;
+  String? windSpeed;
   String? temperature;
   String? selectedTemperatureUnit;
   String? humidity;
@@ -476,6 +476,7 @@ class WeaponFiringRecord {
   String? weaponuid;
   String? licenseno;
   String? licenseuid;
+  String? typeofround;
 
   WeaponFiringRecord({
     this.shootingpositionpicture,
@@ -522,6 +523,7 @@ class WeaponFiringRecord {
     this.weaponuid,
     this.licenseno,
     this.licenseuid,
+    this.typeofround
   });
 
   WeaponFiringRecord.fromJson(Map<String, dynamic> json) {
@@ -571,6 +573,7 @@ class WeaponFiringRecord {
     weaponuid = json['weaponuid'];
     licenseno = json['licenseno'];
     licenseuid = json['licenseuid'];
+    typeofround = json['typeofround'];
   }
 
   Map<String, dynamic> toJson() {
@@ -619,6 +622,7 @@ class WeaponFiringRecord {
     data['weaponuid'] = weaponuid;
     data['licenseno'] = licenseno;
     data['licenseuid'] = licenseuid;
+    data['typeofround'] = typeofround;
     return data;
   }
 
@@ -668,6 +672,7 @@ class WeaponFiringRecord {
     data['weaponuid'] = weaponuid;
     data['licenseno'] = licenseno;
     data['licenseuid'] = licenseuid;
+    data['typeofround'] = typeofround;
     return data;
   }
 }

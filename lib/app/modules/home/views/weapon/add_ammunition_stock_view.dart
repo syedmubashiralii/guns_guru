@@ -121,7 +121,7 @@ class AddAmmunitionStockView extends GetView<WeaponController> {
                   initialValue: controller.ammoCaliber.value,
                   decoration: const InputDecoration(
                     labelText: 'Ammo Calliber',
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder()
                   ),
                   readOnly: true,
                 );

@@ -40,7 +40,7 @@ void main() async {
           buttonTheme:
               const ButtonThemeData(textTheme: ButtonTextTheme.primary),
           brightness: Brightness.light,
-          textTheme: GoogleFonts.latoTextTheme(),
+          textTheme: GoogleFonts.poppinsTextTheme(),
         ),
         defaultTransition: Transition.cupertino,
         builder: (BuildContext context, Widget? child) {
