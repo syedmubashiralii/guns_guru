@@ -28,7 +28,7 @@ class BuildFiringRecord extends StatelessWidget {
                     date ?? "",
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                        color: Colors.black, fontWeight: FontWeight.bold,fontSize: 11),
                   ),
                   const CustomLabelText(
                     text: 'Date',
@@ -36,7 +36,9 @@ class BuildFiringRecord extends StatelessWidget {
                 ],
               ),
             ),
+            5.width,
             Expanded(
+              flex: 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -44,14 +46,15 @@ class BuildFiringRecord extends StatelessWidget {
                     time,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                        color: Colors.black, fontWeight: FontWeight.bold,fontSize: 11),
                   ),
                   const CustomLabelText(
-                    text: 'Time',
+                    text: 'Weapon',
                   ),
                 ],
               ),
             ),
+            5.width,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +63,7 @@ class BuildFiringRecord extends StatelessWidget {
                     shotsFired,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                        color: Colors.black, fontWeight: FontWeight.bold,fontSize: 11),
                   ),
                   const CustomLabelText(
                     text: 'Shots Fired',
@@ -68,16 +71,16 @@ class BuildFiringRecord extends StatelessWidget {
                 ],
               ),
             ),
-            5.width,
-            CircleAvatar(
-                radius: 10,
-                backgroundColor: Colors.black.withOpacity(.7),
-                child: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 12,
-                )),
-            5.width,
+            // 5.width,
+            // CircleAvatar(
+            //     radius: 10,
+            //     backgroundColor: Colors.black.withOpacity(.7),
+            //     child: const Icon(
+            //       Icons.arrow_forward_ios,
+            //       color: Colors.white,
+            //       size: 12,
+            //     )),
+            // 5.width,
           ],
         ),
         5.height,

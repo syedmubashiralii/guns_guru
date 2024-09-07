@@ -37,8 +37,8 @@ class WeaponDetailScreen extends GetView<WeaponController> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             BannerCard(
               title: 'Weapon Detail',
@@ -222,6 +222,11 @@ class AmmunitionStockWidget extends StatelessWidget {
 
       return BannerCard(
         title: 'AMMUNITION',
+        isAddRecord: true,
+        buttonText: "Add Stock",
+        onTap: (){
+            Get.to(const AddAmmunitionStockView());
+        },
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

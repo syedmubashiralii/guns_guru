@@ -24,10 +24,13 @@ class AddShooterLog extends GetView<ShootingLogController> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (weaponController.ammunitionList.isEmpty) {
-      showAddAmmoDialog(context);
-    }
-  });
+      if (weaponController.ammunitionList.isEmpty) {
+        showAddAmmoDialog(context);
+      }
+      else{
+        controller.ammunitionBrand.value=weaponController.ammunitionList.value.first.ammunitionBrand??"";
+      }
+    });
 
     if (controller.homeController.fromFiringRecordDetail.value == false) {
       controller.dateController = TextEditingController(
@@ -255,36 +258,48 @@ class AddShooterLog extends GetView<ShootingLogController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomDropdownField(
-          label: 'Ammo Brand',
-          selectedValue: controller.ammunitionBrand.value,
-          items: weaponController.ammunitionList
-                  .map((ammo) => ammo.ammunitionBrand ?? "")
-                  .toSet()
-                  .toList() ??
-              [],
+        Obx(
+         () {
+            return CustomDropdownField(
+              label: 'Ammo Brand',
+              selectedValue: controller.ammunitionBrand.value,
+              items: weaponController.ammunitionList
+                      .map((ammo) => ammo.ammunitionBrand ?? "")
+                      .toSet()
+                      .toList() ??
+                  [],
               isMandatory: true,
-          onChanged: (String? value) {
-            controller.ammunitionBrand.value = value ?? "";
-          },
-          
-          isEnabled: !homeController.fromFiringRecordDetail.value,
+              onChanged: (String? value) {
+                controller.ammunitionBrand.value = value ?? "";
+              },
+              isEnabled: !homeController.fromFiringRecordDetail.value,
+            );
+          }
         ),
         10.height,
-        CustomDropdownField(
-          label: 'Type of Round',
-          selectedValue: controller.typeofRound.value,
-          items: weaponController.ammunitionList
-                  .map((ammo) => ammo.typeOfRound ?? "")
-                  .toSet()
-                  .toList() ??
-              [],
+        Obx(
+          () {
+            return CustomDropdownField(
+              label: 'Type of Round',
+              selectedValue: controller.typeofRound.value,
+              items: controller.ammunitionBrand.value.isEmpty
+                  ? weaponController.ammunitionList
+                      .map((ammo) => ammo.typeOfRound ?? "")
+                      .toSet()
+                      .toList()
+                  : weaponController.ammunitionList
+                      .where((ammo) =>
+                          ammo.ammunitionBrand == controller.ammunitionBrand.value)
+                      .map((ammo) => ammo.typeOfRound ?? "")
+                      .toSet()
+                      .toList(),
               isMandatory: true,
-          onChanged: (String? value) {
-            controller.typeofRound.value = value ?? "";
-          },
-          
-          isEnabled: !homeController.fromFiringRecordDetail.value,
+              onChanged: (String? value) {
+                controller.typeofRound.value = value ?? "";
+              },
+              isEnabled: !homeController.fromFiringRecordDetail.value,
+            );
+          }
         ),
 
         10.height,
@@ -418,7 +433,6 @@ class AddShooterLog extends GetView<ShootingLogController> {
               controller.windDirection.value = newDirection;
             }
           },
-          
         ),
         10.height,
         Row(

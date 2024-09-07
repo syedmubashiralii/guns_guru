@@ -401,7 +401,7 @@ class AddUserProfileView extends GetView<HomeController> {
                             labelText: 'Gender',
                             border: OutlineInputBorder(),
                           ),
-                          items: ['MALE', 'FEMALE']
+                          items: ['MALE', 'FEMALE','PREFER NOT TO MENTION']
                               .map((gender) => DropdownMenuItem<String>(
                                     value: gender,
                                     child: Text(gender),

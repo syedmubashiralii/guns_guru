@@ -65,7 +65,7 @@ class ShooterLogbookView extends GetView<ShootingLogController> {
                       },
                       child: BuildFiringRecord(
                         date: record.date ?? "",
-                        time: record.time ?? "",
+                        time: record.fireArmMake ?? "",
                         shotsFired: record.roundsFired ?? "",
                       ),
                     ),
