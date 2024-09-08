@@ -125,6 +125,7 @@ class ConsultancyServiceDetail extends GetView<ConsultancyController> {
                           "Service Name: ${consultancy.name}\n User Record ${homeController.userModel.value.toJson()}");
                 },
                 text: "Avail Service"),
+                10.height,
             const Text(
               'Note:',
               style: TextStyle(
