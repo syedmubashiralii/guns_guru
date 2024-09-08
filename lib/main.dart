@@ -27,11 +27,6 @@ void main() async {
     }
   };
 
-  Get.put(HomeController(), permanent: true);
-  Get.put(WeaponController(), permanent:  true);
-   Get.put(LicenseController(), permanent:  true);
-  Get.put(ShootingLogController());
-  Get.put(ServiceRecordController());
   
   runApp(
     GetMaterialApp(

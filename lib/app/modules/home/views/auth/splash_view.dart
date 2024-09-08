@@ -3,6 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/service_record_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/weapon_controller.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 
 class SplashView extends GetView<HomeController> {
@@ -10,6 +14,11 @@ class SplashView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(HomeController(), permanent: true);
+    Get.put(WeaponController(), permanent: true);
+    Get.put(LicenseController(), permanent: true);
+    Get.put(ShootingLogController());
+    Get.put(ServiceRecordController());
     return Scaffold(
       backgroundColor: ColorHelper.primaryColor,
       body: Center(

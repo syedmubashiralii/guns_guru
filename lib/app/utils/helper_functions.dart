@@ -136,6 +136,18 @@ Future<String> datePicker({DateTime? lastDate}) async {
   }
 }
 
+
+Future<void> redirectToWhatsApp(String phoneNumber, {String message = ''}) async {
+  final String whatsappUrl = "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}";
+
+  if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
+    await launchUrl(Uri.parse(whatsappUrl));
+  } else {
+    throw 'Could not launch $whatsappUrl';
+  }
+}
+
+
 void closeDialog() {
   if (Get.isDialogOpen==true) {
     Get.back();

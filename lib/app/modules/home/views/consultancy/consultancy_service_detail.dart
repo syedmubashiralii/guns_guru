@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/consultancy_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/models/consultancy_model.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
+import 'package:guns_guru/app/utils/helper_functions.dart';
+import 'package:guns_guru/app/utils/widgets/dark_button.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ConsultancyServiceDetail extends GetView<ConsultancyController> {
   const ConsultancyServiceDetail({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    HomeController homeController = Get.find();
     Consultancy consultancy =
         controller.consultancyList[controller.selectedConsultancyIndex.value];
     return Scaffold(
@@ -113,6 +118,13 @@ class ConsultancyServiceDetail extends GetView<ConsultancyController> {
                 ],
               ),
             ),
+            DarkButton(
+                onTap: () {
+                  redirectToWhatsApp("+923105205275",
+                      message:
+                          "Service Name: ${consultancy.name}\n User Record ${homeController.userModel.value.toJson()}");
+                },
+                text: "Avail Service"),
             const Text(
               'Note:',
               style: TextStyle(
@@ -129,7 +141,9 @@ class ConsultancyServiceDetail extends GetView<ConsultancyController> {
             const Text(
               'Payment Methods:',
               style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
             const SizedBox(height: 10),
             const BulletPoint(text: 'Cash'),
