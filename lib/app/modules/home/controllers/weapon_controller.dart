@@ -40,9 +40,9 @@ class WeaponController extends GetxController {
   TextEditingController weaponNumberController = TextEditingController();
   TextEditingController issuingDocumentNoController = TextEditingController();
   Rx<File?> weaponPurchaseReceipt = Rx<File?>(null);
-  RxString weaponCaliber = "9mm".obs;
-  RxString weaponMake = "Glock".obs;
-  RxString weaponModel = "AK-47".obs;
+  RxString weaponCaliber = "".obs;
+  RxString weaponMake = "".obs;
+  RxString weaponModel = "".obs;
   RxBool isPhoneNumberValid = false.obs;
   RxString licenseNumber = ''.obs;
 
@@ -85,14 +85,17 @@ class WeaponController extends GetxController {
     }
   }
 
+  loadAmmos({String? weaponNo}) async {
+    await getAllAmmunition(FirebaseAuth.instance.currentUser?.uid ?? "")
+        .then((value) {
+      ammunitionList.value = value;
+      if (weaponNo != null) {
+        ammunitionList.value =
+            ammunitionList.where((ammo) => ammo.weaponNo == weaponNo).toList();
+      }
+    });
 
-  loadAmmos(){
-     if (ammunitionList.isEmpty) {
-      getAllAmmunition(FirebaseAuth.instance.currentUser?.uid ?? "")
-          .then((value) {
-        ammunitionList.value = value;
-      });
-    }
+    ammunitionList.refresh();
   }
 
   List<String> get filterModelsList {
@@ -109,8 +112,45 @@ class WeaponController extends GetxController {
   }
 
   Future<void> addAmmunition() async {
+    String? userID = FirebaseAuth.instance.currentUser?.uid ?? '';
+    if (userID == null || userID == '') {
+      DefaultSnackbar.show(
+        'Error',
+        'Please reauthenticate and try again',
+      );
+      return;
+    }
     try {
       LicenseController licenseController = Get.find();
+
+      String currentLicenseNumber = AppConstants.isPakistani
+          ? licenseController
+                  .licenseList
+                  .value[licenseController.selectedLicenseIndex.value]
+                  .licenseNumber ??
+              ""
+          : "";
+
+      int totalAmmunitionPurchased =
+          await _getTotalAmmunitionPurchasedForLicense(
+              userID, currentLicenseNumber);
+      License currentLicense = licenseController
+          .licenseList.value[licenseController.selectedLicenseIndex.value];
+      int? licenseAmmunitionLimit =
+          int.tryParse(currentLicense.licenseAmmunitionLimit ?? "0");
+      if (licenseAmmunitionLimit != null &&
+          totalAmmunitionPurchased +
+                  int.parse(quantityPurchasedController.text) >
+              licenseAmmunitionLimit) {
+        int remainingStock = licenseAmmunitionLimit - totalAmmunitionPurchased;
+        closeDialog();
+        DefaultSnackbar.show(
+          'Limit Exceeded',
+          'You have exceeded the ammunition limit for this license. You can only add $remainingStock more rounds.',
+        );
+        return;
+      }
+
       if (ammunitionStockFormKey.currentState!.validate()) {
         Get.dialog(const LoadingDialog());
         AmmunitionDetail ammunitionDetail = AmmunitionDetail(
@@ -137,7 +177,7 @@ class WeaponController extends GetxController {
         );
         CollectionReference ammunitionCollection = _firestore
             .collection('ammunition')
-            .doc(Get.find<HomeController>().userModel.value.uid ?? '')
+            .doc(userID ?? '')
             .collection('userAmmunitions');
         DocumentReference ammunitionDocumentReference =
             await ammunitionCollection.add(ammunitionDetail.toMap());
@@ -162,7 +202,42 @@ class WeaponController extends GetxController {
     }
   }
 
+  Future<int> _getTotalAmmunitionPurchasedForLicense(
+      String userID, String licenseNumber) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('ammunition')
+          .doc(userID)
+          .collection('userAmmunitions')
+          .where('licenseNo', isEqualTo: licenseNumber)
+          .get();
+
+      int totalQuantity = 0;
+      for (var doc in querySnapshot.docs) {
+        AmmunitionDetail ammunitionDetail =
+            AmmunitionDetail.fromJson(doc.data() as Map<String, dynamic>);
+        totalQuantity +=
+            int.parse(ammunitionDetail.ammunitionQuantityPurchased ?? '0') ?? 0;
+      }
+      return totalQuantity;
+    } catch (e) {
+      DefaultSnackbar.show(
+        'Error',
+        'Failed to retrieve ammunition data: $e',
+      );
+      return 0;
+    }
+  }
+
   Future<void> addWeapon() async {
+    String? userID = FirebaseAuth.instance.currentUser?.uid ?? '';
+    if (userID == null || userID == '') {
+      DefaultSnackbar.show(
+        'Error',
+        'Please reauthenticate and try again',
+      );
+      return;
+    }
     try {
       // fillControllersWithDummyData();
       if (weaponFormKey.currentState!.validate()) {
@@ -191,7 +266,7 @@ class WeaponController extends GetxController {
             documentExpiryDate: weaponDocumentExpiryDate.text);
         CollectionReference userWeaponsCollection = _firestore
             .collection('weapons')
-            .doc(Get.find<HomeController>().userModel.value.uid ?? '')
+            .doc(userID)
             .collection('userWeapons');
         DocumentReference weaponDocumentReference =
             await userWeaponsCollection.add(newWeapon.toMap());
@@ -240,6 +315,7 @@ class WeaponController extends GetxController {
         weaponDetails.refresh();
       }
     } catch (e) {
+      print(e.toString());
       DefaultSnackbar.show(
         'Error',
         'Failed to fetch weapon details: $e',
@@ -262,32 +338,46 @@ class WeaponController extends GetxController {
               WeaponDetails.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch weapons: $e',
-          snackPosition: SnackPosition.BOTTOM);
+      DefaultSnackbar.show(
+        'Error',
+        'Failed to fetch weapons: $e',
+      );
       return [];
     }
   }
 
   Future<List<AmmunitionDetail>> getAllAmmunition(String userId) async {
+    Get.dialog(LoadingDialog(), barrierDismissible: false);
     try {
       QuerySnapshot querySnapshot = await _firestore
           .collection('ammunition')
           .doc(userId)
           .collection('userAmmunitions')
           .get();
-
+      closeDialog();
       return querySnapshot.docs
           .map((doc) =>
               AmmunitionDetail.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      // Get.snackbar('Error', 'Failed to fetch ammuition: $e',
-      //     snackPosition: SnackPosition.BOTTOM);
+      closeDialog();
+      DefaultSnackbar.show(
+        'Error',
+        'Failed to fetch ammuition: $e',
+      );
       return [];
     }
   }
 
   Future<void> editWeapon() async {
+    String? userID = FirebaseAuth.instance.currentUser?.uid ?? '';
+    if (userID == null || userID == '') {
+      DefaultSnackbar.show(
+        'Error',
+        'Please reauthenticate and try again',
+      );
+      return;
+    }
     try {
       if (weaponFormKey.currentState!.validate()) {
         Get.dialog(LoadingDialog());
@@ -310,7 +400,7 @@ class WeaponController extends GetxController {
             documentExpiryDate: weaponDocumentExpiryDate.text);
         DocumentReference weaponDoc = _firestore
             .collection('weapons')
-            .doc(Get.find<HomeController>().userModel.value.uid ?? '')
+            .doc(userID ?? '')
             .collection('userWeapons')
             .doc(weaponNumberController.text);
 
@@ -348,33 +438,37 @@ class WeaponController extends GetxController {
       await weaponDoc.delete();
       closeDialog();
       Get.back();
-      Get.snackbar('Success', 'Weapon deleted successfully!',
-          snackPosition: SnackPosition.BOTTOM);
+      DefaultSnackbar.show(
+        'Success',
+        'Weapon deleted successfully!',
+      );
       weaponList.value = await getAllWeapons(_auth.currentUser?.uid ?? "");
       clearAllControllers();
     } catch (e) {
       closeDialog();
-      Get.snackbar('Error', 'Failed to delete weapon: $e',
-          snackPosition: SnackPosition.BOTTOM);
+      DefaultSnackbar.show(
+        'Error',
+        'Failed to delete weapon: $e',
+      );
     }
   }
 
   void fillControllersWithDummyData() {
-    if (kDebugMode) {
-      authorizeDealerName.text = 'John Doe';
-      authorizeDealerAddress.text = '1234 Elm Street';
-      authorizeDealerPhoneNo.text = '3105286323';
-      weaponPurchaseDate.text = '01/09/2024';
-      weaponDocumentIssuingDate.text = '09/01/2024';
-      weaponDocumentExpiryDate.text = '09/01/2025';
-      weaponNumberController.text = '12345';
-      issuingDocumentNoController.text = 'LIC123456';
-      emailController.text = 'test@example.com';
-      weaponType.value = 'PISTOL';
-      weaponMake.value = 'Glock';
-      weaponModel.value = 'AK-47';
-      weaponCaliber.value = '9mm'; // Dummy file path
-    }
+    // if (kDebugMode) {
+    //   authorizeDealerName.text = 'John Doe';
+    //   authorizeDealerAddress.text = '1234 Elm Street';
+    //   authorizeDealerPhoneNo.text = '3105286323';
+    //   weaponPurchaseDate.text = '01/09/2024';
+    //   weaponDocumentIssuingDate.text = '09/01/2024';
+    //   weaponDocumentExpiryDate.text = '09/01/2025';
+    //   weaponNumberController.text = '12345';
+    //   issuingDocumentNoController.text = 'LIC123456';
+    //   emailController.text = 'test@example.com';
+    //   weaponType.value = 'PISTOL';
+    //   weaponMake.value = 'Glock';
+    //   weaponModel.value = 'AK-47';
+    //   weaponCaliber.value = '9mm'; // Dummy file path
+    // }
   }
 
   // Method to clear all controllers
@@ -389,9 +483,9 @@ class WeaponController extends GetxController {
     issuingDocumentNoController.clear();
     emailController.clear();
     weaponType.value = "PISTOL"; // Reset to default value
-    weaponMake.value = "Glock"; // Reset to default value
-    weaponModel.value = "AK-47"; // Reset to default value
-    weaponCaliber.value = "9mm"; // Reset to default value
+    weaponMake.value = ""; // Reset to default value
+    weaponModel.value = ""; // Reset to default value
+    weaponCaliber.value = ""; // Reset to default value
     weaponPurchaseReceipt.value = null; // Clear file selection
     isPhoneNumberValid.value = false; // Reset validation state
   }
@@ -422,9 +516,9 @@ class WeaponController extends GetxController {
       AppConstants.caliberList = List<String>.from(doc['callibers']);
       AppConstants.caliberList
           .sort((a, b) => a.compareTo(b)); // Sorting alphabetically
-      Get.find<LicenseController>().caliber.value = AppConstants.caliber[0];
-      Get.find<WeaponController>().weaponCaliber.value = AppConstants.caliber[0];
-      weaponCaliber.value = AppConstants.caliber[0];
+      // Get.find<LicenseController>().caliber.value = AppConstants.caliber[0];
+      // Get.find<WeaponController>().weaponCaliber.value = AppConstants.caliber[0];
+      // weaponCaliber.value = AppConstants.caliber[0];
 
       AppConstants.make = List<String>.from(doc['makes']);
       AppConstants.make.sort((a, b) => a.compareTo(b));
@@ -439,7 +533,7 @@ class WeaponController extends GetxController {
       AppConstants.shootingRanges = List<String>.from(doc['shootingranges']);
       AppConstants.shootingRanges.sort((a, b) => a.compareTo(b));
 
-      weaponMake.value = AppConstants.make[0];
+      // weaponMake.value = AppConstants.make[0];
       List<dynamic> modelsData = doc['models'];
       AppConstants.model = modelsData.map((item) {
         if (item is Map<String, dynamic>) {
@@ -450,7 +544,7 @@ class WeaponController extends GetxController {
       }).toList();
       AppConstants.model
           .sort((a, b) => a.model.compareTo(b.model)); // Sorting alphabetically
-      weaponModel.value = AppConstants.model[0].model;
+      // weaponModel.value = AppConstants.model[0].model;
     } catch (e) {
       print("errororoororo${e.toString()}");
     } finally {}

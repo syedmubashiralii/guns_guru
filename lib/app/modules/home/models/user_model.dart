@@ -14,6 +14,9 @@ class UserModel {
   String? firstname;
   String? phoneno;
   String? lastname;
+  String? memberShip;
+  String? membershipDate;
+  String? membershipExpiryDate;
   String? countrycode;
   List<License>? license;
   String? uid;
@@ -32,6 +35,9 @@ class UserModel {
       this.firstname,
       this.phoneno,
       this.lastname,
+      this.memberShip,
+      this.membershipDate,
+      this.membershipExpiryDate,
       this.countrycode,
       this.license,
       this.uid});
@@ -50,6 +56,9 @@ class UserModel {
     firstname = json['firstname'];
     phoneno = json['phoneno'];
     lastname = json['lastname'];
+    memberShip= json['memberShip'];
+    membershipDate=json['membershipDate'];
+    membershipExpiryDate=json['membershipExpiryDate'];
     countrycode = json['countrycode'];
     if (json['license'] != null) {
       license = <License>[];
@@ -76,6 +85,9 @@ class UserModel {
     data['phoneno'] = phoneno;
     data['lastname'] = lastname;
     data['countrycode'] = countrycode;
+    data['memberShip'] = memberShip;
+    data['membershipDate'] = membershipDate;
+    data['membershipExpiryDate']=membershipExpiryDate;
     if (license != null) {
       data['license'] = license!.map((v) => v.toJson()).toList();
     }

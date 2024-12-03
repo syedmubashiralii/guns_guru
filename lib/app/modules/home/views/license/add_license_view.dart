@@ -32,8 +32,11 @@ class AddLicenseView extends GetView<LicenseController> {
         AppConstants.typeofRounds.isEmpty) {
       Get.find<WeaponController>().loadUtils();
     }
-    bool pakistani =
-        homeController.userModel.value.countrycode == "PK" ? true : false;
+    AppConstants.isPakistani = homeController.userModel.value.countrycode == "PK" ||
+            homeController.userModel.value.countrycode == "" ||
+            homeController.userModel.value.countrycode == null
+        ? true
+        : false;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -53,7 +56,7 @@ class AddLicenseView extends GetView<LicenseController> {
             children: [
               10.height,
               Visibility(
-                visible: !pakistani,
+                visible: !AppConstants.isPakistani,
                 child: DropdownSearch<String>(
                   popupProps: const PopupProps.menu(
                     showSearchBox:
@@ -96,7 +99,7 @@ class AddLicenseView extends GetView<LicenseController> {
                 ),
               ),
               Visibility(
-                visible: pakistani,
+                visible: AppConstants.isPakistani,
                 child: DropdownSearch<String>(
                   popupProps: const PopupProps.menu(
                     showSearchBox:
@@ -135,8 +138,8 @@ class AddLicenseView extends GetView<LicenseController> {
                   },
                 ),
               ),
-              if (pakistani) 20.height,
-              if (pakistani)
+              if (AppConstants.isPakistani) 20.height,
+              if (AppConstants.isPakistani)
                 TextFormField(
                   controller: controller.trackingNumberController,
                   decoration: const InputDecoration(
@@ -153,8 +156,8 @@ class AddLicenseView extends GetView<LicenseController> {
                     return null;
                   },
                 ),
-              if (pakistani) 20.height,
-              if (pakistani)
+              if (AppConstants.isPakistani) 20.height,
+              if (AppConstants.isPakistani)
                 TextFormField(
                   controller: controller.licenseNumberController,
                   decoration: const InputDecoration(
@@ -171,8 +174,8 @@ class AddLicenseView extends GetView<LicenseController> {
                     return null;
                   },
                 ),
-              if (!pakistani) 20.height,
-              if (!pakistani)
+              if (!AppConstants.isPakistani) 20.height,
+              if (!AppConstants.isPakistani)
                 TextFormField(
                   controller: controller.documentTypeController,
                   decoration: const InputDecoration(
@@ -189,8 +192,8 @@ class AddLicenseView extends GetView<LicenseController> {
                     return null;
                   },
                 ),
-              if (!pakistani) 20.height,
-              if (!pakistani)
+              if (!AppConstants.isPakistani) 20.height,
+              if (!AppConstants.isPakistani)
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Issuing Authority',
@@ -209,8 +212,8 @@ class AddLicenseView extends GetView<LicenseController> {
                     return null;
                   },
                 ),
-              if (pakistani) 20.height,
-              if (pakistani)
+              if (AppConstants.isPakistani) 20.height,
+              if (AppConstants.isPakistani)
                 TextFormField(
                   controller: controller.ammunitionLimitController,
                   decoration: const InputDecoration(
@@ -313,8 +316,8 @@ class AddLicenseView extends GetView<LicenseController> {
                   return null;
                 },
               ),
-              if (pakistani) 20.height,
-              if (pakistani)
+              if (AppConstants.isPakistani) 20.height,
+              if (AppConstants.isPakistani)
                 DropdownSearch<String>(
                   popupProps: const PopupProps.menu(
                     showSearchBox:
@@ -345,8 +348,8 @@ class AddLicenseView extends GetView<LicenseController> {
                     return null;
                   },
                 ),
-              if (pakistani) 20.height,
-              if (pakistani)
+              if (AppConstants.isPakistani) 20.height,
+              if (AppConstants.isPakistani)
                 DropdownSearch<String>(
                   popupProps: const PopupProps.menu(
                     showSearchBox:

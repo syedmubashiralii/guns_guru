@@ -45,6 +45,7 @@ class HomeController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
+  TextEditingController state = TextEditingController();
   RxString selectedCountryCode = "PK".obs;
   RxString selectedGender = "MALE".obs;
   RxString selectedState = "".obs;
@@ -88,19 +89,21 @@ class HomeController extends GetxController {
   }
 
   onLoginSuccesfull() {
+    Get.off(HomeView());
+    return;
     // if (userModel.value.cnicFrontSide != null &&
     //     userModel.value.cnicFrontSide!.isNotEmpty) {
-    if (userModel.value.firstname != null &&
-        userModel.value.firstname!.isNotEmpty) {
-      // if (userModel.value.license != null &&
-      //     userModel.value.license!.isNotEmpty) {
-      Get.off(HomeView());
-      // } else {
-      // Get.off(AddLicenseView());
-      // }
-    } else {
-      Get.off(AddUserProfileView());
-    }
+    // if (userModel.value.firstname != null &&
+    //     userModel.value.firstname!.isNotEmpty) {
+    //   // if (userModel.value.license != null &&
+    //   //     userModel.value.license!.isNotEmpty) {
+    //   Get.off(HomeView());
+    //   // } else {
+    //   // Get.off(AddLicenseView());
+    //   // }
+    // } else {
+    //   Get.off(AddUserProfileView());
+    // }
     // } else {
     //   Get.off(IDCardScreen());
     // }
@@ -161,15 +164,28 @@ class HomeController extends GetxController {
         nonce: nonce,
       );
       final oauthCredential = OAuthProvider("apple.com").credential(
+        accessToken: appleCredential.authorizationCode,
         idToken: appleCredential.identityToken,
         rawNonce: rawNonce,
       );
       UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
       if (kDebugMode) {
         print("apple signed in ${userCredential.user!.uid}");
       }
       User? currentUser = FirebaseAuth.instance.currentUser!;
+      if (userCredential.additionalUserInfo?.isNewUser == true) {
+        // Extract and store the user's full name and email if available.
+        String? firstName = appleCredential.givenName;
+        String? lastName = appleCredential.familyName;
+        String? email = appleCredential.email;
+
+        if (firstName != null && lastName != null) {
+          firstNameController.text = firstName ?? "" + ' ' + lastName ?? "";
+          emailController.text = email ?? "";
+        }
+      }
       await loadUserData(currentUser.uid);
       if (Get.isDialogOpen!) {
         Get.back();
@@ -183,7 +199,7 @@ class HomeController extends GetxController {
         DefaultSnackbar.show('Error', e.toString());
       }
       if (kDebugMode) {
-        print("error in signing with google : $e");
+        print("error in signing with apple : $e");
       }
     }
   }
@@ -198,18 +214,23 @@ class HomeController extends GetxController {
             documentSnapshot.data() as Map<String, dynamic>;
         // userModel = data.obs;
         userModel.value = UserModel.fromJson(data);
+        userModel.refresh();
         print(userModel.toJson().toString());
+        if (userModel.value.uid == null || userModel.value.uid == "") {
+          updateUserSpecificData(documentId, {"uid": documentId});
+        }
       } else {
         // Document does not exist, create it with default values
-        final defaultData = UserModel();
+        final defaultData = UserModel(uid: documentId);
         await firestore
             .collection('users')
             .doc(documentId)
             .set(defaultData.toJson());
+        userModel.value.uid = documentId ?? "";
       }
     } catch (error) {
       print(error.toString());
-      Get.snackbar('Error', 'Failed to load user data');
+      DefaultSnackbar.show('Error', 'Failed to load user data');
     }
   }
 
@@ -221,7 +242,7 @@ class HomeController extends GetxController {
       final downloadUrl = await snapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
-      Get.snackbar('Error', 'Failed to upload image: $e');
+      DefaultSnackbar.show('Error', 'Failed to upload image: $e');
       return '';
     }
   }
@@ -287,6 +308,10 @@ class HomeController extends GetxController {
 
   Future<void> saveForm() async {
     if (formKey.currentState?.validate() ?? false) {
+      if (isPhoneNumberValid.isFalse) {
+        DefaultSnackbar.show("Error", "Please Enter Valid Phone Number");
+        return;
+      }
       formKey.currentState?.save();
       Get.dialog(const LoadingDialog());
       await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
@@ -308,11 +333,13 @@ class HomeController extends GetxController {
             : selectedCountryCode.value == "US"
                 ? "United States"
                 : "",
-        AppConstants.state: selectedState.value
+        AppConstants.state:
+            AppConstants.isPakistani ? state.text : selectedState.value
       });
       await loadUserData(firebaseAuth.currentUser!.uid);
       closeDialog();
-      onLoginSuccesfull();
+      // onLoginSuccesfull();
+      Get.back();
     } else {
       print('Validation failed');
     }
@@ -428,5 +455,123 @@ class HomeController extends GetxController {
     userModel.value = UserModel();
     Get.offAll(SplashView());
     isUserLogged();
+  }
+
+  // Function to delete user account
+  Future<void> deleteUserAccount() async {
+    try {
+      User? currentUser = firebaseAuth.currentUser;
+
+      if (currentUser != null) {
+        Get.dialog(LoadingDialog());
+        String userId = currentUser.uid;
+
+        // Step 1: Delete user data from Firestore
+        // Delete user document if it exists
+        await deleteDocumentIfExists('users', userId);
+
+        // Delete licenses document if it exists
+        await deleteDocumentIfExists('licenses', userId);
+
+        // Delete weapons document if it exists
+        await deleteDocumentIfExists('weapons', userId);
+
+        // Delete servicerecord document if it exists
+        await deleteDocumentIfExists('servicerecord', userId);
+
+        // Delete shooterlogs document if it exists
+        await deleteDocumentIfExists('shooterlogs', userId);
+
+        // Step 2: Re-authenticate the user before deletion (required by Firebase for security)
+        await _reauthenticateUser(currentUser);
+
+        // Step 3: Delete the user from Firebase Authentication
+        await currentUser.delete();
+
+        // Optionally, sign out the user after deletion
+        await signOut();
+        closeDialog();
+        // Success message
+        DefaultSnackbar.show(
+            "Account Deleted", "Your account has been successfully deleted.");
+      } else {
+        closeDialog();
+        DefaultSnackbar.show("Error", "No user is currently signed in.");
+      }
+    } catch (e) {
+      closeDialog();
+      // Handle deletion errors (e.g., user needs to be re-authenticated)
+      DefaultSnackbar.show("Error", "Failed to delete account: $e");
+      print("Error deleting account: $e");
+    }
+  }
+
+  void showDeleteConfirmationDialog(
+      BuildContext context, VoidCallback onConfirm) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete Account'),
+          content: Text(
+              'Are you sure you want to delete your account? This action cannot be undone.'),
+          actions: [
+            // Cancel Button
+            TextButton(
+              onPressed: () {
+                Get.back(); // Closes the dialog
+              },
+              child: Text('Cancel', style: TextStyle(color: Colors.grey)),
+            ),
+
+            // Confirm Button
+            TextButton(
+              onPressed: () {
+                Get.back(); // Close the dialog
+                deleteUserAccount();
+              },
+              child: Text('Delete', style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> deleteDocumentIfExists(String collection, String docId) async {
+    DocumentReference docRef =
+        FirebaseFirestore.instance.collection(collection).doc(docId);
+
+    DocumentSnapshot docSnapshot = await docRef.get();
+
+    if (docSnapshot.exists) {
+      await docRef.delete();
+      print('Deleted $collection document with ID: $docId');
+    } else {
+      print('No $collection document found with ID: $docId');
+    }
+  }
+
+  // Function to re-authenticate the user before account deletion
+  Future<void> _reauthenticateUser(User currentUser) async {
+    try {
+      // Get the current authentication provider (Google, Apple, etc.)
+      List<UserInfo> userProviders = currentUser.providerData;
+      String providerId = userProviders.first.providerId;
+
+      if (providerId == 'google.com') {
+        // Re-authenticate with Google
+        GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        await currentUser.reauthenticateWithProvider(googleProvider);
+      } else if (providerId == 'apple.com') {
+        // Re-authenticate with Apple
+        OAuthProvider appleProvider = OAuthProvider("apple.com");
+        await currentUser.reauthenticateWithProvider(appleProvider);
+      } else {
+        throw Exception('Unknown sign-in provider.');
+      }
+    } catch (e) {
+      throw Exception('Re-authentication failed: $e');
+    }
   }
 }

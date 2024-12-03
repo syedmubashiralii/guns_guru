@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,20 +51,34 @@ class LicenseController extends GetxController {
   }
 
   Future<void> updateLicenseWeaponNo(weaponNo, weaponUid) async {
+    String? userID = FirebaseAuth.instance.currentUser?.uid ?? '';
+    if (userID == null || userID == '') {
+      DefaultSnackbar.show(
+        'Error',
+        'Please reauthenticate and try again',
+      );
+      return;
+    }
     DocumentReference licenseDoc = _firestore
         .collection('licenses')
-        .doc(Get.find<HomeController>().userModel.value.uid ?? '')
+        .doc(userID ?? '')
         .collection('userLicenses')
-        .doc(licenseList.value[selectedLicenseIndex.value].uid);
+        .doc(licenseList[selectedLicenseIndex.value].uid);
 
     await licenseDoc.update({"weaponNo": weaponNo, "weaponUid": weaponUid});
     licenseList.value = await getAllLicenses(
-        Get.find<HomeController>().userModel.value.uid ?? "");
+        userID ?? "");
     licenseList.refresh();
   }
 
   Future<void> addLicense() async {
+    String? userId = FirebaseAuth.instance.currentUser?.uid ?? "";
+    if (userId == null || userId == "") {
+      DefaultSnackbar.show('Error', "Please reauthenticate and then try again");
+      return;
+    }
     try {
+      print("enter");
       // fillControllersWithDummyData();
       if (licenseFormKey.currentState!.validate()) {
         if (licensePictures.isEmpty) {
@@ -97,7 +112,7 @@ class LicenseController extends GetxController {
 
         CollectionReference userLicensesCollection = _firestore
             .collection('licenses')
-            .doc(Get.find<HomeController>().userModel.value.uid ?? '')
+            .doc(userId ?? '')
             .collection('userLicenses');
         DocumentReference licenseDocRef =
             await userLicensesCollection.add(newLicense.toMap());
@@ -110,10 +125,11 @@ class LicenseController extends GetxController {
         );
         clearAllControllers();
 
-        licenseList.value = await getAllLicenses(
-            Get.find<HomeController>().userModel.value.uid ?? "");
+        licenseList.value = await getAllLicenses(userId ?? "");
+        licenseList.refresh();
       }
     } catch (e) {
+      print("error in add license${e.toString()}");
       closeDialog();
       DefaultSnackbar.show(
         'Error',
@@ -122,8 +138,12 @@ class LicenseController extends GetxController {
     }
   }
 
-  Future<List<License>> getAllLicenses(String userId) async {
+  Future<List<License>> getAllLicenses(String? userId) async {
+    if (userId == null || userId == '') {
+      return [];
+    }
     try {
+      print('uid ${userId}');
       QuerySnapshot querySnapshot = await _firestore
           .collection('licenses')
           .doc(userId)
@@ -134,8 +154,11 @@ class LicenseController extends GetxController {
           .map((doc) => License.fromJson(doc.data() as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      Get.snackbar('Error', 'Failed to fetch licenses: $e',
-          snackPosition: SnackPosition.BOTTOM);
+      print(e.toString());
+      DefaultSnackbar.show(
+        'Error',
+        'Failed to fetch licenses: $e',
+      );
       return [];
     }
   }
@@ -161,8 +184,10 @@ class LicenseController extends GetxController {
         License updatedLicense = License(
             uid: uid,
             licenseTrackingNumber: trackingNumberController.text,
-            weaponNo: licenseList.value[selectedLicenseIndex.value].weaponNo??"",
-            weaponUid: licenseList.value[selectedLicenseIndex.value].weaponUid??"",
+            weaponNo:
+                licenseList.value[selectedLicenseIndex.value].weaponNo ?? "",
+            weaponUid:
+                licenseList.value[selectedLicenseIndex.value].weaponUid ?? "",
             licenseNumber: licenseNumberController.text,
             documenttype: documentTypeController.text,
             licenseAmmunitionLimit: ammunitionLimitController.text,
@@ -195,6 +220,7 @@ class LicenseController extends GetxController {
         clearAllControllers();
       }
     } catch (e) {
+      print("error in edit license ${e.toString()}");
       closeDialog();
       DefaultSnackbar.show(
         'Error',
@@ -218,14 +244,18 @@ class LicenseController extends GetxController {
       await licenseDoc.delete();
       closeDialog();
       Get.back();
-      Get.snackbar('Success', 'License deleted successfully!',
-          snackPosition: SnackPosition.BOTTOM);
+      DefaultSnackbar.show(
+        'Success',
+        'License deleted successfully!',
+      );
       licenseList.value = await getAllLicenses(userId);
       clearAllControllers();
     } catch (e) {
       closeDialog();
-      Get.snackbar('Error', 'Failed to delete license: $e',
-          snackPosition: SnackPosition.BOTTOM);
+      DefaultSnackbar.show(
+        'Error',
+        'Failed to delete license: $e',
+      );
     }
   }
 
@@ -281,7 +311,7 @@ class LicenseController extends GetxController {
 
   Future<void> addLicensePicture() async {
     if (licensePictures.length >= 3) {
-      Get.snackbar('Error', 'You can only add up to 3 pictures.');
+      DefaultSnackbar.show('Error', 'You can only add up to 3 pictures.');
       return;
     }
 

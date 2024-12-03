@@ -43,10 +43,11 @@ class WeaponListView extends GetView<WeaponController> {
           if (weaponController.weaponList.isEmpty) {
             return Center(
                 child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                const Text('No weapons found'),
+                Center(child: const Text('No weapons found')),
                 10.height,
                 DarkButton(
                   onTap: () {
@@ -62,15 +63,17 @@ class WeaponListView extends GetView<WeaponController> {
           return ListView(
             children: [
               15.height,
-              _buildWeaponList(weaponController.weaponList),
-              30.height,
-              DarkButton(
+               DarkButton(
                 onTap: () {
                   controller.clearAllControllers();
                   Get.to(AddWeaponView());
                 },
                 text: "Add Weapon",
               ),
+                  30.height,
+              _buildWeaponList(weaponController.weaponList),
+          
+             
             ],
           );
         }),

@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/weapon_controller.dart';
 import 'package:guns_guru/app/modules/home/models/user_model.dart';
+import 'package:guns_guru/app/modules/home/views/home/home_view.dart';
+import 'package:guns_guru/app/modules/home/views/shooter_logbook/shooter_logbook_view.dart';
 import 'package:guns_guru/app/modules/home/views/weapon/add_ammunition_stock_view.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
+import 'package:guns_guru/app/utils/default_snackbar.dart';
+import 'package:guns_guru/app/utils/dialogs/membership_dialog.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/widgets/banner_card.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
@@ -200,7 +204,44 @@ class WeaponDetailScreen extends GetView<WeaponController> {
               ),
             ),
             10.height,
-            AmmunitionStockWidget()
+            AmmunitionStockWidget(),
+            10.height,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                DarkButton(
+                  buttonColor: Colors.black.withOpacity(.7),
+                  fontSize: 16,
+                  onTap: () {
+                    Get.offAll(HomeView());
+                  },
+                  text: 'Go To Home',
+                ),
+                const SizedBox(width: 10),
+                DarkButton(
+                  buttonColor: Colors.black.withOpacity(.7),
+                  fontSize: 16,
+                  onTap: () {
+                    if (controller.homeController.userModel.value.memberShip ==
+                            null ||
+                        controller.homeController.userModel.value.memberShip ==
+                            '') {
+                      DefaultSnackbar.show(
+                          "Error", "Please Select MemberShip first");
+                      showMembershipDialog(context);
+                      return;
+                    }
+                    if (controller.weaponList.isEmpty) {
+                      DefaultSnackbar.show("Error",
+                          "Please add weapon then you can use this feature");
+                      return;
+                    }
+                    Get.to(ShooterLogbookView());
+                  },
+                  text: 'Go to Shooters Log',
+                )
+              ],
+            )
           ],
         ),
       ),
@@ -208,15 +249,17 @@ class WeaponDetailScreen extends GetView<WeaponController> {
   }
 }
 
-
-
 class AmmunitionStockWidget extends StatelessWidget {
   final WeaponController weaponController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final ammunitionList = weaponController.ammunitionList.where((ammunition) => ammunition.weaponUid == weaponController.weaponDetails?.value?.uid).toList();
+      final ammunitionList = weaponController.ammunitionList
+          .where((ammunition) =>
+              ammunition.weaponUid ==
+              weaponController.weaponDetails?.value?.uid)
+          .toList();
 
       // final ammunitionList = weaponController.ammunitionList.value;
 
@@ -224,13 +267,12 @@ class AmmunitionStockWidget extends StatelessWidget {
         title: 'AMMUNITION',
         isAddRecord: true,
         buttonText: "Add Stock",
-        onTap: (){
-            Get.to(const AddAmmunitionStockView());
+        onTap: () {
+          Get.to(const AddAmmunitionStockView());
         },
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -318,67 +360,68 @@ class AmmunitionStockWidget extends StatelessWidget {
                   // ),
                   const SizedBox(height: 10),
                   ...ammunitionList.map((record) => Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  record.ammunitionBrand ?? "",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      record.ammunitionBrand ?? "",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const CustomLabelText(text: 'Brand'),
+                                  ],
                                 ),
-                                const CustomLabelText(text: 'Brand'),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  record.ammunitionQuantityPurchased ?? "",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      record.ammunitionQuantityPurchased ?? "",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const CustomLabelText(text: 'Stock'),
+                                  ],
                                 ),
-                                const CustomLabelText(text: 'Stock'),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  record.ammunitionPurchaseDate ?? "",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      record.ammunitionPurchaseDate ?? "",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const CustomLabelText(
+                                        text: 'Purchase Date'),
+                                  ],
                                 ),
-                                const CustomLabelText(text: 'Purchase Date'),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
+                          const SizedBox(height: 5),
+                          const Divider(),
+                          const SizedBox(height: 5),
                         ],
-                      ),
-                      const SizedBox(height: 5),
-                      const Divider(),
-                      const SizedBox(height: 5),
-                    ],
-                  )),
+                      )),
                 ] else ...[
-                   const Text(
+                  const Text(
                     "No ammunition record available.",
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
@@ -389,14 +432,13 @@ class AmmunitionStockWidget extends StatelessWidget {
                 ],
                 const SizedBox(height: 10),
                 DarkButton(
-                        buttonColor: Colors.black.withOpacity(.7),
-                        fontSize: 16,
-                        onTap: () {
-                          Get.to(const AddAmmunitionStockView());
-                        },
-                        text: 'Add Stock',
-                      )
-                    
+                  buttonColor: Colors.black.withOpacity(.7),
+                  fontSize: 16,
+                  onTap: () {
+                    Get.to(const AddAmmunitionStockView());
+                  },
+                  text: 'Add Stock',
+                )
               ],
             ),
           ],

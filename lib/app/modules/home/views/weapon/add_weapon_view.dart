@@ -33,9 +33,11 @@ class AddWeaponView extends GetView<WeaponController> {
         AppConstants.typeofRounds.isEmpty) {
       Get.find<WeaponController>().loadUtils();
     }
-    bool pakistani =
-        homeController.userModel.value.countrycode == "PK" ? true : false;
-        
+    AppConstants.isPakistani = homeController.userModel.value.countrycode == "PK" ||
+        homeController.userModel.value.countrycode == "" ||
+        homeController.userModel.value.countrycode == null
+        ? true
+        : false;
 
     controller.filteredModels.value = controller.filterModelsList;
     return Scaffold(

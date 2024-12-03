@@ -183,12 +183,12 @@ class AddWeaponServiceRecord extends GetView<ServiceRecordController> {
                                 TextFormField(
                                   controller: controller.armorNameController,
                                   decoration: const InputDecoration(
-                                    labelText: 'Armor Name',
+                                    labelText: 'Armorer Name',
                                     border: OutlineInputBorder(),
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter armor name';
+                                      return 'Please enter armorer name';
                                     }
                                     return null;
                                   },
@@ -197,12 +197,12 @@ class AddWeaponServiceRecord extends GetView<ServiceRecordController> {
                                 TextFormField(
                                   controller: controller.armorAddressController,
                                   decoration: const InputDecoration(
-                                    labelText: 'Armor Address',
+                                    labelText: 'Armorer Address',
                                     border: OutlineInputBorder(),
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter armor address';
+                                      return 'Please enter armorer address';
                                     }
                                     return null;
                                   },

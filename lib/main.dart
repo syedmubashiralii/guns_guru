@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
-import 'package:guns_guru/app/modules/home/controllers/home_extension_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/license_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/service_record_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/shooting_log_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/weapon_controller.dart';
 import 'package:guns_guru/app/routes/app_pages.dart';
 import 'package:guns_guru/firebase_options.dart';
+import 'package:upgrader/upgrader.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,30 +27,38 @@ void main() async {
     }
   };
 
+    Get.put(HomeController(), permanent: true);
+    Get.put(WeaponController(), permanent: true);
+    Get.put(LicenseController(), permanent: true);
+    Get.put(ShootingLogController());
+    Get.put(ServiceRecordController());
+
   
   runApp(
-    GetMaterialApp(
-        theme: ThemeData(
-          colorScheme: const ColorScheme.light(primary: Colors.black),
-          buttonTheme:
-              const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-          brightness: Brightness.light,
-          textTheme: GoogleFonts.poppinsTextTheme(),
-        ),
-        defaultTransition: Transition.cupertino,
-        builder: (BuildContext context, Widget? child) {
-          final MediaQueryData data = MediaQuery.of(context);
-          return MediaQuery(
-            data: data.copyWith(
-              textScaler:
-                  TextScaler.linear(data.textScaleFactor > 1.1 ? 1.1 : 1.0),
-            ),
-            child: child!,
-          );
-        },
-        debugShowCheckedModeBanner: false,
-        title: "Guns Guru",
-        initialRoute: AppPages.INITIAL,
-        getPages: AppPages.routes),
+    UpgradeAlert(
+      child: GetMaterialApp(
+          theme: ThemeData(
+            colorScheme: const ColorScheme.light(primary: Colors.black),
+            buttonTheme:
+                const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+            brightness: Brightness.light,
+            textTheme: GoogleFonts.poppinsTextTheme(),
+          ),
+          defaultTransition: Transition.cupertino,
+          builder: (BuildContext context, Widget? child) {
+            final MediaQueryData data = MediaQuery.of(context);
+            return MediaQuery(
+              data: data.copyWith(
+                textScaler:
+                    TextScaler.linear(data.textScaleFactor > 1.1 ? 1.1 : 1.0),
+              ),
+              child: child!,
+            );
+          },
+          debugShowCheckedModeBanner: false,
+          title: "Guns Guru",
+          initialRoute: AppPages.INITIAL,
+          getPages: AppPages.routes),
+    ),
   );
 }

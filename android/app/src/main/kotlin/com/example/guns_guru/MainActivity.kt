@@ -1,4 +1,4 @@
-package com.example.guns_guru
+package com.oef.gunsguru
 
 import io.flutter.embedding.android.FlutterActivity
 

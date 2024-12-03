@@ -19,8 +19,8 @@ class ServiceRecordController extends GetxController {
   final serviceNotesController = TextEditingController();
   TextEditingController retailerPhoneNo = TextEditingController();
   RxList servicePartsChangedList = [].obs;
-  RxBool isBasicService = false.obs;
-  RxBool isSelfService = false.obs;
+  var isBasicService  = true.obs;
+  var isSelfService = true.obs;
   TextEditingController armorNameController = TextEditingController();
   TextEditingController armorAddressController = TextEditingController();
   TextEditingController armorPhoneNoController = TextEditingController();
@@ -57,9 +57,9 @@ class ServiceRecordController extends GetxController {
             serviceDate: serviceDateController.text,
             partsChanged: servicePartsChangedList.value,
             serviceType:
-                isBasicService.isTrue ? "Basic Service" : "Deatiled Service",
+                isBasicService.value==true ? "Basic Service" : "Deatiled Service",
             selfOrArmorService:
-                isSelfService.isTrue ? "Self Service" : "Armor Service",
+                isSelfService.value==true ? "Self Service" : "Armor Service",
             armorName: armorNameController.text,
             armorAddress: armorAddressController.text,
             armorphoneno: armorPhoneNoController.text,

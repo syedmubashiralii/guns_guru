@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>340919836801-m81ckhptojdnjirfs47p9qjn3g8961g8.apps.googleusercontent.com</string>
+	<string>340919836801-p5pupm73kgbmcusq026t2b1tt8ntn26t.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.340919836801-m81ckhptojdnjirfs47p9qjn3g8961g8</string>
+	<string>com.googleusercontent.apps.340919836801-p5pupm73kgbmcusq026t2b1tt8ntn26t</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>340919836801-tmqagurvv0pemi2d4rip0uth7ugl16l1.apps.googleusercontent.com</string>
+	<string>340919836801-15g9mq3u964jqaerjtdm74pgg5d6osbd.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBma4Pku_pKcd4wMLQM22U0KOO78Clo8k4</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.gunsGuru</string>
+	<string>com.khastech.gunsguru</string>
 	<key>PROJECT_ID</key>
 	<string>guns-guru</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:340919836801:ios:bcae28999305eec1682d80</string>
+	<string>1:340919836801:ios:01f33c92c8a0a217682d80</string>
 </dict>
 </plist>

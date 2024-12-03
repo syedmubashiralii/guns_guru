@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAemr949re4chKKzUKfz3yG6Hod9_mOBKQ',
-    appId: '1:340919836801:android:7fdcb0f880d92188682d80',
+    appId: '1:340919836801:android:437e7c8c239b6fb9682d80',
     messagingSenderId: '340919836801',
     projectId: 'guns-guru',
     storageBucket: 'guns-guru.appspot.com',
@@ -59,12 +59,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBma4Pku_pKcd4wMLQM22U0KOO78Clo8k4',
-    appId: '1:340919836801:ios:bcae28999305eec1682d80',
+    appId: '1:340919836801:ios:01f33c92c8a0a217682d80',
     messagingSenderId: '340919836801',
     projectId: 'guns-guru',
     storageBucket: 'guns-guru.appspot.com',
-    androidClientId: '340919836801-tmqagurvv0pemi2d4rip0uth7ugl16l1.apps.googleusercontent.com',
-    iosClientId: '340919836801-m81ckhptojdnjirfs47p9qjn3g8961g8.apps.googleusercontent.com',
-    iosBundleId: 'com.example.gunsGuru',
+    androidClientId: '340919836801-15g9mq3u964jqaerjtdm74pgg5d6osbd.apps.googleusercontent.com',
+    iosClientId: '340919836801-p5pupm73kgbmcusq026t2b1tt8ntn26t.apps.googleusercontent.com',
+    iosBundleId: 'com.khastech.gunsguru',
   );
 }

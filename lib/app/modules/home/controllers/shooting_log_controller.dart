@@ -140,7 +140,7 @@ class ShootingLogController extends GetxController {
         'weaponuid': weaponuid.value,
         'licenseno': '',
         'licenseuid': '',
-        'typeofround':typeofRound.value
+        'typeofround': typeofRound.value
         // AppConstants.licenseno: licensenoController.text,
         // AppConstants.licenseuid: licenseuidController.text,
       };
@@ -192,90 +192,81 @@ class ShootingLogController extends GetxController {
     } else {
       DefaultSnackbar.show("Error", "Please fill all mandatory fields");
       // If validation fails, find the first invalid field and scroll to it
-     checkAndScroll();
-
+      checkAndScroll();
     }
   }
 
-  checkAndScroll(){
- if (weaponNo.value.isEmpty) {
-        scrollController.animateTo(
-          scrollController.position.minScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      } else if (ammunitionBrand.value.isEmpty) {
-        scrollController.animateTo(
-          scrollController.position.minScrollExtent +
-              300, // Adjust scroll offset as needed
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-      else if (humidityController.text.isEmpty) {
-        scrollController.animateTo(
-          scrollController.position.minScrollExtent +
-              1800, // Adjust scroll offset as needed
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-       else if (terrain.value.isEmpty) {
-        scrollController.animateTo(
-          scrollController.position.minScrollExtent +
-              2100, // Adjust scroll offset as needed
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-       else if (brightness.value.isEmpty) {
-        scrollController.animateTo(
-          scrollController.position.minScrollExtent +
-              2200, // Adjust scroll offset as needed
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-      else if (shootingDistanceController.text.isEmpty) {
-        scrollController.animateTo(
-          scrollController.position.minScrollExtent +
-              2300, // Adjust scroll offset as needed
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-        else if (targetType.value.isEmpty) {
-        scrollController.animateTo(
-          scrollController.position.minScrollExtent +
-              2400, // Adjust scroll offset as needed
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-       else if (shootingPosition.value.isEmpty) {
-        scrollController.animateTo(
-          scrollController.position.minScrollExtent +
-              2500, // Adjust scroll offset as needed
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-      else if (roundsFiredController.text.isEmpty) {
-        scrollController.animateTo(
-          scrollController.position.minScrollExtent +
-              2600, // Adjust scroll offset as needed
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-      else if (accuracyGroupingController.text.isEmpty) {
-        scrollController.animateTo(
-          scrollController.position.minScrollExtent +
-              2900, // Adjust scroll offset as needed
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
+  checkAndScroll() {
+    if (weaponNo.value.isEmpty) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (ammunitionBrand.value.isEmpty) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent +
+            300, // Adjust scroll offset as needed
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (humidityController.text.isEmpty) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent +
+            1800, // Adjust scroll offset as needed
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (terrain.value.isEmpty) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent +
+            2100, // Adjust scroll offset as needed
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (brightness.value.isEmpty) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent +
+            2200, // Adjust scroll offset as needed
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (shootingDistanceController.text.isEmpty) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent +
+            2300, // Adjust scroll offset as needed
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (targetType.value.isEmpty) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent +
+            2400, // Adjust scroll offset as needed
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (shootingPosition.value.isEmpty) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent +
+            2500, // Adjust scroll offset as needed
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (roundsFiredController.text.isEmpty) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent +
+            2600, // Adjust scroll offset as needed
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else if (accuracyGroupingController.text.isEmpty) {
+      scrollController.animateTo(
+        scrollController.position.minScrollExtent +
+            2900, // Adjust scroll offset as needed
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   addLogWithLicense() {
@@ -294,21 +285,23 @@ class ShootingLogController extends GetxController {
   RxList<WeaponFiringRecord> shooterLogList = <WeaponFiringRecord>[].obs;
 
   Future<void> getShooterLogs() async {
-    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    if (FirebaseAuth.instance.currentUser != null) {
+      String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
 
-    QuerySnapshot querySnapshot = await _firestore
-        .collection('shooterlogs')
-        .doc(userId)
-        .collection('userShooterlog')
-        .get();
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('shooterlogs')
+          .doc(userId)
+          .collection('userShooterlog')
+          .get();
 
-    var records = querySnapshot.docs
-        .map((doc) =>
-            WeaponFiringRecord.fromJson(doc.data() as Map<String, dynamic>))
-        .toList();
+      var records = querySnapshot.docs
+          .map((doc) =>
+              WeaponFiringRecord.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
 
-    shooterLogList.assignAll(records);
-    shooterLogList.refresh();
+      shooterLogList.assignAll(records);
+      shooterLogList.refresh();
+    }
   }
 
   void populateFieldsForEditing(WeaponFiringRecord record) {

@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/consultancy_controller.dart';
+import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
+import 'package:guns_guru/app/modules/home/views/auth/add_user_profile_view.dart';
 import 'package:guns_guru/app/modules/home/views/consultancy/consultancy_service_detail.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
+import 'package:guns_guru/app/utils/dialogs/complete_profile_dialog.dart';
 
 class ConsultancyView extends StatelessWidget {
   ConsultancyView({super.key});
 
   final ConsultancyController controller = Get.put(ConsultancyController());
+  final HomeController homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-       appBar: AppBar(
-          backgroundColor: ColorHelper.primaryColor,
-          foregroundColor: Colors.white,
-          centerTitle: true,
-          title: Image.asset(
-            "assets/images/guns-guru.png",
-            height: 40,
-          ),
+      appBar: AppBar(
+        backgroundColor: ColorHelper.primaryColor,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+        title: Image.asset(
+          "assets/images/guns-guru.png",
+          height: 40,
         ),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: _buildConsultancySection(controller),
@@ -29,8 +32,7 @@ class ConsultancyView extends StatelessWidget {
     );
   }
 
-  Widget _buildConsultancySection(
-      ConsultancyController consultancyController) {
+  Widget _buildConsultancySection(ConsultancyController consultancyController) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -71,14 +73,23 @@ class ConsultancyView extends StatelessWidget {
                 child: ListTile(
                   contentPadding: EdgeInsets.zero,
                   leading: Text('${index + 1}.'),
-                  title: Text(consultancyController.consultancyList[index].name),
-                  subtitle: Text(consultancyController
-                      .consultancyList[index].description),
+                  title:
+                      Text(consultancyController.consultancyList[index].name),
+                  subtitle: Text(
+                      consultancyController.consultancyList[index].description),
                   trailing: IconButton(
                     onPressed: () {
-                      consultancyController.selectedConsultancyIndex.value =
-                          index;
-                      Get.to(const ConsultancyServiceDetail());
+                      print(homeController.userModel.value.toJson().toString());
+                      // if (homeController.userModel.value.firstname == null ||
+                      //     homeController.userModel.value.firstname=='') {
+                      //   showUserDetailsDialog(context, () {
+                      //     Get.to(() => AddUserProfileView());
+                      //   });
+                      // } else {
+                        consultancyController.selectedConsultancyIndex.value =
+                            index;
+                        Get.to(const ConsultancyServiceDetail());
+                      // }
                     },
                     icon: const Icon(Icons.arrow_forward),
                   ),

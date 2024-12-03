@@ -31,7 +31,7 @@ class WeaponDetailWidget extends StatelessWidget {
     final WeaponController weaponController = Get.find();
     print("uid${license.weaponUid}");
     // Fetch weapon details when this widget is built
-    if (license.weaponUid != null) {
+    if (license.weaponUid != null&&license.weaponUid!="") {
       log("enter");
       weaponController.fetchWeaponDetailsById(license.weaponUid ?? "");
     } else {

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
@@ -21,7 +22,7 @@ class LicenseListView extends GetView<LicenseController> {
   Widget build(BuildContext context) {
     if (controller.licenseList.isEmpty) {
       controller
-          .getAllLicenses(Get.find<HomeController>().userModel.value.uid ?? "")
+          .getAllLicenses(FirebaseAuth.instance.currentUser?.uid ?? "")
           .then((value) {
         controller.licenseList.value = value;
       });

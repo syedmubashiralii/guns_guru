@@ -30,7 +30,7 @@ Future<String?> pickImage(ImagePicker picker, String source) async {
     } else {
       final deviceInfo = await DeviceInfoPlugin().androidInfo;
       galleryPermission = deviceInfo.version.sdkInt > 32
-          ? await Permission.photos.request().isGranted
+          ? await true
           : await Permission.storage.request().isGranted;
     }
     if (galleryPermission == true) {
@@ -143,7 +143,8 @@ Future<void> redirectToWhatsApp(String phoneNumber, {String message = ''}) async
   if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
     await launchUrl(Uri.parse(whatsappUrl));
   } else {
-    throw 'Could not launch $whatsappUrl';
+    DefaultSnackbar.show("Error", "Can't Launch Whatsapp, Contact this no to avail service ${phoneNumber}");
+    // throw 'Could not launch $whatsappUrl';
   }
 }
 
@@ -241,7 +242,7 @@ Future<File> urlToFile(String imageUrl) async {
   // Get the temporary directory
   final Directory tempDir = await getTemporaryDirectory();
   // Create a file path for the image
-  final String filePath = '${tempDir.path}/temp_image.png';
+  final String filePath = '${tempDir.path}/${DateTime.now().microsecondsSinceEpoch}.png';
   // Download the image
   final http.Response response = await http.get(Uri.parse(imageUrl));
   // Save the image as a file
@@ -260,7 +261,7 @@ Future<String> uploadImage(File image) async {
       final downloadUrl = await snapshot.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
-      Get.snackbar('Error', 'Failed to upload image: $e');
+      DefaultSnackbar.show('Error', 'Failed to upload image: $e');
       return '';
     }
   }

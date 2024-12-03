@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:guns_guru/app/modules/home/controllers/consultancy_controller.dart';
 import 'package:guns_guru/app/modules/home/controllers/home_controller.dart';
 import 'package:guns_guru/app/modules/home/models/consultancy_model.dart';
+import 'package:guns_guru/app/modules/home/views/auth/add_user_profile_view.dart';
 import 'package:guns_guru/app/utils/app_colors.dart';
+import 'package:guns_guru/app/utils/dialogs/complete_profile_dialog.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
@@ -36,26 +38,30 @@ class ConsultancyServiceDetail extends GetView<ConsultancyController> {
               ),
             ),
             const SizedBox(height: 10),
-            const BulletPoint(text: 'Be a Pakistani citizen.'),
-            const BulletPoint(text: 'Be at least 25 years old.'),
             const BulletPoint(
-              text: 'Have a valid CNIC (both temporary and permanent '
-                  'addresses be of Sindh).',
-            ),
+                text: 'Be a Pakistani citizen, with a valid CNIC. '),
             const BulletPoint(
-              text: 'Not be considered unsuitable by the local police.',
-            ),
+                text:
+                    'Be at least 25 years old (or as approved by your local authorities).'),
             const BulletPoint(
-              text: 'Not be a proscribed person or member of a proscribed '
-                  'organization.',
+              text:
+                  'Not be considered unsuitable by the local police, any law enforcement authority or by the court.',
             ),
             const BulletPoint(
               text:
-                  'Not be suspected of involvement in any anti-state activity.',
+                  'Not be a proscribed person or member of a proscribed organization. ',
             ),
             const BulletPoint(
-              text: 'Not be physically, mentally, or psychologically infirm '
-                  'to carry a weapon.',
+              text:
+                  'Not be suspected of involvement in any anti-state activity, or held guilty for murder, dacoity, robbery, theft, moral turpitude, cruelty/violence, or any other offence prescribed in this regard by the Home Department or any local or federal law enforcement agency from time to time.',
+            ),
+            const BulletPoint(
+              text:
+                  '• Not be physically, mentally, or psychologically infirm to carry a weapon.',
+            ),
+            const BulletPoint(
+              text:
+                  'Note: Subject to change from time to time by the authorities.',
             ),
             Text(
               consultancy.description,
@@ -120,12 +126,21 @@ class ConsultancyServiceDetail extends GetView<ConsultancyController> {
             ),
             DarkButton(
                 onTap: () {
-                  redirectToWhatsApp("+923105205275",
-                      message:
-                          "Service Name: ${consultancy.name}\n User Record ${homeController.userModel.value.toJson()}");
+                  if (homeController.userModel.value.phoneno == null ||
+                      homeController.userModel.value.phoneno == '') {
+                    showUserDetailsDialog(context, () {
+                      Get.to(() => AddUserProfileView(
+                            isReadOnly: false,
+                          ));
+                    });
+                  } else {
+                    redirectToWhatsApp("+923316662709",
+                        message:
+                            "Service Name: ${consultancy.name}\n User Record ${homeController.userModel.value.toJson()}");
+                  }
                 },
                 text: "Avail Service"),
-                10.height,
+            20.height,
             const Text(
               'Note:',
               style: TextStyle(
@@ -134,23 +149,25 @@ class ConsultancyServiceDetail extends GetView<ConsultancyController> {
             const SizedBox(height: 10),
             const BulletPoint(
                 text:
-                    'Please note that if your application is rejected by the authorities due any reason including misrepresentation, incomplete information, and or falsification, it constitutes a crime, and you will NOT be eligible for any refund.'),
+                    "Please be advised that if your application or request is rejected by the regulatory authorities for any reason—including, but not limited to, misrepresentation, incomplete information, or falsification—it will be considered a criminal offense, and you will not be eligible for any refund."
+                    "GunsGuru is not liable for any delays caused by the regulators or issuing authorities. In such cases, refunds will not be provided."
+                    ),
             const BulletPoint(
                 text:
-                    'We reserve the sole right to accept or decline any request at our discretion. '),
+                    'We reserve the sole right to accept or decline any request at our discretion.'),
             10.height,
-            const Text(
-              'Payment Methods:',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
+            const Text('Payment Methods:',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black)),
             const SizedBox(height: 10),
-            const BulletPoint(text: 'Cash'),
-            const BulletPoint(text: 'Easypaisa'),
-            const BulletPoint(text: 'Bank Transfer'),
-            30.height,
+            const BulletPoint(text: 'Bank to Bank (All Local Banks)'),
+            const BulletPoint(text: 'Debit Cards (All Local Banks)'),
+            const BulletPoint(text: 'Credit Cards (Local and International)'),
+            const BulletPoint(text: 'Raast (State Bank of Pakistan)'),
+            const BulletPoint(text: 'Wallets (JazzCash, EasyPaisa, Omni, NayaPay, SadaPay, HBL Connect, Zindagi)'),
+            30.height
           ],
         ),
       ),

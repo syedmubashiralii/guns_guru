@@ -181,15 +181,19 @@ class AddShooterLog extends GetView<ShootingLogController> {
                   .map((weapon) => weapon.weaponNo ?? "")
                   .toList() ??
               [],
-          onChanged: (String? value) {
+          onChanged: (String? value) async {
             controller.weaponNo.value = value ?? "";
             final selectedWeapon = weaponController.weaponList.value.firstWhere(
                 (weapon) => weapon.weaponNo == value,
                 orElse: () => WeaponDetails());
+
             controller.fireArmMake.value = selectedWeapon.weaponMake ?? "";
             controller.fireArmModel.value = selectedWeapon.weaponModel ?? "";
             controller.caliber.value = selectedWeapon.weaponCaliber ?? "";
             controller.weaponuid.value = selectedWeapon.uid ?? "";
+            controller.typeofRound.value='';
+            await weaponController.loadAmmos(weaponNo:controller.weaponNo.value);
+            controller.ammunitionBrand.value=weaponController.ammunitionList.value.first.ammunitionBrand??"";
           },
           isMandatory: true,
           isEnabled: !homeController.fromFiringRecordDetail.value,
@@ -216,7 +220,7 @@ class AddShooterLog extends GetView<ShootingLogController> {
             onChanged: (String? value) {
               controller.fireArmModel.value = value ?? "";
             },
-            isMandatory: true,
+            isMandatory: false,
             isEnabled: false ?? !homeController.fromFiringRecordDetail.value,
           );
         }),
@@ -351,6 +355,7 @@ class AddShooterLog extends GetView<ShootingLogController> {
             items: AppConstants.shootingRanges,
             onChanged: (String? value) {
               controller.shootingRange.value = value ?? "";
+          
             },
             isMandatory: false,
           ),
@@ -358,43 +363,47 @@ class AddShooterLog extends GetView<ShootingLogController> {
           const Padding(
             padding: EdgeInsets.only(top: 5),
             child: Text(
-                "Note: If you don't see your shooting range in the list or if you are shooting at a different location, please add the location by turning on your GPS. Click the button below to fetch your location."),
+                "Note: If you don't see your shooting range in the list or if you are shooting at a different location, then Select Other Option, please add the location by turning on your GPS. Click the button below to fetch your location."),
           ),
         if (AppConstants.isPakistani) 10.height,
-        CustomTextField(
-          label: 'Range Location (GPS)',
-          controller: controller.rangeNameLocationController,
-          isMandatory: true,
-          isEnabled: homeController.fromFiringRecordDetail.value,
-          suffix:
-              controller.homeController.fromFiringRecordDetail.value == false
-                  ? DarkButton(
-                      onTap: () async {
-                        controller.rangeNameLocationController.text =
-                            await controller.getCurrentLocation();
-                      },
-                      text: "Fetch Location")
-                  : const SizedBox(),
-          validator: (value) {
-            if (AppConstants.isPakistani) {
-              return null;
-            }
-            if (value == null || value.isEmpty) {
-              return 'Range Location is required';
-            }
-
-            // // Regular expression for GPS coordinates validation
-            // final regex = RegExp(
-            //   r'^(-?([1-8]?\d(\.\d+)?|90(\.0+)?))\s*,\s*(-?(1[0-7]\d(\.\d+)?|180(\.0+)?))$',
-            //   caseSensitive: false,
-            //   multiLine: false,
-            // );
-
-            // if (!regex.hasMatch(value)) {
-            //   return 'Enter a valid GPS location in the format XX.XXXX,YY.YYYY';
-            // }
-            return null;
-          },
+        Obx(
+          () {
+            return controller.shootingRange.value=='Other'||AppConstants.isPakistani==false? CustomTextField(
+              label: 'Range Location (GPS)',
+              controller: controller.rangeNameLocationController,
+              isMandatory: true,
+              isEnabled: homeController.fromFiringRecordDetail.value,
+              suffix:
+                  controller.homeController.fromFiringRecordDetail.value == false
+                      ? DarkButton(
+                          onTap: () async {
+                            controller.rangeNameLocationController.text =
+                                await controller.getCurrentLocation();
+                          },
+                          text: "Fetch Location")
+                      : const SizedBox(),
+              validator: (value) {
+                if (AppConstants.isPakistani&&controller.shootingRange.value!='Other') {
+                  return null;
+                }
+                if (value == null || value.isEmpty) {
+                  return 'Range Location is required';
+                }
+            
+                // // Regular expression for GPS coordinates validation
+                // final regex = RegExp(
+                //   r'^(-?([1-8]?\d(\.\d+)?|90(\.0+)?))\s*,\s*(-?(1[0-7]\d(\.\d+)?|180(\.0+)?))$',
+                //   caseSensitive: false,
+                //   multiLine: false,
+                // );
+            
+                // if (!regex.hasMatch(value)) {
+                //   return 'Enter a valid GPS location in the format XX.XXXX,YY.YYYY';
+                // }
+                return null;
+              },
+            ):SizedBox();
+          }
         ),
         10.height,
         CustomTextField(
@@ -468,20 +477,20 @@ class AddShooterLog extends GetView<ShootingLogController> {
           label: 'Humidity',
           controller: controller.humidityController,
           suffix: const Text("%"),
-          isMandatory: true,
+          isMandatory: false,
           inputType: TextInputType.number,
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter humidity';
-            }
-            final humidity = double.tryParse(value);
-            if (humidity == null) {
-              return 'Please enter a valid number';
-            }
-            if (humidity < 0 || humidity > 100) {
-              return 'Humidity must be between 0 and 100%';
-            }
-            return null; // Input is valid
+            // if (value == null || value.isEmpty) {
+            //   return 'Please enter humidity';
+            // }
+            // final humidity = double.tryParse(value);
+            // if (humidity == null) {
+            //   return 'Please enter a valid number';
+            // }
+            // if (humidity < 0 || humidity > 100) {
+            //   return 'Humidity must be between 0 and 100%';
+            // }
+            // return null; // Input is valid
           },
         ),
         10.height,
@@ -489,20 +498,21 @@ class AddShooterLog extends GetView<ShootingLogController> {
           isEnabled: homeController.fromFiringRecordDetail.value,
           label: 'Altitude (from sea level)',
           controller: controller.altitudeController,
+          
           suffix: const Text('ft'),
           inputType: TextInputType.number,
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return null;
-            }
-            final altitude = double.tryParse(value);
-            if (altitude == null) {
-              return 'Please enter a valid number';
-            }
-            if (altitude < 0) {
-              return 'Altitude cannot be negative';
-            }
-            return null;
+            // if (value == null || value.isEmpty) {
+            //   return null;
+            // }
+            // final altitude = double.tryParse(value);
+            // if (altitude == null) {
+            //   return 'Please enter a valid number';
+            // }
+            // if (altitude < 0) {
+            //   return 'Altitude cannot be negative';
+            // }
+            // return null;
           },
         ),
         10.height,
@@ -514,7 +524,7 @@ class AddShooterLog extends GetView<ShootingLogController> {
           onChanged: (String? value) {
             controller.terrain.value = value ?? "";
           },
-          isMandatory: true,
+          isMandatory: false,
         ),
         10.height,
         CustomDropdownField(
@@ -525,7 +535,7 @@ class AddShooterLog extends GetView<ShootingLogController> {
           onChanged: (String? value) {
             controller.brightness.value = value ?? "";
           },
-          isMandatory: true,
+          isMandatory: false,
         ),
         10.height,
         Row(
@@ -534,7 +544,7 @@ class AddShooterLog extends GetView<ShootingLogController> {
               child: Obx(() {
                 return CustomTextField(
                   isEnabled: homeController.fromFiringRecordDetail.value,
-                  label: 'Shooting Distance (yds/mtrs) *',
+                  label: 'Shooting Distance (yds/mtrs) ',
                   controller: controller.shootingDistanceController,
                   isMandatory: true,
                   validator: (value) {
@@ -576,7 +586,7 @@ class AddShooterLog extends GetView<ShootingLogController> {
           onChanged: (String? value) {
             controller.targetType.value = value ?? "";
           },
-          isMandatory: true,
+          isMandatory: false,
         ),
         10.height,
         CustomDropdownField(
@@ -587,7 +597,7 @@ class AddShooterLog extends GetView<ShootingLogController> {
           onChanged: (String? value) {
             controller.shootingPosition.value = value ?? "";
           },
-          isMandatory: true,
+          isMandatory: false,
         ),
       ],
     );
@@ -633,13 +643,14 @@ class AddShooterLog extends GetView<ShootingLogController> {
           isEnabled: homeController.fromFiringRecordDetail.value,
           label: 'Accuracy/Grouping',
           controller: controller.accuracyGroupingController,
-          isMandatory: true,
+          isMandatory: false,
         ),
         10.height,
         CustomOptionalField(
           isEnabled: homeController.fromFiringRecordDetail.value,
           label: 'Sight Adjustment',
           controller: controller.sightAdjustmentController,
+          
         ),
         10.height,
         CustomOptionalField(

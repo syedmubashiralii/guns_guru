@@ -24,7 +24,7 @@ class RenewalButtonWidget extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
+              const Icon(
                 Icons.warning,
                 color: Colors.red,
               ),
@@ -33,12 +33,12 @@ class RenewalButtonWidget extends StatelessWidget {
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Your License renewal is coming soon.",
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                   ),
                   5.height,
-                  Text(
+                  const Text(
                     "Please get your license renewed to avoid any inconvenience",
                     style:
                         TextStyle(fontSize: 13, fontWeight: FontWeight.normal),
@@ -49,7 +49,9 @@ class RenewalButtonWidget extends StatelessWidget {
                     buttonColor: Colors.black.withOpacity(.7),
                     onTap: () {
                       // Get.dialog(LoadingDialog());
-                      sendSMS('+1-555-010-999', 'Hello, this is a test message!');
+                      redirectToWhatsApp("+923316662709",
+                    message:
+                        "I want my License to be renewed");
                     },
                     text: "Renew my License",
                   ),

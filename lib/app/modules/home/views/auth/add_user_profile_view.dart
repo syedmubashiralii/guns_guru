@@ -14,6 +14,8 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../controllers/home_controller.dart';
 
 class AddUserProfileView extends GetView<HomeController> {
+  AddUserProfileView({required this.isReadOnly});
+  bool isReadOnly;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,19 +45,20 @@ class AddUserProfileView extends GetView<HomeController> {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                readOnly: isReadOnly,
                                 controller: controller.firstNameController,
                                 decoration: const InputDecoration(
                                   labelText: 'First Name',
                                   border: OutlineInputBorder(),
                                 ),
                                 validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'First Name is required';
-                                  }
-                                  if (value.length > 25) {
-                                    return 'First Name cannot be longer than 25 characters';
-                                  }
-                                  return null;
+                                  // if (value == null || value.isEmpty) {
+                                  //   return 'First Name is required';
+                                  // }
+                                  // if (value.length > 25) {
+                                  //   return 'First Name cannot be longer than 25 characters';
+                                  // }
+                                  // return null;
                                 },
                                 inputFormatters: [
                                   UpperCaseTextFormatter(),
@@ -65,19 +68,20 @@ class AddUserProfileView extends GetView<HomeController> {
                             const SizedBox(width: 10.0), // Space between fields
                             Expanded(
                               child: TextFormField(
+                                readOnly: isReadOnly,
                                 controller: controller.lastNameController,
                                 decoration: const InputDecoration(
                                   labelText: 'Last Name',
                                   border: OutlineInputBorder(),
                                 ),
                                 validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Last Name is required';
-                                  }
-                                  if (value.length > 25) {
-                                    return 'Last Name cannot be longer than 25 characters';
-                                  }
-                                  return null;
+                                  // if (value == null || value.isEmpty) {
+                                  //   return 'Last Name is required';
+                                  // }
+                                  // if (value.length > 25) {
+                                  //   return 'Last Name cannot be longer than 25 characters';
+                                  // }
+                                  // return null;
                                 },
                                 inputFormatters: [
                                   UpperCaseTextFormatter(),
@@ -89,9 +93,11 @@ class AddUserProfileView extends GetView<HomeController> {
                         const SizedBox(height: 20),
                         Obx(() {
                           return IntlPhoneField(
+                            readOnly: isReadOnly,
                             initialCountryCode:
                                 controller.selectedCountryCode.value,
-                                initialValue: controller.phoneNoTextEditingController.text,
+                            initialValue:
+                                controller.phoneNoTextEditingController.text,
                             invalidNumberMessage:
                                 "Phone number is not valid".tr,
                             decoration: InputDecoration(
@@ -123,6 +129,7 @@ class AddUserProfileView extends GetView<HomeController> {
                         }),
                         20.height,
                         TextFormField(
+                          readOnly: isReadOnly,
                           controller: controller.emailController,
                           decoration: const InputDecoration(
                             labelText: 'Email',
@@ -131,21 +138,22 @@ class AddUserProfileView extends GetView<HomeController> {
                           ),
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Email is required';
-                            }
-                            RegExp emailRegex = RegExp(
-                              r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                            );
-                            if (!emailRegex.hasMatch(value)) {
-                              return 'Please enter a valid email address';
-                            }
-                            return null;
+                            // if (value == null || value.isEmpty) {
+                            //   return 'Email is required';
+                            // }
+                            // RegExp emailRegex = RegExp(
+                            //   r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                            // );
+                            // if (!emailRegex.hasMatch(value)) {
+                            //   return 'Please enter a valid email address';
+                            // }
+                            // return null;
                           },
                         ),
                         const SizedBox(height: 20),
                         Obx(() {
                           return TextFormField(
+                            readOnly: isReadOnly,
                             controller: controller.cnicController,
                             decoration: InputDecoration(
                                 labelText:
@@ -171,20 +179,20 @@ class AddUserProfileView extends GetView<HomeController> {
                                         )
                                       ],
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return controller.selectedCountryCode.value ==
-                                        "PK"
-                                    ? 'CNIC NO is required'
-                                    : 'DL/PAL/License no is required';
-                              }
-                              if (!RegExp(r'^\d{5}-\d{7}-\d{1}$')
-                                      .hasMatch(value) &&
-                                  controller.selectedCountryCode.value ==
-                                      "PK") {
-                                return 'CNIC must be in the format 11111-1111111-1';
-                              }
+                              // if (value == null || value.isEmpty) {
+                              //   return controller.selectedCountryCode.value ==
+                              //           "PK"
+                              //       ? 'CNIC NO is required'
+                              //       : 'DL/PAL/License no is required';
+                              // }
+                              // if (!RegExp(r'^\d{5}-\d{7}-\d{1}$')
+                              //         .hasMatch(value) &&
+                              //     controller.selectedCountryCode.value ==
+                              //         "PK") {
+                              //   return 'CNIC must be in the format 11111-1111111-1';
+                              // }
 
-                              return null;
+                              // return null;
                             },
                           );
                         }),
@@ -200,20 +208,23 @@ class AddUserProfileView extends GetView<HomeController> {
                               suffixIcon: Icon(Icons.date_range),
                               hintText: 'DD/MM/YYYY',
                             ),
-                            onTap: () async {
-                              controller.documentIssuanceDate.text =
-                                  await datePicker(lastDate: DateTime.now());
-                            },
+                            onTap: isReadOnly
+                                ? () {}
+                                : () async {
+                                    controller.documentIssuanceDate.text =
+                                        await datePicker(
+                                            lastDate: DateTime.now());
+                                  },
                             keyboardType: TextInputType.datetime,
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Document issuing date is required';
-                              }
-                              RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                              if (!dateRegex.hasMatch(value)) {
-                                return 'Please enter a valid date format: DD/MM/YYYY';
-                              }
-                              return null;
+                              // if (value == null || value.isEmpty) {
+                              //   return 'Document issuing date is required';
+                              // }
+                              // RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                              // if (!dateRegex.hasMatch(value)) {
+                              //   return 'Please enter a valid date format: DD/MM/YYYY';
+                              // }
+                              // return null;
                             },
                           ),
                         if (controller.selectedCountryCode.value != "PK")
@@ -228,20 +239,22 @@ class AddUserProfileView extends GetView<HomeController> {
                               suffixIcon: Icon(Icons.date_range),
                               hintText: 'DD/MM/YYYY',
                             ),
-                            onTap: () async {
-                              controller.documentExpiryDate.text =
-                                  await datePicker();
-                            },
+                            onTap: isReadOnly
+                                ? () {}
+                                : () async {
+                                    controller.documentExpiryDate.text =
+                                        await datePicker();
+                                  },
                             keyboardType: TextInputType.datetime,
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Document expiry date is required';
-                              }
-                              RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                              if (!dateRegex.hasMatch(value)) {
-                                return 'Please enter a valid date format: DD/MM/YYYY';
-                              }
-                              return null;
+                              // if (value == null || value.isEmpty) {
+                              //   return 'Document expiry date is required';
+                              // }
+                              // RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                              // if (!dateRegex.hasMatch(value)) {
+                              //   return 'Please enter a valid date format: DD/MM/YYYY';
+                              // }
+                              // return null;
                             },
                           ),
                         const SizedBox(height: 20),
@@ -253,35 +266,38 @@ class AddUserProfileView extends GetView<HomeController> {
                                 hintText: 'DD/MM/YYYY'),
                             keyboardType: TextInputType.datetime,
                             readOnly: true,
-                            onTap: () async {
-                              DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime(1990, 1, 1),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime.now(),
-                              );
-                              if (pickedDate != null) {
-                                controller.dobController.text =
-                                    "${pickedDate.day < 10 ? '0${pickedDate.day}' : pickedDate.day}/${pickedDate.month < 10 ? '0${pickedDate.month}' : pickedDate.month}/${pickedDate.year}";
-                              }
-                            },
+                            onTap: isReadOnly
+                                ? () {}
+                                : () async {
+                                    DateTime? pickedDate = await showDatePicker(
+                                      context: context,
+                                      initialDate: DateTime(1990, 1, 1),
+                                      firstDate: DateTime(1900),
+                                      lastDate: DateTime.now(),
+                                    );
+                                    if (pickedDate != null) {
+                                      controller.dobController.text =
+                                          "${pickedDate.day < 10 ? '0${pickedDate.day}' : pickedDate.day}/${pickedDate.month < 10 ? '0${pickedDate.month}' : pickedDate.month}/${pickedDate.year}";
+                                    }
+                                  },
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Date of Birth is required';
-                              }
-                              RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
-                              if (!dateRegex.hasMatch(value)) {
-                                return 'Please enter a valid date format: DD/MM/YYYY';
-                              }
-                              List<String> parts = value.split('/');
-                              if (parts.length != 3 ||
-                                  parts.any((part) => !isNumeric(part))) {
-                                return 'Date must be in numeric format: DD/MM/YYYY';
-                              }
-                              return null;
+                              // if (value == null || value.isEmpty) {
+                              //   return 'Date of Birth is required';
+                              // }
+                              // RegExp dateRegex = RegExp(r'^\d{2}/\d{2}/\d{4}$');
+                              // if (!dateRegex.hasMatch(value)) {
+                              //   return 'Please enter a valid date format: DD/MM/YYYY';
+                              // }
+                              // List<String> parts = value.split('/');
+                              // if (parts.length != 3 ||
+                              //     parts.any((part) => !isNumeric(part))) {
+                              //   return 'Date must be in numeric format: DD/MM/YYYY';
+                              // }
+                              // return null;
                             }),
                         const SizedBox(height: 20),
                         TextFormField(
+                          readOnly: isReadOnly,
                           controller: controller.addressController,
                           decoration: const InputDecoration(
                             labelText: 'Address',
@@ -291,18 +307,18 @@ class AddUserProfileView extends GetView<HomeController> {
                             UpperCaseTextFormatter(),
                           ],
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Address is required';
-                            }
-                            if (value.length > 100) {
-                              return 'Address cannot be longer than 100 characters';
-                            }
-                            return null;
+                            // if (value == null || value.isEmpty) {
+                            //   return 'Address is required';
+                            // }
+                            // if (value.length > 100) {
+                            //   return 'Address cannot be longer than 100 characters';
+                            // }
+                            // return null;
                           },
                         ),
-                       
                         const SizedBox(height: 20),
                         TextFormField(
+                          readOnly: isReadOnly,
                           controller: controller.cityController,
                           decoration: const InputDecoration(
                             labelText: 'City',
@@ -312,16 +328,16 @@ class AddUserProfileView extends GetView<HomeController> {
                             UpperCaseTextFormatter(),
                           ],
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'City is required';
-                            }
-                            if (value.length > 50) {
-                              return 'City cannot be longer than 50 characters';
-                            }
-                            return null;
+                            // if (value == null || value.isEmpty) {
+                            //   return 'City is required';
+                            // }
+                            // if (value.length > 50) {
+                            //   return 'City cannot be longer than 50 characters';
+                            // }
+                            // return null;
                           },
                         ),
-                         if (controller.selectedCountryCode.value == "CA" ||
+                        if (controller.selectedCountryCode.value == "CA" ||
                             controller.selectedCountryCode.value == "US")
                           20.height,
                         if (controller.selectedCountryCode.value == "CA" ||
@@ -362,14 +378,17 @@ class AddUserProfileView extends GetView<HomeController> {
                                 ),
                               ),
                               selectedItem: controller.selectedState.value,
-                              onChanged: (newValue) {
-                                controller.selectedState.value = newValue!;
-                              },
+                              onChanged: isReadOnly
+                                  ? (_) {}
+                                  : (newValue) {
+                                      controller.selectedState.value =
+                                          newValue!;
+                                    },
                               validator: (value) {
-                                if (value == null) {
-                                  return 'State/Province is required';
-                                }
-                                return null;
+                                // if (value == null) {
+                                //   return 'State/Province is required';
+                                // }
+                                // return null;
                               },
                             );
                           }),
@@ -394,6 +413,29 @@ class AddUserProfileView extends GetView<HomeController> {
                               UpperCaseTextFormatter(),
                             ],
                           ),
+                        if (controller.selectedCountryCode.value != "PK")
+                          const SizedBox(height: 20),
+                        if (controller.selectedCountryCode.value != "PK")
+                          TextFormField(
+                            readOnly: isReadOnly,
+                            controller: controller.state,
+                            decoration: const InputDecoration(
+                              labelText: 'State/Province',
+                              border: OutlineInputBorder(),
+                            ),
+                            inputFormatters: [
+                              UpperCaseTextFormatter(),
+                            ],
+                            validator: (value) {
+                              // if (value == null || value.isEmpty) {
+                              //   return 'City is required';
+                              // }
+                              // if (value.length > 50) {
+                              //   return 'City cannot be longer than 50 characters';
+                              // }
+                              // return null;
+                            },
+                          ),
                         20.height,
                         DropdownButtonFormField<String>(
                           value: controller.selectedGender.value,
@@ -401,20 +443,22 @@ class AddUserProfileView extends GetView<HomeController> {
                             labelText: 'Gender',
                             border: OutlineInputBorder(),
                           ),
-                          items: ['MALE', 'FEMALE','PREFER NOT TO MENTION']
+                          items: ['MALE', 'FEMALE', 'PREFER NOT TO MENTION']
                               .map((gender) => DropdownMenuItem<String>(
                                     value: gender,
                                     child: Text(gender),
                                   ))
                               .toList(),
-                          onChanged: (value) {
-                            controller.selectedGender.value = value!;
-                          },
+                          onChanged: isReadOnly
+                              ? (_) {}
+                              : (value) {
+                                  controller.selectedGender.value = value!;
+                                },
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please select a gender';
-                            }
-                            return null;
+                            // if (value == null || value.isEmpty) {
+                            //   return 'Please select a gender';
+                            // }
+                            // return null;
                           },
                         ),
                       ],
@@ -422,13 +466,14 @@ class AddUserProfileView extends GetView<HomeController> {
                   ),
                 ),
                 10.height,
-                SizedBox(
-                  width: Get.width,
-                  child: DarkButton(
-                    onTap: controller.saveForm,
-                    text: "Submit",
+                if (!isReadOnly)
+                  SizedBox(
+                    width: Get.width,
+                    child: DarkButton(
+                      onTap: controller.saveForm,
+                      text: "Submit",
+                    ),
                   ),
-                ),
                 20.height,
               ],
             ),
