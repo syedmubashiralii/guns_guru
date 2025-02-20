@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,7 @@ class AddUserProfileView extends GetView<HomeController> {
   bool isReadOnly;
   @override
   Widget build(BuildContext context) {
+    controller.emailController.text=FirebaseAuth.instance.currentUser?.email??'';
     return Scaffold(
       appBar: AppBar(
           backgroundColor: ColorHelper.primaryColor,

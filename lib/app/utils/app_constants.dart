@@ -227,6 +227,15 @@ class AppConstants {
     "Unsupported Standing"
   ];
 
+
+ static String getCountryName(String countryCode) {
+    return ALL_COUNTRIES_ALPHA_2.entries
+        .firstWhere(
+          (entry) => entry.value == countryCode, 
+          orElse: () => const MapEntry("", "")
+        )
+        .key;
+  }
   static const Map<String, String> ALL_COUNTRIES_ALPHA_2 = {
     "Afghanistan": "AF",
     "Albania": "AL",
@@ -371,7 +380,7 @@ class AppConstants {
     "Northern Mariana Islands": "MP",
     "Norway": "NO",
     "Oman": "OM",
-    // "Pakistan": "PK",
+    "Pakistan": "PK",
     "Palau": "PW",
     "Palestinian Territory": "PS",
     "Panama": "PA",

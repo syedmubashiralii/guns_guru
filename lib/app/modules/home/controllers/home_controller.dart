@@ -23,6 +23,7 @@ import 'package:guns_guru/app/utils/dialogs/loading_dialog.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/source_selection_dialog.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class HomeController extends GetxController {
@@ -252,6 +253,7 @@ class HomeController extends GetxController {
     try {
       CollectionReference users =
           FirebaseFirestore.instance.collection('users');
+          print(newData.toString());
       await users.doc(userId).update(newData);
     } catch (e) {
       print('Error updating user data: $e');
@@ -313,6 +315,7 @@ class HomeController extends GetxController {
         return;
       }
       formKey.currentState?.save();
+      print("counntry ${selectedCountryCode.value} ${AppConstants.getCountryName(selectedCountryCode.value)}");
       Get.dialog(const LoadingDialog());
       await updateUserSpecificData(firebaseAuth.currentUser!.uid, {
         AppConstants.FirstName: firstNameController.text,
@@ -332,7 +335,7 @@ class HomeController extends GetxController {
             ? "Canada"
             : selectedCountryCode.value == "US"
                 ? "United States"
-                : "",
+                : AppConstants.getCountryName(selectedCountryCode.value),
         AppConstants.state:
             AppConstants.isPakistani ? state.text : selectedState.value
       });
@@ -574,4 +577,15 @@ class HomeController extends GetxController {
       throw Exception('Re-authentication failed: $e');
     }
   }
+
+
+  String formatDate(String? date) {
+  if (date == null || date.isEmpty) return '';
+  try {
+    final parsedDate = DateTime.parse(date); // Parse date from string (format: YYYY-MM-DD)
+    return DateFormat('dd MMM yyyy').format(parsedDate); // Format date
+  } catch (e) {
+    return date; // Return original date if parsing fails
+  }
+}
 }

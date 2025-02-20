@@ -225,12 +225,33 @@ class WeaponDetailScreen extends GetView<WeaponController> {
                     if (controller.homeController.userModel.value.memberShip ==
                             null ||
                         controller.homeController.userModel.value.memberShip ==
-                            '') {
-                      DefaultSnackbar.show(
-                          "Error", "Please Select MemberShip first");
-                      showMembershipDialog(context);
+                            '' ||
+                        (controller.homeController.userModel.value
+                                    .membershipExpiryDate !=
+                                null &&
+                            DateTime.parse(controller.homeController.userModel
+                                        .value.membershipExpiryDate ??
+                                    "")
+                                .isBefore(DateTime.now()))) {
+                      // Check if the membership has expired
+                      if (controller.homeController.userModel.value
+                                  .membershipExpiryDate !=
+                              null &&
+                          DateTime.parse(controller.homeController.userModel
+                                      .value.membershipExpiryDate ??
+                                  "")
+                              .isBefore(DateTime.now())) {
+                        DefaultSnackbar.show("Membership Expired",
+                            "Your membership has expired. Please renew it.");
+                      } else {
+                        DefaultSnackbar.show(
+                            "Error", "Please Select Membership first");
+                      }
+
+                      Get.to(MembershipPage());
                       return;
                     }
+
                     if (controller.weaponList.isEmpty) {
                       DefaultSnackbar.show("Error",
                           "Please add weapon then you can use this feature");

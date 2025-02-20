@@ -111,11 +111,10 @@ class HomeView extends GetView<HomeController> {
                                 TextSpan(
                                   text: "Complete Profile",
                                   style: const TextStyle(
-                                    color: ColorHelper.rustyOrange,
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                    height: 1.5
-                                  ),
+                                      color: ColorHelper.rustyOrange,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      height: 1.5),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Get.to(() => AddUserProfileView(
@@ -167,12 +166,30 @@ class HomeView extends GetView<HomeController> {
                       return;
                     }
                     if (controller.userModel.value.memberShip == null ||
-                        controller.userModel.value.memberShip == '') {
-                      DefaultSnackbar.show(
-                          "Error", "Please Select MemberShip first");
-                      showMembershipDialog(context);
+                        controller.userModel.value.memberShip == '' ||
+                        (controller.userModel.value.membershipExpiryDate !=
+                                null &&
+                            DateTime.parse(controller
+                                        .userModel.value.membershipExpiryDate ??
+                                    "")
+                                .isBefore(DateTime.now()))) {
+                      if (controller.userModel.value.membershipExpiryDate !=
+                              null &&
+                          DateTime.parse(controller
+                                      .userModel.value.membershipExpiryDate ??
+                                  "")
+                              .isBefore(DateTime.now())) {
+                        DefaultSnackbar.show("Membership Expired",
+                            "Your membership has expired. Please renew it.");
+                      } else {
+                        DefaultSnackbar.show(
+                            "Error", "Please Select Membership first");
+                      }
+
+                      Get.to(MembershipPage());
                       return;
                     }
+
                     if (weaponController.weaponList.isEmpty) {
                       DefaultSnackbar.show("Error",
                           "Please add weapon then you can use this feature");
@@ -195,12 +212,31 @@ class HomeView extends GetView<HomeController> {
                       return;
                     }
                     if (controller.userModel.value.memberShip == null ||
-                        controller.userModel.value.memberShip == '') {
-                      DefaultSnackbar.show(
-                          "Error", "Please Select MemberShip first");
-                      showMembershipDialog(context);
+                        controller.userModel.value.memberShip == '' ||
+                        (controller.userModel.value.membershipExpiryDate !=
+                                null &&
+                            DateTime.parse(controller
+                                        .userModel.value.membershipExpiryDate ??
+                                    "")
+                                .isBefore(DateTime.now()))) {
+                      // Check if the membership has expired
+                      if (controller.userModel.value.membershipExpiryDate !=
+                              null &&
+                          DateTime.parse(controller
+                                      .userModel.value.membershipExpiryDate ??
+                                  "")
+                              .isBefore(DateTime.now())) {
+                        DefaultSnackbar.show("Membership Expired",
+                            "Your membership has expired. Please renew it.");
+                      } else {
+                        DefaultSnackbar.show(
+                            "Error", "Please Select Membership first");
+                      }
+
+                      Get.to(MembershipPage());
                       return;
                     }
+
                     if (weaponController.weaponList.isEmpty) {
                       DefaultSnackbar.show("Error",
                           "Please add weapon then you can use this feature");

@@ -130,25 +130,27 @@ class WeaponController extends GetxController {
                   .licenseNumber ??
               ""
           : "";
-
-      int totalAmmunitionPurchased =
-          await _getTotalAmmunitionPurchasedForLicense(
-              userID, currentLicenseNumber);
-      License currentLicense = licenseController
-          .licenseList.value[licenseController.selectedLicenseIndex.value];
-      int? licenseAmmunitionLimit =
-          int.tryParse(currentLicense.licenseAmmunitionLimit ?? "0");
-      if (licenseAmmunitionLimit != null &&
-          totalAmmunitionPurchased +
-                  int.parse(quantityPurchasedController.text) >
-              licenseAmmunitionLimit) {
-        int remainingStock = licenseAmmunitionLimit - totalAmmunitionPurchased;
-        closeDialog();
-        DefaultSnackbar.show(
-          'Limit Exceeded',
-          'You have exceeded the ammunition limit for this license. You can only add $remainingStock more rounds.',
-        );
-        return;
+      if (AppConstants.isPakistani) {
+        int totalAmmunitionPurchased =
+            await _getTotalAmmunitionPurchasedForLicense(
+                userID, currentLicenseNumber);
+        License currentLicense = licenseController
+            .licenseList.value[licenseController.selectedLicenseIndex.value];
+        int? licenseAmmunitionLimit =
+            int.tryParse(currentLicense.licenseAmmunitionLimit ?? "0");
+        if (licenseAmmunitionLimit != null &&
+            totalAmmunitionPurchased +
+                    int.parse(quantityPurchasedController.text) >
+                licenseAmmunitionLimit) {
+          int remainingStock =
+              licenseAmmunitionLimit - totalAmmunitionPurchased;
+          closeDialog();
+          DefaultSnackbar.show(
+            'Limit Exceeded',
+            'You have exceeded the ammunition limit for this license. You can only add $remainingStock more rounds.',
+          );
+          return;
+        }
       }
 
       if (ammunitionStockFormKey.currentState!.validate()) {

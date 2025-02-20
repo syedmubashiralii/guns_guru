@@ -9,6 +9,7 @@ import 'package:guns_guru/app/utils/dialogs/complete_profile_dialog.dart';
 import 'package:guns_guru/app/utils/extensions.dart';
 import 'package:guns_guru/app/utils/helper_functions.dart';
 import 'package:guns_guru/app/utils/widgets/dark_button.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class ConsultancyServiceDetail extends GetView<ConsultancyController> {
@@ -134,9 +135,31 @@ class ConsultancyServiceDetail extends GetView<ConsultancyController> {
                           ));
                     });
                   } else {
-                    redirectToWhatsApp("+923316662709",
-                        message:
-                            "Service Name: ${consultancy.name}\n User Record ${homeController.userModel.value.toJson()}");
+                    final userData = homeController.userModel.value.toJson();
+                    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+
+                    final nonNullDetails = userData.entries
+                        .where((entry) =>
+                                entry.value != null &&
+                                entry.value.toString().isNotEmpty &&
+                                entry.key != 'uid' 
+                            )
+                        .map((entry) {
+                      String formattedValue;
+                      try {
+                        final date = DateTime.parse(entry.value.toString());
+                        formattedValue = formatter.format(date);
+                      } catch (e) {
+                        formattedValue = entry.value
+                            .toString();
+                      }
+                      return '${entry.key}: $formattedValue';
+                    }).join('\n');
+
+                    final message =
+                        'Service Name: ${consultancy.name}\nUser Record:\n$nonNullDetails';
+                    print(message.toString());
+                    redirectToWhatsApp("+923316662709", message: message);
                   }
                 },
                 text: "Avail Service"),
@@ -150,8 +173,7 @@ class ConsultancyServiceDetail extends GetView<ConsultancyController> {
             const BulletPoint(
                 text:
                     "Please be advised that if your application or request is rejected by the regulatory authorities for any reason—including, but not limited to, misrepresentation, incomplete information, or falsification—it will be considered a criminal offense, and you will not be eligible for any refund."
-                    "GunsGuru is not liable for any delays caused by the regulators or issuing authorities. In such cases, refunds will not be provided."
-                    ),
+                    "GunsGuru is not liable for any delays caused by the regulators or issuing authorities. In such cases, refunds will not be provided."),
             const BulletPoint(
                 text:
                     'We reserve the sole right to accept or decline any request at our discretion.'),
@@ -166,7 +188,9 @@ class ConsultancyServiceDetail extends GetView<ConsultancyController> {
             const BulletPoint(text: 'Debit Cards (All Local Banks)'),
             const BulletPoint(text: 'Credit Cards (Local and International)'),
             const BulletPoint(text: 'Raast (State Bank of Pakistan)'),
-            const BulletPoint(text: 'Wallets (JazzCash, EasyPaisa, Omni, NayaPay, SadaPay, HBL Connect, Zindagi)'),
+            const BulletPoint(
+                text:
+                    'Wallets (JazzCash, EasyPaisa, Omni, NayaPay, SadaPay, HBL Connect, Zindagi)'),
             30.height
           ],
         ),
